@@ -24,7 +24,7 @@
             <div class="auth-buttons">
                 <router-link to="/user/register" class="auth-button">注册</router-link>
                 <span class="space"> </span>
-                <router-link to="/user/forget_password" class="auth-button">忘记密码</router-link>
+                <router-link to="/user/forgetPassword" class="auth-button">忘记密码</router-link>
             </div>
         </el-card>
     </div>
@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         login(){
-		    axios.post('/user/login',this.loginForm)
+		    axios.post('http://localhost:8081/user/login',this.loginForm)
 		        .then(response => {
 		            console.log(response.data);
 		  		      if(response.data.code === 0) {
