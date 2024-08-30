@@ -14,3 +14,5 @@ public class MonisafeApplication
         SpringApplication.run(MonisafeApplication.class, args);
     }
 }
+
+
