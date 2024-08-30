@@ -1,11 +1,10 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import './background.css';
 
-// 定义表单数据和验证规则
+// 表单数据和验证规则
 const forgetPasswordForm = reactive({
     username: '',
     emailAddress: '',
@@ -26,7 +25,7 @@ const rules = {
             message: '新密码长度应在6到16个字符之间',
             trigger: 'blur'
         }
-    ]
+    ],
 };
 
 // 使用 Vue Router
@@ -92,14 +91,18 @@ const resetPassword = async () => {
 <style scoped>
 .forget-password-page {
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
+    justify-content: flex-start;
+    padding-left: 5%;
+    width: 171ch;
+    height: 97.8vh;
+    background: url('../../assets/background.png') no-repeat center center;
+    background-size: cover;
 }
 
 .forget-password-card {
     width: 400px;
-    padding: 20px;
+    padding: 25px;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

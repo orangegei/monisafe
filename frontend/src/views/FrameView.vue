@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
+// import { defineProps } from 'vue';
 
 // const props = defineProps({
 //     monitorbackgroundColor: {
@@ -79,17 +79,11 @@ import { defineProps } from 'vue';
                             <div class="icon-button">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">
                             </div>
-                            <!-- <div class="profile">
-                                <img src="@/assets/settings-设置.svg" alt="Profile Icon" class="picture">
-                            </div> -->
-
                             <div class="picture" style="padding:0 5px;cursor: pointer;">
                                 <img src="../assets/profile-头像.jpeg" alt="Profile Icon"
                                     style="width: 50px;height: 50px;border-radius: 50%;">
                             </div>
                         </div>
-
-
                     </div>
                 </el-header>
 
@@ -116,7 +110,6 @@ body {
     overflow: hidden;
     border-radius: 10px;
     /* background: linear-gradient(to bottom, #BEDCFE, #ffffff); */
-    /* 添加轻微的径向渐变效果来模拟柔和的光晕 */
     /* background: radial-gradient(circle at top, #BEDCFE, #fff 50%);
     background: radial-gradient(circle at top left, #DBE9FD, #fff 50%); */
     /* linear-gradient(to top, #BEDCFE, #ffffff); */
@@ -199,7 +192,7 @@ body {
     /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
     /* background-color: #e9f1f6; */
     /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
-    border-bottom: 1px solid #c0b9b9;
+    /* border-bottom: 1px solid #c0b9b9; */
     padding: 10px 20px;
     height: auto;
     border-top-left-radius: 20px;
@@ -258,33 +251,15 @@ body {
     height: 30px;
 }
 
-/* .profile {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #2c3e50;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f9fbfd;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 10px;
-} */
-
-/* .picture {
-    width: 32px;
-    height: 32px;
-} */
-
 /* main */
 .monisafe-main {
-    /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
+    background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%);
     /* background-color: #e9f1f6; */
     /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
     height: calc(100% - 64px);
     padding: 20px;
-    border-bottom-left-radius: 20px;
+    /* border-bottom-left-radius: 20px; */
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;

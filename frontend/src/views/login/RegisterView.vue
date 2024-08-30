@@ -3,9 +3,8 @@ import { reactive, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import './background.css';
 
-// 表单数据和验证规则
+// 创建响应式表单数据和验证规则
 const registerForm = reactive({
     username: '',
     password: '',
@@ -57,12 +56,11 @@ const formRef = ref(null);
 const router = useRouter();
 
 // 注册方法
-const register = () => {
+const register = async () => {
     formRef.value.validate((valid) => {
         if (valid) {
             axios.post('http://localhost:8081/user/register', registerForm)
                 .then(response => {
-                    console.log(response.data);
                     if (response.data.code === 0) {
                         ElMessage.success("注册成功");
                         router.push({ path: '/user/login' });
@@ -122,14 +120,18 @@ const register = () => {
 <style scoped>
 .register-page {
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
+    justify-content: flex-start;
+    padding-left: 5%;
+    width: 171ch;
+    height: 97.8vh;
+    background: url('../../assets/background.png') no-repeat center center;
+    background-size: cover;
 }
 
 .register-card {
     width: 400px;
-    padding: 20px;
+    padding: 25px;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

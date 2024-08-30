@@ -1,17 +1,15 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import './background.css';
 
-// 定义登录表单
+// 创建响应式表单数据
 const loginForm = reactive({
     username: '',
     password: '',
 });
 
-// 使用 Vue Router
 const router = useRouter();
 
 // 登录方法
@@ -67,12 +65,24 @@ const login = async () => {
 </template>
 
 <style scoped>
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 5%;
+    width: 171ch;
+    height: 97.8vh;
+    background: url('../../assets/background.png') no-repeat center center;
+    background-size: cover;
+}
+
 .login-card {
     width: 400px;
-    padding: 20px;
+    padding: 15px;
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    justify-content: flex-start;
 }
 
 .header {

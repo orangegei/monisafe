@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import FrameView from '../FrameView.vue';
 </script>
 
