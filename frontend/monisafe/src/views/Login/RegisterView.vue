@@ -14,8 +14,8 @@
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="registerForm.username" placeholder="请输入用户名" class="short-input"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="registerForm.email" placeholder="请输入邮箱" class="short-input"></el-input>
+                <el-form-item label="邮箱" prop="emailAddress">
+                    <el-input v-model="registerForm.emailAddress" placeholder="请输入邮箱" class="short-input"></el-input>
                 </el-form-item>
                 <el-form-item label="电话号码" prop="phoneNumber">
                     <el-input v-model="registerForm.phoneNumber" placeholder="请输入电话号码" class="short-input"></el-input>
@@ -44,11 +44,11 @@ export default {
             registerForm: {
                 username: '',
                 password: '',
-                email: '',
+                emailAddress: '',
                 phoneNumber: '',
             },
             rules: {
-                email: [
+                emailAddress: [
                     { 
                         required: true, 
                         message: '请输入邮箱', 

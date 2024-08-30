@@ -52,8 +52,8 @@ export default {
 		  		      if(response.data.code === 0) {
                     ElMessage.success("登录成功");
                     sessionStorage.setItem("token", response.data.data);
-                    sessionStorage.setItem("isLogin", 1);
-                    this.$router.push({ path: '/user/home' });
+                    sessionStorage.setItem("isLogin", true);
+                    this.$router.push({ path: '/monitor' });
                 } else {
                     ElMessage.error(response.data.message || "登录失败");
                 }
