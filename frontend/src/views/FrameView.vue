@@ -137,7 +137,6 @@ body {
     height: auto;
 }
 
-/* Menu */
 .menu-items {
     display: flex;
     flex-direction: column;
@@ -187,7 +186,6 @@ body {
     padding-top: 20px;
 }
 
-/* header */
 .monisafe-header {
     /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
     /* background-color: #e9f1f6; */
@@ -204,7 +202,6 @@ body {
     align-items: center;
 }
 
-/* welcome-message */
 .welcome-message {
     font-size: 20px;
     font-weight: bold;
@@ -222,7 +219,6 @@ body {
     color: #c0c4cc;
 }
 
-/* header-icons */
 .header-icons {
     display: flex;
     align-items: center;
@@ -251,17 +247,16 @@ body {
     height: 30px;
 }
 
-/* main */
 .monisafe-main {
     background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%);
+    height: calc(100% - 64px);
+    border-radius: 20px;
     /* background-color: #e9f1f6; */
     /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
-    height: calc(100% - 64px);
-    padding: 20px;
+    /* padding: 20px; */
     /* border-bottom-left-radius: 20px; */
-    border-radius: 20px;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 10px; */
 }
 </style>

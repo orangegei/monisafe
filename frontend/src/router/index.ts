@@ -3,12 +3,11 @@ import FrameView from '@/views/FrameView.vue'
 import InfoView from '@/views/settings/UpdateInfoView.vue'
 import ModifyView from '@/views/settings/UpdatePwdView.vue'
 import SecuritylogView from '@/views/settings/SecuritylogView.vue'
-import ATMView from '@/views/business/ATMView.vue'
-import ForexView from '@/views/business/ForexView.vue'
 import MonitorView from '@/views/monitor/MonitorView.vue'
 import LoginView from '../views/login/LoginView.vue';
 import RegisterView from '../views/login/RegisterView.vue';
 import ForgetPasswordView from '../views/login/ForgetPasswordView.vue';
+import MapView from '@/views/business/MapView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,17 +38,7 @@ const router = createRouter({
     },
     {
       path: '/business',
-      redirect: '/business/atm'
-    },
-    {
-      path: '/business/atm',
-      name: 'atm',
-      component: ATMView
-    },
-    {
-      path: '/business/forex',
-      name: 'forex',
-      component: ForexView
+      redirect: '/business/map'
     },
     {
       path: '/monitor',
@@ -74,6 +63,11 @@ const router = createRouter({
       path: '/user/forgetPassword',
       name: 'forgetPassword',
       component: ForgetPasswordView
+    },
+    {
+      path: '/business/map',
+      name: 'map',
+      component: MapView
     }
   ]
 })
