@@ -120,7 +120,7 @@ const hideSubMenu = () => {
         <div class="submenu" :class="{ collapsed: isSidebarCollapsed }" v-if="isBusinessHovered"
             @mouseenter="showSubMenu" @mouseleave="hideSubMenu">
             <RouterLink to="/business/map" class="submenu-item">地图</RouterLink>
-            <RouterLink to="/business/atm" class="submenu-item">图表</RouterLink>
+            <RouterLink to="/business/chart/atm" class="submenu-item">图表</RouterLink>
         </div>
     </div>
 </template>

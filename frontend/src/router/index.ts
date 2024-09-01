@@ -65,7 +65,7 @@ const router = createRouter({
       component: MapView
     },
     {
-      path: '/business/atm',
+      path: '/business/chart/atm',
       name: 'atm',
       component: ATMInfoView
     }
