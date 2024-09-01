@@ -1,60 +1,49 @@
 <script setup>
-// import { defineProps } from 'vue';
+import { ref } from 'vue';
 
-// const props = defineProps({
-//     monitorbackgroundColor: {
-//         type: String,
-//         default: '#f9fbfd' // 默认背景颜色
-//     },
-//     businessbackgroundColor: {
-//         type: String,
-//         default: '#f9fbfd' // 默认背景颜色
-//     }
-// });
+// 控制侧边栏显示状态的变量
+const isSidebarCollapsed = ref(false);
+
+// 切换侧边栏的显示状态
+const toggleSidebar = () => {
+    isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
 </script>
 
 <template>
     <div class="common-layout">
-        <el-container style="height: 100%;">
+        <el-container style="height: 100%; display: flex; position: relative;">
             <!-- Aside -->
-            <el-aside width="250px" class="monisafe-sidebar">
-                <div class="logo-item-container">
-                    <img src="../assets/logo-MoniSafe-透明.png" alt="MoniSafe Logo" class="logo">
+            <el-aside :width="isSidebarCollapsed ? '80px' : '250px'" class="monisafe-sidebar">
+                <div class="content">
+                    <div class="logo-item-container" :style="{ textAlign: isSidebarCollapsed ? 'center' : 'left' }">
+                        <img src="../assets/logo-MoniSafe-透明.png" alt="MoniSafe Logo" class="logo"
+                            :style="{ width: isSidebarCollapsed ? '80px' : '150px' }">
+                    </div>
 
                     <div class="menu-items">
-                        <div class="menu-title">
+                        <div class="menu-title" v-show="!isSidebarCollapsed">
                             Main Menu
                         </div>
 
-                        <!-- <RouterLink to="/monitor" class="item"
-                            :style="{ backgroundColor: monitorbackgroundColor }" style="text-decoration: none;">
-                            <img src="../assets/monitor-监控.svg" alt="monitor" class="menu-icon">
-                            <span class="text">监控</span>
-                        </RouterLink>
-
-                        <RouterLink to="/business/atm" class="item"
-                            :style="{ backgroundColor: businessbackgroundColor }" style="text-decoration: none;">
-                            <img src="../assets/business-业务.svg" alt="business" class="menu-icon">
-                            <span class="text">业务</span>
-                        </RouterLink> -->
-
                         <RouterLink to="/monitor" class="item" style="text-decoration: none;">
                             <img src="../assets/monitor-监控.svg" alt="monitor" class="menu-icon">
-                            <span class="text">监控</span>
+                            <span class="text" v-show="!isSidebarCollapsed">监控</span>
                         </RouterLink>
 
                         <RouterLink to="/business/atm" class="item" style="text-decoration: none;">
                             <img src="../assets/business-业务.svg" alt="business" class="menu-icon">
-                            <span class="text">业务</span>
+                            <span class="text" v-show="!isSidebarCollapsed">业务</span>
                         </RouterLink>
 
                         <RouterLink to="/settings" class="item" style="text-decoration: none;">
                             <img src="../assets/settings-设置.svg" alt="settings" class="menu-icon">
-                            <span class="text">设置</span>
+                            <span class="text" v-show="!isSidebarCollapsed">设置</span>
                         </RouterLink>
                     </div>
                 </div>
-                <div class="footer">
+
+                <div class="footer" v-show="!isSidebarCollapsed">
                     <div class="footer-text">
                         @MoniSafe.2024<br>
                         Bank monitor platform is a solution for finance
@@ -62,7 +51,14 @@
                 </div>
             </el-aside>
 
-            <el-container>
+            <!-- Toggle Sidebar Button -->
+            <div class="sidebar-toggle" @click="toggleSidebar" :style="{ left: isSidebarCollapsed ? '80px' : '250px' }">
+                <img v-if="isSidebarCollapsed" src="@/assets/keyboard_arrow_right-弹出.svg" alt="Expand Sidebar" />
+                <img v-else src="@/assets/keyboard_arrow_left-折叠.svg" alt="Collapse Sidebar" />
+            </div>
+
+            <el-container
+                :style="{ marginLeft: isSidebarCollapsed ? '30px' : '30px', transition: 'margin-left 0.3s ease' }">
                 <!-- header -->
                 <el-header class="monisafe-header">
                     <div class="header-content">
@@ -111,39 +107,39 @@ body {
     height: 98vh;
     overflow: hidden;
     border-radius: 10px;
-    /* background-color: #E8F4EA; */
-    /* opacity: 0.85; */
-    /* background: linear-gradient(to bottom, #BEDCFE, #ffffff); */
-    /* background: radial-gradient(circle at top, #BEDCFE, #fff 50%);
-    background: radial-gradient(circle at top left, #DBE9FD, #fff 50%); */
-    /* linear-gradient(to top, #BEDCFE, #ffffff); */
-    /* background-color: #f9fbfd; */
-    /* background: linear-gradient(to bottom, #D1E3FF 0%, #f0f4fa 25%, #ffffff 50%, #E0E6F2 75%, #D1E3FF 100%); */
-    /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
-
-    /* background-color: #F5F6F8; */
 }
 
 .monisafe-sidebar {
-    /* background-color: #f9fbfd; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 0;
+    transition: width 0.3s ease;
+    background-color: #f9fbfd;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .logo-item-container {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    transition: text-align 0.3s ease;
 }
 
 .logo {
-    width: 150px;
     height: auto;
+    transition: width 0.3s ease;
 }
 
 .menu-items {
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: 20px 10px 10px 10px;
     border-radius: 8px;
 }
@@ -157,24 +153,25 @@ body {
 }
 
 .menu-items .item {
+    width: 90%;
     display: flex;
-    align-items: center;
     justify-content: center;
     cursor: pointer;
     padding: 10px;
     margin: 10px;
+    transition: justify-content 0.3s ease;
 }
 
 .item .menu-icon {
     width: 28px;
     height: 28px;
     margin-right: 10px;
-    color: black;
 }
 
 .item .text {
     font-size: 20px;
     color: black;
+    transition: opacity 0.3s ease;
 }
 
 .item:hover {
@@ -196,11 +193,41 @@ body {
     font-style: normal;
 }
 
+/* 控制侧边栏的按钮 */
+.sidebar-toggle {
+    width: 10px;
+    height: 40px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.3s ease, opacity 0.3s ease;
+    z-index: 1000;
+    opacity: 0;
+}
+
+/* .sidebar-toggle:hover {
+    opacity: 1;
+}
+
+.monisafe-sidebar:hover .sidebar-toggle {
+    opacity: 1;
+} */
+
+.sidebar-toggle:hover,
+.monisafe-sidebar:hover+.sidebar-toggle {
+    opacity: 1;
+}
+
+.sidebar-toggle span {
+    font-size: 20px;
+}
+
 .monisafe-header {
-    /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
-    /* background-color: #e9f1f6; */
-    /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
-    /* border-bottom: 1px solid #c0b9b9; */
     padding: 10px 20px;
     height: auto;
     border-top-left-radius: 20px;
@@ -221,12 +248,6 @@ body {
     margin: 10px;
     font-size: 24px;
     font-weight: bold;
-}
-
-.welcome-message p {
-    margin: 10px;
-    font-size: 18px;
-    color: #c0c4cc;
 }
 
 .header-icons {
@@ -260,13 +281,5 @@ body {
 .monisafe-main {
     height: calc(100% - 64px);
     border-radius: 20px;
-    /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
-    /* background-color: #ffffff; */
-    /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
-    /* padding: 20px; */
-    /* border-bottom-left-radius: 20px; */
-    /* display: flex;
-    flex-direction: column;
-    gap: 10px; */
 }
 </style>
