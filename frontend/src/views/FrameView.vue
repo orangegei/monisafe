@@ -55,8 +55,10 @@
                     </div>
                 </div>
                 <div class="footer">
-                    @MoniSafe.2024<br>
-                    Bank monitor platform is a solution for finance
+                    <div class="footer-text">
+                        @MoniSafe.2024<br>
+                        Bank monitor platform is a solution for finance
+                    </div>
                 </div>
             </el-aside>
 
@@ -109,6 +111,8 @@ body {
     height: 98vh;
     overflow: hidden;
     border-radius: 10px;
+    /* background-color: #E8F4EA; */
+    /* opacity: 0.85; */
     /* background: linear-gradient(to bottom, #BEDCFE, #ffffff); */
     /* background: radial-gradient(circle at top, #BEDCFE, #fff 50%);
     background: radial-gradient(circle at top left, #DBE9FD, #fff 50%); */
@@ -186,6 +190,12 @@ body {
     padding-top: 20px;
 }
 
+.footer-text {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 .monisafe-header {
     /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
     /* background-color: #e9f1f6; */
@@ -233,7 +243,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -248,10 +258,10 @@ body {
 }
 
 .monisafe-main {
-    background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%);
     height: calc(100% - 64px);
     border-radius: 20px;
-    /* background-color: #e9f1f6; */
+    /* background: linear-gradient(to right, #EDF0F5 0%, #f0f4fa 50%, #E0E6F2 75%, #e7eefc 100%); */
+    /* background-color: #ffffff; */
     /* background: linear-gradient(to right, #e9f1f6 0%, #ecf5fc 50%, #e9f1f6 100%); */
     /* padding: 20px; */
     /* border-bottom-left-radius: 20px; */
