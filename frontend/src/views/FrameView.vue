@@ -4,9 +4,31 @@ import { ref } from 'vue';
 // 控制侧边栏显示状态的变量
 const isSidebarCollapsed = ref(false);
 
+// 控制子菜单的显示状态
+const isBusinessHovered = ref(false);
+
 // 切换侧边栏的显示状态
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
+};
+
+// 定义定时器
+let hoverTimer = null;
+
+// 鼠标移入业务菜单项或子菜单时触发，确保弹窗显示
+const showSubMenu = () => {
+    clearTimeout(hoverTimer);  // 清除之前的定时器
+    hoverTimer = setTimeout(() => {
+        isBusinessHovered.value = true;
+    }, 300);  // 300ms 延迟显示弹窗
+};
+
+// 鼠标移出业务菜单项或子菜单时触发，隐藏弹窗
+const hideSubMenu = () => {
+    clearTimeout(hoverTimer);  // 清除之前的定时器
+    hoverTimer = setTimeout(() => {
+        isBusinessHovered.value = false;
+    }, 100);  // 300ms 延迟隐藏弹窗
 };
 </script>
 
@@ -31,10 +53,12 @@ const toggleSidebar = () => {
                             <span class="text" v-show="!isSidebarCollapsed">监控</span>
                         </RouterLink>
 
-                        <RouterLink to="/business/atm" class="item" style="text-decoration: none;">
+                        <!-- Business Menu Item with Hover Submenu -->
+                        <div class="item business-item" @mouseenter="showSubMenu" @mouseleave="hideSubMenu"
+                            style="text-decoration: none; position: relative;">
                             <img src="../assets/business-业务.svg" alt="business" class="menu-icon">
                             <span class="text" v-show="!isSidebarCollapsed">业务</span>
-                        </RouterLink>
+                        </div>
 
                         <RouterLink to="/settings" class="item" style="text-decoration: none;">
                             <img src="../assets/settings-设置.svg" alt="settings" class="menu-icon">
@@ -91,6 +115,13 @@ const toggleSidebar = () => {
                 </el-main>
             </el-container>
         </el-container>
+
+        <!-- Submenu placed outside the container -->
+        <div class="submenu" :class="{ collapsed: isSidebarCollapsed }" v-if="isBusinessHovered"
+            @mouseenter="showSubMenu" @mouseleave="hideSubMenu">
+            <RouterLink to="/business/map" class="submenu-item">地图</RouterLink>
+            <RouterLink to="/business/atm" class="submenu-item">图表</RouterLink>
+        </div>
     </div>
 </template>
 
@@ -179,6 +210,50 @@ body {
     border-radius: 8px;
 }
 
+.business-item {
+    position: relative;
+    /* 保证弹窗相对于业务菜单项定位 */
+}
+
+.business-item {
+    position: relative;
+}
+
+.submenu {
+    position: fixed;
+    /* 固定位置 */
+    top: 210px;
+    /* 根据需要调整弹窗的垂直位置 */
+    left: 260px;
+    /* 将弹窗放置在业务栏的右侧 */
+    background-color: #f9fbfd;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+    /* 提高 z-index 确保弹窗显示在header和body上方 */
+}
+
+.submenu.collapsed {
+    top: 180px;
+    left: 90px;
+    /* 当侧边栏收起时，将弹窗左移到收起后的边栏右侧 */
+}
+
+.submenu-item {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.submenu-item:hover {
+    background-color: #E2E6F9;
+    border-radius: 5px;
+}
+
 .footer {
     text-align: center;
     color: #909399;
@@ -209,14 +284,6 @@ body {
     z-index: 1000;
     opacity: 0;
 }
-
-/* .sidebar-toggle:hover {
-    opacity: 1;
-}
-
-.monisafe-sidebar:hover .sidebar-toggle {
-    opacity: 1;
-} */
 
 .sidebar-toggle:hover,
 .monisafe-sidebar:hover+.sidebar-toggle {
