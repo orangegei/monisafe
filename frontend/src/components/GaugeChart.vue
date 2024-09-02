@@ -19,8 +19,8 @@ onMounted(() => {
             series: [
                 {
                     type: 'gauge',
-                    radius: '90%',
-                    center: ['50%', '45%'],
+                    radius: '99%',
+                    center: ['50%', '35%'],
                     axisLine: {
                         lineStyle: {
                             width: 8,
@@ -96,4 +96,8 @@ onMounted(() => {
 
 <style scoped>
 /* 样式可以根据需要调整 */
+.gauge-chart {
+    width: 100%;
+    height: 100%;
+}
 </style>

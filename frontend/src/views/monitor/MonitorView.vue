@@ -1,8 +1,9 @@
 <script setup>
 import GaugeChart from '@/components/GaugeChart.vue';
-import LineChart from '@/components/LineChart.vue';  // 导入封装好的折线图组件
-import { ref, onMounted } from 'vue';
+import LineChart from '@/components/LineChart.vue';
 import FrameView from '@/views/FrameView.vue';
+import { ref, onMounted } from 'vue';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'; // 引入所有图标组件
 
 const atmGaugeValue = ref(75);
 const forexGaugeValue = ref(50);
@@ -16,18 +17,28 @@ const xAxisData = ref(['-10m', '-9m', '-8m', '-7m', '-6m', '-5m', '-4m', '-3m', 
 
 // 定义监控告警内容
 const alerts = ref([
-    { time: '10:00', message: 'ATM响应时间过长', level: '✔' },
-    { time: '10:05', message: '外汇交易金额异常', level: '❗' },
-    { time: '10:10', message: 'ATM取款失败', level: '❌' },
+    { time: '10:00', message: 'ATM响应时间过长' },
+    { time: '10:05', message: '外汇响应时间过长' },
+    { time: '10:10', message: 'ATM时间金额异常' },
+    { time: '10:15', message: '外汇时间金额异常' },
+    { time: '10:20', message: '正常' },
 ]);
 
+const getAlertIcon = (message) => {
+    if (message.includes('响应时间过长')) {
+        return '❌'; // 叉图标
+    } else if (message.includes('金额异常')) {
+        return '❗'; // 感叹号图标
+    } else {
+        return '✔'; // 钩图标
+    }
+};
 </script>
 
 <template>
     <FrameView>
         <template #main-body>
             <div class="main-body-container">
-
                 <!-- 监控部分 -->
                 <div class="left-section">
                     <div class="monitor-container">
@@ -42,8 +53,8 @@ const alerts = ref([
                                     <div class="right-section">
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row top-statistic">
-                                                <el-col :span="24">
-                                                    <el-statistic title="交易金额" :value="445" suffix="元" class="custom-suffix" />
+                                                <el-col :span="20">
+                                                    <el-statistic title="交易金额/元" :value="4475" />
                                                     <template #suffix>
                                                         <span class="custom-suffix">元</span>
                                                     </template>
@@ -53,7 +64,7 @@ const alerts = ref([
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row bottom-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易笔数" :value="5345" suffix="笔" class="custom-suffix" />
+                                                    <el-statistic title="交易笔数/笔" :value="5345" />
                                                 </el-col>
                                             </el-row>
                                         </el-card>
@@ -63,7 +74,7 @@ const alerts = ref([
 
                             <el-card class="chart-card line-chart-card" shadow="hover">
                                 <div class="chart-title">过去10分钟ATM 取款响应时间</div>
-                                <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 230%;"/>
+                                <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 220%;"/>
                             </el-card>
                         </div>
 
@@ -71,7 +82,7 @@ const alerts = ref([
                         <div class="forex-container">
                             <el-card class="chart-card line-chart-card" shadow="hover">
                                 <div class="chart-title">过去10分钟外汇交易响应时间</div>
-                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 230%;"/>
+                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 220%;"/>
                             </el-card>
 
                             <el-card class="chart-card gauge-card" shadow="hover">
@@ -84,14 +95,14 @@ const alerts = ref([
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row top-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易金额" :value="4545" suffix="元" class="custom-suffix" />
+                                                    <el-statistic title="交易金额/元" :value="453" />
                                                 </el-col>
                                             </el-row>
                                         </el-card>
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row bottom-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易笔数" :value="5345" suffix="笔" class="custom-suffix" />
+                                                    <el-statistic title="交易笔数/笔" :value="53545" />
                                                 </el-col>
                                             </el-row>
                                         </el-card>
@@ -110,7 +121,15 @@ const alerts = ref([
                             <el-table :data="alerts" stripe>
                                 <el-table-column prop="time" label="时间" width="65" />
                                 <el-table-column prop="message" label="告警内容" width="140" class-name="center-align" />
-                                <el-table-column prop="level" label=" " width="45" />
+                                <el-table-column label=" " width="50">
+                                    <template #default="{ row }">
+                                        <div class="alert-icon">
+                                            <i v-if="getAlertIcon(row.message) === '✔'" class="el-icon-check"></i>
+                                            <i v-if="getAlertIcon(row.message) === '❗'" class="el-icon-warning"></i>
+                                            <i v-if="getAlertIcon(row.message) === '❌'" class="el-icon-close"></i>
+                                        </div>
+                                    </template>
+                                </el-table-column>
                             </el-table>
                         </el-card>
                     </div>
@@ -120,24 +139,23 @@ const alerts = ref([
     </FrameView>
 </template>
 
-
 <style scoped>
 .main-body-container {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
 }
 
 .alerts-container {
-    padding: 5px;
-    margin-left: 20px;
-    height: 100%;
+    padding-top: 1%;
+    height: 90%;
 }
 
 .alert-card {
-    height: calc(100% - 30px); /* 减去 padding 和 margin */
+    height: calc(91%);
     display: flex;
     flex-direction: column;
+    margin-left: -15%;
+    margin-right: 10%;
 }
 
 .left-section {
@@ -146,54 +164,55 @@ const alerts = ref([
 
 .right-section {
     flex: 1;
-    align-items: stretch
+    align-items: stretch;
 }
 
 .monitor-container {
-    padding: 5px;
+    padding-top: 1%;
     display: flex;
     flex-direction: column;
-    gap: 40px; /* 分隔ATM和外汇部分 */
-    margin-left: 20px;
-    margin-right: 20px;
+    /* gap: 10px;   */
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 .atm-container {
     display: grid;
-    grid-template-columns: 330px 410px; 
-    gap: 20px;
+    grid-template-columns: 60% 70%; 
+    margin-bottom: -10%;
+    gap: 25px;
 }
 
 .forex-container {
     display: grid;
-    grid-template-columns: 410px 330px; 
-    gap: 20px;
+    grid-template-columns: 70% 60%; 
+    gap: 25px;
 }
 
 .chart {
     width: 100%;
-    height: 200px;
+    height: 100%;
 }
 
 .chart-card {
     border-radius: 15px;
-    padding: 17px;
+    padding: 4%;
 }
 
 .gauge-card {
-    height: 225px;
+    height: 66%;
 }   
 
 .line-chart-card {
-    height: 225px;
+    height: 65%;
 }
 
 .chart-title {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 20px;
-    margin-top: -20px;
+    margin-bottom: 6%;
+    margin-top: -5%;
 }
 
 .chart-content {
@@ -205,10 +224,8 @@ const alerts = ref([
     display: flex;
     flex-direction: row;
     flex: 1;
-    display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-left: -20px;
 }
 
 .right-section {
@@ -220,19 +237,18 @@ const alerts = ref([
 }
 
 .right-section > *:not(:last-child) {
-    margin-bottom: 40px; 
+    margin-bottom: 25%; 
 }
 
 .statistic-card {
     border-radius: 15px;
-    margin-bottom: 10px;
     background-color: #eff3f8;
-    width: 100px; 
-    height: 45px;
+    width: 68%;
+    height: 17%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 8%;
 }
 
 .statistic-row {
@@ -240,7 +256,7 @@ const alerts = ref([
 }
 
 .el-statistic .custom-suffix .el-statistic__suffix {
-    font-size: 0.6em
+    font-size: 0.6em;
 }
 
 .custom-suffix {
@@ -248,11 +264,28 @@ const alerts = ref([
   vertical-align: baseline;
   margin-left: 2px;
 }
+
 .center-align .cell {
     text-align: center;
 }
 
 .center-align .header {
     text-align: center;
+}
+
+.alert-icon {
+    text-align: center;
+}
+
+.el-icon-check {
+    color: green;
+}
+
+.el-icon-warning {
+    color: orange;
+}
+
+.el-icon-close {
+    color: red;
 }
 </style>
