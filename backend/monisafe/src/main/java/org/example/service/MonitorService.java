@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MonitorService {
-    MonitorData getATMMonitorData(LocalDateTime time);
+    List<MonitorData> getATMMonitorData(LocalDateTime time);
 
-    MonitorData getforexMonitorData(LocalDateTime time);
+    List<MonitorData> getforexMonitorData(LocalDateTime time);
 
     List<WithdrawalMonitorLog> getWithdrawalMonitorLogs(LocalDateTime time);
 

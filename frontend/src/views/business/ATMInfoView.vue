@@ -9,22 +9,42 @@ import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
 
-// 日期范围
+// 获取当前时间的前一天
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(today.getDate() - 1);
+
+// 日期范围（默认展示昨天一天的数据）
 const dateRange = ref<[Date, Date]>([
-    new Date(2024, 8, 1),
-    new Date(2024, 8, 2),
+    yesterday,
+    yesterday,
 ]);
 
+// 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
 function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
+// 将日期转换为字符串并进行URL编码
+function formatDate(date: Date): string {
+    return encodeURIComponent(date.toISOString());
+}
+
+// 发送日期范围到后端
+function sendDateRangeToBackend() {
+    const params = {
+        startDate: formatDate(dateRange.value[0]),
+        endDate: formatDate(dateRange.value[1]),
+    };
+
+    return axios.get('/business/atm/range', { params });
+}
+
 // 柱状图数据
-// const barData = ref([5, 20, 36, 10]);
-// const categories = ref(['A', 'B', 'C', 'D']);
 const barData = ref([]);
 const categories = ref([]);
 
+<<<<<<< HEAD
 const fetchData = async () => {
     try {
         const response = await axios.get('http://localhost:8081/business/atm/range'); // 替换成你的后端API路径
@@ -36,6 +56,33 @@ const fetchData = async () => {
         console.error('Failed to fetch data:', error);
     }
 };
+=======
+// 发送柱状图数据到后端
+function sendBarDataToBackend() {
+    const params = {
+        barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
+        categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
+    };
+
+    return axios.get('/business/atm/range', { params });
+}
+
+// 并行发送请求
+function sendAllDataToBackend() {
+    axios.all([sendDateRangeToBackend(), sendBarDataToBackend()])
+        .then(axios.spread((dateRangeResponse, barDataResponse) => {
+            console.log('Date Range Response:', dateRangeResponse.data);
+            console.log('Bar Data Response:', barDataResponse.data);
+        }))
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+}
+
+onMounted(() => {
+    sendAllDataToBackend();
+});
+>>>>>>> c118318fd47d381e2059c49d8da174f72ab57c11
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
@@ -59,9 +106,6 @@ const doughnutChartData = ref([
     { value: 300, name: 'Video Ads' }
 ]);
 
-onMounted(() => {
-    fetchData();
-});
 </script>
 
 <template>

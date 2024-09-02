@@ -17,12 +17,12 @@ public class MonitorServiceImpl implements MonitorService {
     MonitorMapper monitorMapper;
 
     @Override
-    public MonitorData getATMMonitorData(LocalDateTime time) {
+    public List<MonitorData> getATMMonitorData(LocalDateTime time) {
         return monitorMapper.getATMMonitorData(time);
     }
 
     @Override
-    public MonitorData getforexMonitorData(LocalDateTime time) {
+    public List<MonitorData> getforexMonitorData(LocalDateTime time) {
         return monitorMapper.getforexMonitorData(time);
     }
 
