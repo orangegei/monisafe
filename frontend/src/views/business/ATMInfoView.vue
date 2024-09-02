@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -19,8 +20,22 @@ function handleDateChange(newRange: [Date, Date]) {
 }
 
 // 柱状图数据
-const barData = ref([5, 20, 36, 10]);
-const categories = ref(['A', 'B', 'C', 'D']);
+// const barData = ref([5, 20, 36, 10]);
+// const categories = ref(['A', 'B', 'C', 'D']);
+const barData = ref([]);
+const categories = ref([]);
+
+const fetchData = async () => {
+    try {
+        const response = await axios.get('/monitor/atm/range'); // 替换成你的后端API路径
+        // 假设后端返回的数据格式如下:
+        // { data: [10, 30, 50, 20], categories: ['E', 'F', 'G', 'H'] }
+        barData.value = response.data.ydata;
+        categories.value = response.data.xdata;
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+};
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
@@ -43,6 +58,10 @@ const doughnutChartData = ref([
     { value: 484, name: 'Union Ads' },
     { value: 300, name: 'Video Ads' }
 ]);
+
+onMounted(() => {
+    fetchData();
+});
 </script>
 
 <template>
