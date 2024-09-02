@@ -138,6 +138,9 @@ body {
     height: 98vh;
     overflow: hidden;
     border-radius: 10px;
+    /* background-color: #E8F3EB; */
+    /* background: linear-gradient(to bottom, #80A4CB 0%,#dfeefe 25%, #e5f1fa); */
+    /* background: linear-gradient(to bottom, #ecf5fc 0%, #FFFFFF 45%, #FFFFFF 80%, #ECF5FC 100%); */
 }
 
 .monisafe-sidebar {
@@ -146,7 +149,7 @@ body {
     justify-content: space-between;
     padding: 0;
     transition: width 0.3s ease;
-    background-color: #f9fbfd;
+    /* background-color: #f9fbfd; */
 }
 
 .content {

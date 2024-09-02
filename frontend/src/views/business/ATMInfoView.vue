@@ -149,7 +149,7 @@ const doughnutChartData = ref([
                             <PieChart :chartData="pieData"></PieChart>
                         </div>
                         <div class="doughnut-chart">
-                            <DoughnutChart :chartData="doughnutChartData" title="Doughnut Chart"></DoughnutChart>
+                            <DoughnutChart :chartData="doughnutChartData" title="Chart"></DoughnutChart>
                         </div>
                     </div>
                 </div>
@@ -187,8 +187,9 @@ const doughnutChartData = ref([
 }
 
 .bar-chart {
-    width: 30%;
     height: 100%;
+    width: 28%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -196,14 +197,22 @@ const doughnutChartData = ref([
 
 .bar-chart-wrapper {
     width: 100%;
-    height: 65%;
+    height: 64%;
+    box-sizing: border-box;
+    border-radius: 15px;
+    background-color: rgba(211, 207, 207, 0.642);
+    padding: 15px;
 }
 
 .bar-chart-text {
     width: 100%;
-    flex-grow: 1;
+    height: 34%;
+    box-sizing: border-box;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.893);
     line-height: 2;
-    margin-left: 20px;
+    padding-left: 20px;
+    color: white;
 }
 
 .bar-chart-number,
@@ -212,7 +221,7 @@ const doughnutChartData = ref([
     font-weight: 400;
     font-style: normal;
     font-size: 30px;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 
 .bar-chart-english {
@@ -222,8 +231,9 @@ const doughnutChartData = ref([
 }
 
 .line-chart {
-    width: 40%;
     height: 100%;
+    width: 38%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -231,39 +241,53 @@ const doughnutChartData = ref([
 
 .line-chart-area {
     width: 100%;
-    height: 50%;
+    height: 49%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
 }
 
 .line-chart-text {
     width: 40%;
     height: 100%;
+    box-sizing: border-box;
     line-height: 2;
+    padding: 10px;
 }
 
 .line-chart-wrapper {
     width: 60%;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .pie-doughnut-chart {
-    width: 30%;
     height: 100%;
+    width: 28%;
+    box-sizing: border-box;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 15px;
 }
 
 .pie-chart {
     width: 100%;
     height: auto;
+    box-sizing: border-box;
+    background-color: #DDE8F2;
+    border-radius: 15px;
+    padding: 10px;
 }
 
 .doughnut-chart {
     width: 100%;
     flex-grow: 1;
+    box-sizing: border-box;
 }
 </style>

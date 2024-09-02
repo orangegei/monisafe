@@ -33,7 +33,8 @@ onMounted(() => {
             },
             legend: {
                 orient: 'vertical',
-                left: 'left'
+                left: 'left',
+                show: false,
             },
             series: [
                 {
