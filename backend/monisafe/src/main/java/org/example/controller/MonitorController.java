@@ -20,16 +20,19 @@ public class MonitorController {
     MonitorService monitorService;
 
 
+    // 返回过去十分钟的外ATM实时平均数据
     @GetMapping("/atm")
-    public Result<MonitorData> getATMdata(@RequestParam LocalDateTime time) {
-        MonitorData ATMMonitorData = monitorService.getATMMonitorData(time);
+    public Result<List<MonitorData>> getATMdata(/*@RequestParam LocalDateTime time*/) {
+        LocalDateTime time = LocalDateTime.now();
+        List<MonitorData> ATMMonitorData = monitorService.getATMMonitorData(time);
 
         return Result.success(ATMMonitorData);
     }
 
+    // 返回过去十分钟的外汇实时平均数据
     @GetMapping("/forex")
-    public Result<MonitorData> getforexdata(LocalDateTime time) {
-        MonitorData forexMonitorData = monitorService.getforexMonitorData(time);
+    public Result<List<MonitorData>> getforexdata(LocalDateTime time) {
+        List<MonitorData> forexMonitorData = monitorService.getforexMonitorData(time);
 
         return Result.success(forexMonitorData);
     }

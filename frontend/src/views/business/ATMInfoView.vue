@@ -44,6 +44,19 @@ function sendDateRangeToBackend() {
 const barData = ref([]);
 const categories = ref([]);
 
+<<<<<<< HEAD
+const fetchData = async () => {
+    try {
+        const response = await axios.get('http://localhost:8081/business/atm/range'); // 替换成你的后端API路径
+        // 假设后端返回的数据格式如下:
+        // { data: [10, 30, 50, 20], categories: ['E', 'F', 'G', 'H'] }
+        barData.value = response.data.ydata;
+        categories.value = response.data.xdata;
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+};
+=======
 // 发送柱状图数据到后端
 function sendBarDataToBackend() {
     const params = {
@@ -69,6 +82,7 @@ function sendAllDataToBackend() {
 onMounted(() => {
     sendAllDataToBackend();
 });
+>>>>>>> c118318fd47d381e2059c49d8da174f72ab57c11
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
