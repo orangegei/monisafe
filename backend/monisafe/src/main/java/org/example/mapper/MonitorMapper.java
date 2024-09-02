@@ -12,11 +12,16 @@ import java.util.List;
 @Mapper
 public interface MonitorMapper {
 
-    @Select("select * from average_monitor_data where transaction_type=\"ATM\" and transaction_time=#{time}")
-    MonitorData getATMMonitorData(LocalDateTime time);
+    // 获取该分钟的数据
+//    @Select("select * from average_monitor_data where transaction_type=\"ATM\" and transaction_time=#{time}")
+//    List<MonitorData> getATMMonitorData(LocalDateTime time);
 
-    @Select("select * from average_monitor_data where transaction_type=\"forex\" and transaction_time=#{time}")
-    MonitorData getforexMonitorData(LocalDateTime time);
+    // 获取过去十分钟的数据
+    @Select("select * from average_monitor_data where transaction_type=\"ATM\" and transaction_time BETWEEN #{time} - INTERVAL 10 MINUTE AND #{time}")
+    List<MonitorData> getATMMonitorData(LocalDateTime time);
+
+    @Select("select * from average_monitor_data where transaction_type=\"forex\" and transaction_time BETWEEN #{time} - INTERVAL 10 MINUTE AND #{time}")
+    List<MonitorData> getforexMonitorData(LocalDateTime time);
 
     @Select("select * from withdrawal_monitor where transaction_time=#{time}")
     List<WithdrawalMonitorLog> getWithdrawalMonitorLogs(LocalDateTime time);
