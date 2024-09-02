@@ -1,21 +1,24 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import GaugeChart from '@/components/GaugeChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import FrameView from '@/views/FrameView.vue';
-import { ref, onMounted } from 'vue';
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'; // 引入所有图标组件
 
-const atmGaugeValue = ref(75);
-const forexGaugeValue = ref(50);
+// 初始化状态
+const atmGaugeValue = ref(0);
+const forexGaugeValue = ref(0);
+const atmLineChartData = ref([]);
+const forexLineChartData = ref([]);
+const atmAmount = ref(0);
+const atmCount = ref(0);
+const forexAmount = ref(0);
+const forexCount = ref(0);
 
-// 定义 ATM 和外汇折线图的数据
-const atmLineChartData = ref([120, 200, 150, 80, 70, 110, 130, 160, 180, 140]);
-const forexLineChartData = ref([100, 200, 120, 70, 90, 50, 110, 180, 130, 140]);
-
-// 定义 X 轴数据
+// X轴数据固定
 const xAxisData = ref(['-10m', '-9m', '-8m', '-7m', '-6m', '-5m', '-4m', '-3m', '-2m', '-1m']);
 
-// 定义监控告警内容
+// 假设有一些告警数据
 const alerts = ref([
     { time: '10:00', message: 'ATM响应时间过长' },
     { time: '10:05', message: '外汇响应时间过长' },
@@ -33,6 +36,52 @@ const getAlertIcon = (message) => {
         return '✔'; // 钩图标
     }
 };
+
+// 获取ATM数据的函数
+const fetchAtmData = async () => {
+    try {
+        const response = await axios.get('/moniter/atm', {
+            params: { time: new Date().toISOString() }
+        });
+        if (response.data.code === 0) {
+            const data = response.data.data;
+            atmGaugeValue.value = data[0].averageResponseTime; // 更新仪表盘值
+            atmLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
+            atmAmount.value = data[0].totalAmount; // 更新交易金额
+            atmCount.value = data[0].totalCount; // 更新交易笔数
+        }
+    } catch (error) {
+        console.error('Failed to fetch ATM data', error);
+    }
+};
+
+// 获取Forex数据的函数
+const fetchForexData = async () => {
+    try {
+        const response = await axios.get('/moniter/forex', {
+            params: { time: new Date().toISOString() }
+        });
+        if (response.data.code === 0) {
+            const data = response.data.data;
+            forexGaugeValue.value = data[0].averageResponseTime; // 更新仪表盘值
+            forexLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
+            forexAmount.value = data[0].totalAmount; // 更新交易金额
+            forexCount.value = data[0].totalCount; // 更新交易笔数
+        }
+    } catch (error) {
+        console.error('Failed to fetch Forex data', error);
+    }
+};
+
+// 定时获取数据
+onMounted(() => {
+    fetchAtmData();
+    fetchForexData();
+    setInterval(() => {
+        fetchAtmData();
+        fetchForexData();
+    }, 60000); // 每分钟请求一次
+});
 </script>
 
 <template>
@@ -53,8 +102,8 @@ const getAlertIcon = (message) => {
                                     <div class="right-section">
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row top-statistic">
-                                                <el-col :span="20">
-                                                    <el-statistic title="交易金额/元" :value="4475" />
+                                                <el-col :span="24">
+                                                    <el-statistic title="交易金额/元" :value="atmAmount" />
                                                     <template #suffix>
                                                         <span class="custom-suffix">元</span>
                                                     </template>
@@ -64,7 +113,7 @@ const getAlertIcon = (message) => {
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row bottom-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易笔数/笔" :value="5345" />
+                                                    <el-statistic title="交易笔数/笔" :value="atmCount" />
                                                 </el-col>
                                             </el-row>
                                         </el-card>
@@ -95,14 +144,17 @@ const getAlertIcon = (message) => {
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row top-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易金额/元" :value="453" />
+                                                    <el-statistic title="交易金额/元" :value="forexAmount" />
+                                                    <template #suffix>
+                                                        <span class="custom-suffix">元</span>
+                                                    </template>
                                                 </el-col>
                                             </el-row>
                                         </el-card>
                                         <el-card class="statistic-card">
                                             <el-row class="statistic-row bottom-statistic">
                                                 <el-col :span="24">
-                                                    <el-statistic title="交易笔数/笔" :value="53545" />
+                                                    <el-statistic title="交易笔数/笔" :value="forexCount" />
                                                 </el-col>
                                             </el-row>
                                         </el-card>
