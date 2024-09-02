@@ -5,28 +5,24 @@ import GaugeChart from '@/components/GaugeChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import FrameView from '@/views/FrameView.vue';
 
-// 初始化状态
+// 实时数据状态
 const atmGaugeValue = ref(0);
 const forexGaugeValue = ref(0);
-const atmLineChartData = ref([]);
-const forexLineChartData = ref([]);
 const atmAmount = ref(0);
 const atmCount = ref(0);
 const forexAmount = ref(0);
 const forexCount = ref(0);
 
-// X轴数据固定
-const xAxisData = ref(['-10m', '-9m', '-8m', '-7m', '-6m', '-5m', '-4m', '-3m', '-2m', '-1m']);
+// X轴数据
+const xAxisData = ref([]);
 
-// 假设有一些告警数据
-const alerts = ref([
-    { time: '10:00', message: 'ATM响应时间过长' },
-    { time: '10:05', message: '外汇响应时间过长' },
-    { time: '10:10', message: 'ATM时间金额异常' },
-    { time: '10:15', message: '外汇时间金额异常' },
-    { time: '10:20', message: '正常' },
-]);
+// 告警数据
+const alerts = ref([]);
 
+const atmLineChartData = ref([]);
+const forexLineChartData = ref([]);
+
+// 获取告警图标
 const getAlertIcon = (message) => {
     if (message.includes('响应时间过长')) {
         return '❌'; // 叉图标
@@ -45,10 +41,11 @@ const fetchAtmData = async () => {
         });
         if (response.data.code === 0) {
             const data = response.data.data;
-            atmGaugeValue.value = data[0].averageResponseTime; // 更新仪表盘值
+            atmGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
             atmLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
-            atmAmount.value = data[0].totalAmount; // 更新交易金额
-            atmCount.value = data[0].totalCount; // 更新交易笔数
+            xAxisData.value = data.map(item => item.time); // 更新X轴数据
+            atmAmount.value = data[9].totalAmount; // 更新交易金额
+            atmCount.value = data[9].totalCount; // 更新交易笔数
         }
     } catch (error) {
         console.error('Failed to fetch ATM data', error);
@@ -63,13 +60,28 @@ const fetchForexData = async () => {
         });
         if (response.data.code === 0) {
             const data = response.data.data;
-            forexGaugeValue.value = data[0].averageResponseTime; // 更新仪表盘值
+            forexGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
             forexLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
-            forexAmount.value = data[0].totalAmount; // 更新交易金额
-            forexCount.value = data[0].totalCount; // 更新交易笔数
+            xAxisData.value = data.map(item => item.time); // 更新X轴数据
+            forexAmount.value = data[9].totalAmount; // 更新交易金额
+            forexCount.value = data[9].totalCount; // 更新交易笔数
         }
     } catch (error) {
         console.error('Failed to fetch Forex data', error);
+    }
+};
+
+// 获取告警数据的函数
+const fetchAlerts = async () => {
+    try {
+        const response = await axios.get('/moniter/logs', {
+            params: { time: new Date().toISOString() }
+        });
+        if (response.data.code === 0) {
+            alerts.value = response.data.data; // 更新告警数据
+        }
+    } catch (error) {
+        console.error('Failed to fetch alerts data', error);
     }
 };
 
@@ -77,9 +89,11 @@ const fetchForexData = async () => {
 onMounted(() => {
     fetchAtmData();
     fetchForexData();
+    fetchAlerts();
     setInterval(() => {
         fetchAtmData();
         fetchForexData();
+        fetchAlerts();
     }, 60000); // 每分钟请求一次
 });
 </script>
@@ -88,157 +102,167 @@ onMounted(() => {
     <FrameView>
         <template #main-body>
             <div class="main-body-container">
+
                 <!-- 监控部分 -->
-                <div class="left-section">
-                    <div class="monitor-container">
-                        <!-- ATM监控部分 -->
-                        <div class="atm-container">
-                            <el-card class="chart-card gauge-card" shadow="hover">
-                                <div class="chart-title">ATM 实时数据</div>
-                                <div class="chart-content">
-                                    <div class="left-section">
-                                        <GaugeChart :value="atmGaugeValue" />
-                                    </div>
-                                    <div class="right-section">
-                                        <el-card class="statistic-card">
-                                            <el-row class="statistic-row top-statistic">
-                                                <el-col :span="24">
-                                                    <el-statistic title="交易金额/元" :value="atmAmount" />
-                                                    <template #suffix>
-                                                        <span class="custom-suffix">元</span>
-                                                    </template>
-                                                </el-col>
-                                            </el-row>
-                                        </el-card>
-                                        <el-card class="statistic-card">
-                                            <el-row class="statistic-row bottom-statistic">
-                                                <el-col :span="24">
-                                                    <el-statistic title="交易笔数/笔" :value="atmCount" />
-                                                </el-col>
-                                            </el-row>
-                                        </el-card>
-                                    </div>
+                <div class="monitor-container">
+
+                    <!-- ATM监控部分 -->
+                    <div class="atm-container">
+                        <el-card class="chart-card gauge-card" shadow="hover">
+                            <div class="chart-title">ATM 实时数据</div>
+                            <div class="chart-content">
+                                <div class="left-section">
+                                    <GaugeChart :value="atmGaugeValue" />
                                 </div>
-                            </el-card>
-
-                            <el-card class="chart-card line-chart-card" shadow="hover">
-                                <div class="chart-title">过去10分钟ATM 取款响应时间</div>
-                                <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 220%;"/>
-                            </el-card>
-                        </div>
-
-                        <!-- 外汇监控部分 -->
-                        <div class="forex-container">
-                            <el-card class="chart-card line-chart-card" shadow="hover">
-                                <div class="chart-title">过去10分钟外汇交易响应时间</div>
-                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100%; height: 220%;"/>
-                            </el-card>
-
-                            <el-card class="chart-card gauge-card" shadow="hover">
-                                <div class="chart-title">外汇实时数据</div>
-                                <div class="chart-content">
-                                    <div class="left-section">
-                                        <GaugeChart :value="forexGaugeValue" />
-                                    </div>
-                                    <div class="right-section">
-                                        <el-card class="statistic-card">
-                                            <el-row class="statistic-row top-statistic">
-                                                <el-col :span="24">
-                                                    <el-statistic title="交易金额/元" :value="forexAmount" />
-                                                    <template #suffix>
-                                                        <span class="custom-suffix">元</span>
-                                                    </template>
-                                                </el-col>
-                                            </el-row>
-                                        </el-card>
-                                        <el-card class="statistic-card">
-                                            <el-row class="statistic-row bottom-statistic">
-                                                <el-col :span="24">
-                                                    <el-statistic title="交易笔数/笔" :value="forexCount" />
-                                                </el-col>
-                                            </el-row>
-                                        </el-card>
-                                    </div>
+                                <div class="right-section">
+                                    <el-card class="statistic-card">
+                                        <el-row class="statistic-row top-statistic">
+                                            <el-col :span="24">
+                                                <el-statistic title="交易金额/元" :value="atmAmount" />
+                                                <template #suffix>
+                                                    <span class="custom-suffix">元</span>
+                                                </template>
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                    <el-card class="statistic-card">
+                                        <el-row class="statistic-row bottom-statistic">
+                                            <el-col :span="24">
+                                                <el-statistic title="交易笔数/笔" :value="atmCount" />
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
                                 </div>
-                            </el-card>
-                        </div>
+                            </div>
+                        </el-card>
+
+                         <el-card class="chart-card line-chart-card" shadow="hover">
+                            <div class="chart-title">过去10分钟ATM取款响应时间</div>
+                            <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100% ; height: 250%;" />
+                        </el-card>
+                    </div>
+
+                    <!-- 外汇监控部分 -->
+                    <div class="forex-container">
+                        <el-card class="chart-card line-chart-card" shadow="hover">
+                            <div class="chart-title">过去10分钟外汇交易响应时间</div>
+                            <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100% ; height: 250%;"/>
+                        </el-card>
+
+                        <el-card class="chart-card gauge-card" shadow="hover">
+                            <div class="chart-title">外汇实时数据</div>
+                            <div class="chart-content">
+                                <div class="left-section">
+                                    <GaugeChart :value="forexGaugeValue" />
+                                </div>
+                                <div class="right-section">
+                                    <el-card class="statistic-card">
+                                        <el-row class="statistic-row top-statistic">
+                                            <el-col :span="24">
+                                                <el-statistic title="交易金额/元" :value="forexAmount" />
+                                                <template #suffix>
+                                                    <span class="custom-suffix">元</span>
+                                                </template>           
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                    <el-card class="statistic-card">
+                                        <el-row class="statistic-row bottom-statistic">
+                                            <el-col :span="24">
+                                                <el-statistic title="交易笔数/笔" :value="forexCount" />
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                </div>
+                            </div>
+                        </el-card>
                     </div>
                 </div>
 
                 <!-- 告警部分 -->
-                <div class="right-section">
-                    <div class="alerts-container">
-                        <el-card class="chart-card alert-card" shadow="hover">
-                            <div class="chart-title">实时告警信息</div>
-                            <el-table :data="alerts" stripe>
-                                <el-table-column prop="time" label="时间" width="65" />
-                                <el-table-column prop="message" label="告警内容" width="140" class-name="center-align" />
-                                <el-table-column label=" " width="50">
-                                    <template #default="{ row }">
-                                        <div class="alert-icon">
-                                            <i v-if="getAlertIcon(row.message) === '✔'" class="el-icon-check"></i>
-                                            <i v-if="getAlertIcon(row.message) === '❗'" class="el-icon-warning"></i>
-                                            <i v-if="getAlertIcon(row.message) === '❌'" class="el-icon-close"></i>
-                                        </div>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-card>
-                    </div>
+                <div class="alerts-container">
+                    <el-card class="chart-card alert-card" shadow="hover">
+                        <div class="chart-title">实时告警信息</div>
+                        <el-table :data="alerts" stripe>
+                            <el-table-column prop="time" label="时间" width="65" />
+                            <el-table-column prop="message" label="告警内容" width="140" class-name="center-align" />
+                            <el-table-column label=" " width="50">
+                                <template #default="{ row }">
+                                    <div class="alert-icon">
+                                        <i v-if="getAlertIcon(row.message) === '✔'" class="el-icon-check"></i>
+                                        <i v-if="getAlertIcon(row.message) === '❗'" class="el-icon-warning"></i>                                            <i v-if="getAlertIcon(row.message) === '❌'" class="el-icon-close"></i>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-card>
                 </div>
             </div>
         </template>
     </FrameView>
 </template>
 
+
 <style scoped>
 .main-body-container {
     display: flex;
-    justify-content: space-between;
-}
-
-.alerts-container {
-    padding-top: 1%;
-    height: 90%;
-}
-
-.alert-card {
-    height: calc(91%);
-    display: flex;
-    flex-direction: column;
-    margin-left: -15%;
-    margin-right: 10%;
-}
-
-.left-section {
-    flex: 2;
-}
-
-.right-section {
-    flex: 1;
-    align-items: stretch;
+    width: 100%;
+    height: 100%;
 }
 
 .monitor-container {
-    padding-top: 1%;
+    flex:2;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    /* gap: 10px;   */
-    margin-left: 2%;
-    margin-right: 2%;
+}
+
+.alerts-container {
+    flex:1;
+    height: 100%;
 }
 
 .atm-container {
-    display: grid;
-    grid-template-columns: 60% 70%; 
-    margin-bottom: -10%;
-    gap: 25px;
+    display: flex;
+    flex:1;
+    height: 50%;
+    width: 100%;
+    gap: 3%;
 }
 
 .forex-container {
-    display: grid;
-    grid-template-columns: 70% 60%; 
-    gap: 25px;
+    display: flex;
+    flex:1;
+    height: 50%;
+    width: 100%;
+    gap: 3%;
+}
+
+.alert-card {
+    height: 95%;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.right-section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.right-section > *:not(:last-child) {
+    margin-top: 20%;
+    margin-bottom: 50%;
 }
 
 .chart {
@@ -248,23 +272,23 @@ onMounted(() => {
 
 .chart-card {
     border-radius: 15px;
-    padding: 4%;
+    /* padding: 4%; */
 }
 
 .gauge-card {
-    height: 66%;
+    flex:3;
+    height: 90%;
 }   
 
 .line-chart-card {
-    height: 65%;
+    flex:4;
+    height: 90%;
 }
 
 .chart-title {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 6%;
-    margin-top: -5%;
 }
 
 .chart-content {
@@ -272,50 +296,20 @@ onMounted(() => {
     align-items: stretch;
 }
 
-.left-section {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-.right-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end;
-    margin-right: -15px;
-}
-
-.right-section > *:not(:last-child) {
-    margin-bottom: 25%; 
-}
-
 .statistic-card {
     border-radius: 15px;
     background-color: #eff3f8;
-    width: 68%;
-    height: 17%;
+    width: 120%;
+    height: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8%;
 }
 
 .statistic-row {
-    width: 150%;
+    width: 100%;
 }
 
-.el-statistic .custom-suffix .el-statistic__suffix {
-    font-size: 0.6em;
-}
-
-.custom-suffix {
-  font-size: 0.6em;
-  vertical-align: baseline;
-  margin-left: 2px;
-}
 
 .center-align .cell {
     text-align: center;

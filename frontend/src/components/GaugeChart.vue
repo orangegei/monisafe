@@ -19,8 +19,8 @@ onMounted(() => {
             series: [
                 {
                     type: 'gauge',
-                    radius: '99%',
-                    center: ['50%', '35%'],
+                    radius: '70%',
+                    center: ['40%', '40%'],
                     axisLine: {
                         lineStyle: {
                             width: 8,
