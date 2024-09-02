@@ -26,13 +26,17 @@ onMounted(() => {
         // 设置 ECharts 的配置项
         const option = {
             title: {
-                text: 'ECharts 折线图示例'
+                text: props.showTitle ? 'ECharts 折线图示例' : ''
+                // text: 'ECharts 折线图示例'
             },
             tooltip: {
                 trigger: 'axis'
             },
             xAxis: {
                 type: 'category',
+                axisLabel: {
+                    interval: 0
+                },
                 data: props.xAxisData
             },
             yAxis: {
