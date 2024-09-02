@@ -8,6 +8,7 @@ import RegisterView from '../views/login/RegisterView.vue';
 import ForgetPasswordView from '../views/login/ForgetPasswordView.vue';
 import MapView from '@/views/business/MapView.vue'
 import ATMInfoView from '@/views/business/ATMInfoView.vue'
+import MonitorView from '@/views/monitor/MonitorView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +69,11 @@ const router = createRouter({
       path: '/business/chart/atm',
       name: 'atm',
       component: ATMInfoView
+    },
+    {
+      path: '/monitor',
+      name: 'monitor',
+      component: MonitorView
     }
   ]
 })

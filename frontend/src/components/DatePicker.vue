@@ -1,18 +1,29 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch, defineProps, defineEmits } from 'vue'
 
-const value = ref('')
-const defaultTime = ref<[Date, Date]>([
-    new Date(2000, 1, 1, 0, 0, 0),
-    new Date(2000, 2, 1, 23, 59, 59),
-])
+// 定义组件接收的 props
+const props = defineProps<{
+    time: [Date, Date];
+}>()
+
+// 定义 emit 用于触发事件
+const emit = defineEmits(['update:internalValue'])
+
+// 内部的 reactive 数据，用于管理 v-model 双向绑定
+const internalValue = ref<[Date, Date]>(props.time)
+
+// 将 internalValue 变化时更新到外部
+watch(internalValue, (newValue) => {
+    emit('update:internalValue', newValue)
+})
 </script>
 
 <template>
     <div class="date-picker">
         <div class="block">
-            <el-date-picker v-model="value" type="daterange" start-placeholder="Start date" end-placeholder="End date"
-                :default-time="defaultTime" style="width: 300px; height: 40px; border-radius: 30px;" />
+            <el-date-picker v-model="internalValue" type="daterange" start-placeholder="Start date"
+                end-placeholder="End date" :default-time="time"
+                style="width: 300px; height: 40px; border-radius: 30px;" />
         </div>
     </div>
 </template>

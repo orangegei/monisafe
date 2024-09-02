@@ -1,8 +1,4 @@
-<template>
-    <div ref="chart" style="width: 100%; height: 400px;"></div>
-</template>
-
-<script setup>
+<script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import * as echarts from 'echarts';
 
@@ -49,6 +45,10 @@ onMounted(() => {
     myChart.setOption(option);
 });
 </script>
+
+<template>
+    <div ref="chart" style="width: 100%; height: 400px;"></div>
+</template>
 
 <style scoped>
 /* 您可以在这里添加自定义样式 */

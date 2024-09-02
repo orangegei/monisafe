@@ -1,5 +1,6 @@
-<script setup>
-import { ref } from 'vue';
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -8,9 +9,33 @@ import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
 
+// 日期范围
+const dateRange = ref<[Date, Date]>([
+    new Date(2024, 8, 1),
+    new Date(2024, 8, 2),
+]);
+
+function handleDateChange(newRange: [Date, Date]) {
+    dateRange.value = newRange;
+}
+
 // 柱状图数据
-const barData = ref([5, 20, 36, 10]);
-const categories = ref(['A', 'B', 'C', 'D']);
+// const barData = ref([5, 20, 36, 10]);
+// const categories = ref(['A', 'B', 'C', 'D']);
+const barData = ref([]);
+const categories = ref([]);
+
+const fetchData = async () => {
+    try {
+        const response = await axios.get('http://localhost:8081/business/atm/range'); // 替换成你的后端API路径
+        // 假设后端返回的数据格式如下:
+        // { data: [10, 30, 50, 20], categories: ['E', 'F', 'G', 'H'] }
+        barData.value = response.data.ydata;
+        categories.value = response.data.xdata;
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+};
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
@@ -33,6 +58,10 @@ const doughnutChartData = ref([
     { value: 484, name: 'Union Ads' },
     { value: 300, name: 'Video Ads' }
 ]);
+
+onMounted(() => {
+    fetchData();
+});
 </script>
 
 <template>
@@ -41,7 +70,7 @@ const doughnutChartData = ref([
             <div class="container">
                 <div class="picker">
                     <div class="date-picker-wrapper">
-                        <DatePicker></DatePicker>
+                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
                     </div>
                     <div class="type-selector">
                         <SelectIcon></SelectIcon>
@@ -62,11 +91,26 @@ const doughnutChartData = ref([
                     </div>
 
                     <div class="line-chart">
-                        <div class="line-chart-wrapper">
-                            <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+                        <div class="line-chart-area">
+                            <div class="line-chart-text">
+                                <span>总交易金额最多的时间是</span><br>
+                                <span style="font-size: 48px;">周六</span><br>
+                                <span class="line-chart-number">17,165￥</span>
+                            </div>
+                            <div class="line-chart-wrapper">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+                            </div>
                         </div>
-                        <div class="line-chart-wrapper">
-                            <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+
+                        <div class="line-chart-area">
+                            <div class="line-chart-wrapper">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+                            </div>
+                            <div class="line-chart-text">
+                                <span>总交易笔数最多的时间是</span><br>
+                                <span style="font-size: 48px;">周三</span><br>
+                                <span class="line-chart-number">2,436 deals</span>
+                            </div>
                         </div>
                     </div>
 
@@ -128,12 +172,12 @@ const doughnutChartData = ref([
 .bar-chart-text {
     width: 100%;
     flex-grow: 1;
-    /* border: 1px solid black; */
     line-height: 2;
     margin-left: 20px;
 }
 
-.bar-chart-number {
+.bar-chart-number,
+.line-chart-number {
     font-family: "Libre Baskerville", serif;
     font-weight: 400;
     font-style: normal;
@@ -155,9 +199,24 @@ const doughnutChartData = ref([
     justify-content: space-between;
 }
 
-.line-chart-wrapper {
+.line-chart-area {
     width: 100%;
     height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.line-chart-text {
+    width: 40%;
+    height: 100%;
+    line-height: 2;
+}
+
+.line-chart-wrapper {
+    width: 60%;
+    height: 100%;
 }
 
 .pie-doughnut-chart {
