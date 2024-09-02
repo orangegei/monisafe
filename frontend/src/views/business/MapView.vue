@@ -1,9 +1,114 @@
-<script setup>
+<script lang="ts" setup>
+import { ref } from 'vue'
 import FrameView from '../FrameView.vue';
 import ChinaMap from '@/components/ChinaMap.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
-import SortedTable from '@/components/SortedTable.vue';
+import DataTable from '@/components/DataTable.vue';
+
+// 日期范围
+const dateRange = ref<[Date, Date]>([
+    new Date(2024, 8, 1),
+    new Date(2024, 8, 2),
+]);
+
+function handleDateChange(newRange: [Date, Date]) {
+    dateRange.value = newRange;
+}
+
+// 定义地图数据
+const mapData = ref([
+    { name: '北京市', value: Math.round(Math.random() * 1000) },
+    { name: '天津市', value: Math.round(Math.random() * 1000) },
+    { name: '上海市', value: Math.round(Math.random() * 1000) },
+    { name: '重庆市', value: Math.round(Math.random() * 1000) },
+]);
+
+// 定义 Record 接口
+interface Record {
+    city: string
+    money: number
+    amount: number
+}
+
+// 定义表格数据
+const tableData = ref<Record[]>([
+    {
+        city: '北京', money: 1000, amount: 100
+    },
+    {
+        city: '杭州', money: 2000, amount: 200
+    },
+    {
+        city: '广州', money: 3000, amount: 300
+    },
+    {
+        city: '深圳', money: 4000, amount: 400
+    },
+    {
+        city: '上海', money: 5000, amount: 500
+    },
+    {
+        city: '北京', money: 1000, amount: 100
+    },
+    {
+        city: '杭州', money: 2000, amount: 200
+    },
+    {
+        city: '广州', money: 3000, amount: 300
+    },
+    {
+        city: '深圳', money: 4000, amount: 400
+    },
+    {
+        city: '上海', money: 5000, amount: 500
+    },
+    {
+        city: '北京', money: 1000, amount: 100
+    },
+    {
+        city: '杭州', money: 2000, amount: 200
+    },
+    {
+        city: '广州', money: 3000, amount: 300
+    },
+    {
+        city: '深圳', money: 4000, amount: 400
+    },
+    {
+        city: '上海', money: 5000, amount: 500
+    },
+    {
+        city: '北京', money: 1000, amount: 100
+    },
+    {
+        city: '杭州', money: 2000, amount: 200
+    },
+    {
+        city: '广州', money: 3000, amount: 300
+    },
+    {
+        city: '深圳', money: 4000, amount: 400
+    },
+    {
+        city: '上海', money: 5000, amount: 500
+    },
+    {
+        city: '北京', money: 1000, amount: 100
+    },
+    {
+        city: '杭州', money: 2000, amount: 200
+    },
+    {
+        city: '广州', money: 3000, amount: 300
+    },
+    {
+        city: '深圳', money: 4000, amount: 400
+    },
+    {
+        city: '上海', money: 5000, amount: 500
+    },
+]);
 </script>
 
 <template>
@@ -11,20 +116,20 @@ import SortedTable from '@/components/SortedTable.vue';
         <template #main-body>
             <div class="container">
                 <div class="china-map">
-                    <ChinaMap :containerStyle="{ width: '100%', height: '100%' }"></ChinaMap>
+                    <ChinaMap :data="mapData" />
                 </div>
 
                 <div class="display">
                     <div class="picker">
                         <div class="date-picker-wrapper">
-                            <DatePicker></DatePicker>
+                            <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
                         </div>
                         <div class="type-selector">
                             <SelectIcon></SelectIcon>
                         </div>
                     </div>
                     <div class="table-container">
-                        <SortedTable></SortedTable>
+                        <DataTable :tableData="tableData" />
                     </div>
                 </div>
             </div>
@@ -39,13 +144,11 @@ import SortedTable from '@/components/SortedTable.vue';
     align-items: flex-start;
     justify-content: space-between;
     height: 100%;
-    /* border: 1px solid black; */
 }
 
 .china-map {
     height: 100%;
     width: 60%;
-    /* border: 1px solid black; */
 }
 
 .display {
@@ -55,7 +158,6 @@ import SortedTable from '@/components/SortedTable.vue';
     flex-direction: column;
     justify-content: flex-start;
     gap: 15px;
-    /* border: 1px solid black; */
 }
 
 .picker {
@@ -65,7 +167,6 @@ import SortedTable from '@/components/SortedTable.vue';
     justify-content: space-between;
     width: 100%;
     height: 20%;
-    /* border: 1px solid black; */
 }
 
 .display .picker {
@@ -77,6 +178,5 @@ import SortedTable from '@/components/SortedTable.vue';
     width: 100%;
     height: 100%;
     overflow: auto;
-    /* border: 1px solid black; */
 }
 </style>
