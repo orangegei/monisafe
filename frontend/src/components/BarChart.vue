@@ -28,21 +28,32 @@ onMounted(() => {
     // 定义更新图表的方法
     const setChartOption = () => {
         const option = {
+            backgroundColor: '#f0f0f0',
             title: {
-                text: props.title
+                text: 'Y-Axis with Arrow'
             },
-            color: ['#3398DB'],
-            tooltip: {},
             xAxis: {
-                data: props.xAxisData,
+                data: ['A', 'B', 'C', 'D'],
+                axisLine: {
+                    show: false // 隐藏横坐标轴的线
+                },
+                axisTick: {
+                    show: false // 隐藏横坐标轴的小竖线
+                },
                 axisLabel: {
-                    rotate: -30 // 旋转标签
+                    fontStyle: 'italic' // 斜体标签
                 }
             },
             yAxis: {
                 axisLine: {
                     lineStyle: {
-                        width: 2 // 将 Y 轴线宽度设为 2 像素
+                        width: 2,
+                        color: '#333'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed' // 虚线的网格线
                     }
                 }
             },
@@ -50,18 +61,26 @@ onMounted(() => {
                 {
                     name: 'Sales',
                     type: 'bar',
-                    data: props.chartData,
-                    barWidth: '50%', // 设置柱宽
-                    animationDuration: 5000, // 动画时长
-                    animationEasing: 'elasticOut', // 动画效果
+                    data: [120, 80, 150, 100],
                     itemStyle: {
-                        borderRadius: [5, 5, 5, 5] // 设置柱子的圆角，顺序为 [左上, 右上, 右下, 左下]
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#83bff6' },
+                            { offset: 0.5, color: '#188df0' },
+                            { offset: 1, color: '#188df0' }
+                        ]),
+                        borderRadius: [10, 10, 10, 10] // 圆角效果
                     }
                 }
-            ]
+            ],
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                borderRadius: 10
+            },
         };
+
         chart.setOption(option);
     };
+
 
     // 初始化图表
     setChartOption();
