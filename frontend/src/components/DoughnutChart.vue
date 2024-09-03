@@ -30,7 +30,7 @@ onMounted(() => {
                 textStyle: {
                     color: '#333333',
                     fontSize: 18,
-                    fontWeight: 'normal'
+                    fontWeight: 'bold'
                 }
             },
             tooltip: {
@@ -48,32 +48,34 @@ onMounted(() => {
                 {
                     name: 'Data',
                     type: 'pie',
-                    radius: ['35%', '70%'], // 调整内外半径使其更占空间
+                    radius: ['20%', '45%'], // 调整内外半径使其更占空间
                     center: ['50%', '50%'], // 确保饼图居中
                     avoidLabelOverlap: false,
                     label: {
-                        show: true,
-                        position: 'outside', // 标签显示在外侧
-                        formatter: '{b}: {d}%', // 标签显示名称和百分比
-                        fontSize: 14,
-                        color: '#333333', // 标签文字颜色
-                    },
-                    labelLine: {
-                        show: true, // 显示引线
-                        length: 10, // 引线第一段长度
-                        length2: 15, // 引线第二段长度
-                        lineStyle: {
-                            color: '#aaaaaa', // 引线颜色
-                            width: 1,
-                        }
-                    },
+                    show: true, // 显示标签
+                    position: 'outside', // 标签位置在色块外部
+                    formatter: '{d}%', // 标签只显示百分比
+                    fontSize: 14,
+                    color: '#333333', // 标签文字颜色为黑色，匹配简约风格
+                    fontWeight: 'bold'
+                },
+                labelLine: {
+                    show: true, // 显示引线
+                    length: 15, // 引线第一段长度
+                    length2: 10, // 引线第二段长度
+                    smooth: true, // 引线圆滑处理
+                    lineStyle: {
+                        color: '#aaaaaa', // 引线颜色
+                        width: 2
+                    }
+                },
                     data: props.chartData.map((item, index) => ({
                         ...item,
                         itemStyle: {
                             color: ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1'][index % 5], // 使用简约风格的配色
-                            borderRadius: 10,
+                            borderRadius: 8,
                             borderColor: '#ffffff',
-                            borderWidth: 2
+                            borderWidth: 1
                         }
                     })),
                     emphasis: {

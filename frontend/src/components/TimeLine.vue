@@ -1,0 +1,78 @@
+<script setup>
+import { computed } from 'vue';
+
+// 接收 props
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true
+  }
+});
+
+function isLeft(index) {
+  return index % 2 === 0;
+}
+</script>
+
+
+<template>
+  <div class="time-line">
+    <div v-for="(item, index) in items" :key="index" class="time-line-item">
+      <div :class="['time-line-content', { 'left': isLeft(index), 'right': !isLeft(index) }]" :style="{ backgroundColor: item.color }" >
+        <div class="time-line-content-text">
+          {{ item.text }}
+        </div>
+      </div>
+      <div class="time-line-marker"></div>
+    </div>
+  </div>
+</template>
+
+
+<style scoped>
+.time-line {
+  position: relative;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.time-line-item {
+  position: relative;
+  margin-right: 25%;
+  margin-bottom: 40px;
+}
+
+.time-line-content {
+  position: relative;
+  width: 150%;
+  height: 65%;
+  padding: 20px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.time-line-content.left {
+  left: -210%;
+  text-align: left;
+}
+
+.time-line-content.right {
+  right: -70%;
+  text-align: right;
+  margin-left: auto;
+}
+
+.time-line-content-text {
+  font-size: 16px;
+}
+
+.time-line-marker {
+  position: absolute;
+  left: 40%;
+  top: 0;
+  height: 130%;
+  border-left: 2px solid #000000;
+  transform: translateX(-50%);
+}
+</style>

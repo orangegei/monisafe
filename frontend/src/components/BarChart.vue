@@ -28,12 +28,26 @@ onMounted(() => {
     // 定义更新图表的方法
     const setChartOption = () => {
         const option = {
-            backgroundColor: '#f0f0f0',
+            // backgroundColor: '#f0f0f0',
             title: {
-                text: 'Y-Axis with Arrow'
+                text: props.title,
+                left: 'center',
+                top: '10%',
+                textStyle: {
+                    color: '#333333', // 标题颜色
+                    fontSize: 18,
+                    fontWeight: 'bold'
+                }
+            },
+            grid: {
+                left: '5%',
+                right: '8%',
+                bottom: '5%',
+                top: '30%',
+                containLabel: true
             },
             xAxis: {
-                data: ['A', 'B', 'C', 'D'],
+                data: props.xAxisData,
                 axisLine: {
                     show: false // 隐藏横坐标轴的线
                 },
@@ -61,7 +75,8 @@ onMounted(() => {
                 {
                     name: 'Sales',
                     type: 'bar',
-                    data: [120, 80, 150, 100],
+                    data: props.chartData,
+                    barWidth: '75%', // 控制柱状图的宽度
                     itemStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: '#83bff6' },

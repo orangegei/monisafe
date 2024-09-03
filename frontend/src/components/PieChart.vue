@@ -28,6 +28,7 @@ onMounted(() => {
                 fontSize: 18,
                 fontWeight: 'bold'
             }
+            
         },
         tooltip: {
             trigger: 'item',
@@ -44,7 +45,7 @@ onMounted(() => {
             {
                 name: 'Access Source',
                 type: 'pie',
-                radius: ['0%', '70%'], // 增大饼图的尺寸
+                radius: ['0%', '45%'], // 增大饼图的尺寸
                 center: ['50%', '50%'], // 确保饼图居中显示
                 avoidLabelOverlap: false,
                 label: {
@@ -67,9 +68,9 @@ onMounted(() => {
                 },
                 data: props.chartData,
                 itemStyle: {
-                    borderRadius: 10, // 让饼图的每个部分边缘圆润
+                    borderRadius: 8, // 让饼图的每个部分边缘圆润
                     borderColor: '#ffffff', // 设置分隔线颜色
-                    borderWidth: 2 // 设置分隔线宽度
+                    borderWidth: 1 // 设置分隔线宽度
                 },
                 emphasis: {
                     itemStyle: {
@@ -80,7 +81,7 @@ onMounted(() => {
                 }
             }
         ],
-        backgroundColor: '#f4f4f4' // 设置为浅灰色背景，简约风格
+        // backgroundColor: '#f4f4f4' // 设置为浅灰色背景，简约风格
     };
 
     myChart.setOption(option);
