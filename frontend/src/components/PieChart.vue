@@ -8,47 +8,87 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    title: {
+        type: String,
+        default: 'Chart'
+    },
 });
 
 const chart = ref(null);
 
 onMounted(() => {
     const myChart = echarts.init(chart.value);
+
     const option = {
         title: {
-            text: 'Sample Pie Chart',
+            text: props.title,
             left: 'center',
+            textStyle: {
+                color: '#333333', // 标题颜色
+                fontSize: 18,
+                fontWeight: 'bold'
+            }
         },
         tooltip: {
             trigger: 'item',
+            backgroundColor: 'rgba(50, 50, 50, 0.7)', // 半透明背景
+            borderWidth: 0,
+            textStyle: {
+                color: '#ffffff'
+            }
         },
         legend: {
-            orient: 'vertical',
-            left: 'left',
-            show: false,
+            show: false, // 隐藏图例
         },
         series: [
             {
                 name: 'Access Source',
                 type: 'pie',
-                radius: '50%',
+                radius: ['0%', '70%'], // 增大饼图的尺寸
+                center: ['50%', '50%'], // 确保饼图居中显示
+                avoidLabelOverlap: false,
+                label: {
+                    show: true, // 显示标签
+                    position: 'outside', // 标签位置在色块外部
+                    formatter: '{d}%', // 标签只显示百分比
+                    fontSize: 14,
+                    color: '#333333', // 标签文字颜色为黑色，匹配简约风格
+                    fontWeight: 'bold'
+                },
+                labelLine: {
+                    show: true, // 显示引线
+                    length: 15, // 引线第一段长度
+                    length2: 10, // 引线第二段长度
+                    smooth: true, // 引线圆滑处理
+                    lineStyle: {
+                        color: '#aaaaaa', // 引线颜色
+                        width: 2
+                    }
+                },
                 data: props.chartData,
+                itemStyle: {
+                    borderRadius: 10, // 让饼图的每个部分边缘圆润
+                    borderColor: '#ffffff', // 设置分隔线颜色
+                    borderWidth: 2 // 设置分隔线宽度
+                },
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)',
-                    },
-                },
-            },
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
         ],
+        backgroundColor: '#f4f4f4' // 设置为浅灰色背景，简约风格
     };
+
     myChart.setOption(option);
 });
 </script>
 
 <template>
-    <div ref="chart" style="width: 100%; height: 400px;"></div>
+    <div ref="chart" style="width: 100%; height: 100%;"></div>
 </template>
 
 <style scoped>

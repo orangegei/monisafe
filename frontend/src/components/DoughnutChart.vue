@@ -26,39 +26,68 @@ onMounted(() => {
         const option = {
             title: {
                 text: props.title,
-                left: 'center'
+                left: 'center',
+                textStyle: {
+                    color: '#333333',
+                    fontSize: 18,
+                    fontWeight: 'normal'
+                }
             },
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                backgroundColor: 'rgba(50, 50, 50, 0.7)', // 半透明背景
+                borderWidth: 0,
+                textStyle: {
+                    color: '#ffffff'
+                }
             },
             legend: {
-                orient: 'vertical',
-                left: 'left',
-                show: false,
+                show: false, // 隐藏图例
             },
             series: [
                 {
                     name: 'Data',
                     type: 'pie',
-                    radius: ['40%', '70%'], // 设置内外半径，形成环形图
+                    radius: ['35%', '70%'], // 调整内外半径使其更占空间
+                    center: ['50%', '50%'], // 确保饼图居中
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
                         position: 'outside', // 标签显示在外侧
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: '30',
-                            fontWeight: 'bold'
-                        }
+                        formatter: '{b}: {d}%', // 标签显示名称和百分比
+                        fontSize: 14,
+                        color: '#333333', // 标签文字颜色
                     },
                     labelLine: {
                         show: true, // 显示引线
                         length: 10, // 引线第一段长度
-                        length2: 15 // 引线第二段长度
+                        length2: 15, // 引线第二段长度
+                        lineStyle: {
+                            color: '#aaaaaa', // 引线颜色
+                            width: 1,
+                        }
                     },
-                    data: props.chartData
+                    data: props.chartData.map((item, index) => ({
+                        ...item,
+                        itemStyle: {
+                            color: ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1'][index % 5], // 使用简约风格的配色
+                            borderRadius: 10,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }
+                    })),
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '16',
+                            fontWeight: 'bold'
+                        },
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 }
             ]
         };

@@ -76,11 +76,11 @@ const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
 // 饼状图数据
 const pieData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' },
+    { value: 1048, name: 'Search Engine', itemStyle: { color: '#8BC34A' } }, // 绿色
+    { value: 735, name: 'Direct', itemStyle: { color: '#FFC107' } }, // 黄色
+    { value: 580, name: 'Email', itemStyle: { color: '#03A9F4' } }, // 蓝色
+    { value: 484, name: 'Union Ads', itemStyle: { color: '#FF5722' } }, // 橙色
+    { value: 300, name: 'Video Ads', itemStyle: { color: '#9C27B0' } }  // 紫色
 ]);
 
 // 环形图数据
@@ -284,7 +284,7 @@ const doughnutChartData = ref([
 
 .pie-chart {
     width: 100%;
-    height: auto;
+    height: 50%;
     box-sizing: border-box;
     background-color: #DDE8F2;
     border-radius: 15px;

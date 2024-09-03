@@ -23,32 +23,81 @@ onMounted(() => {
 
     // 定义更新图表的方法
     const setChartOption = () => {
-        // 设置 ECharts 的配置项
         const option = {
             title: {
-                text: props.showTitle ? 'ECharts 折线图示例' : ''
-                // text: 'ECharts 折线图示例'
+                text: props.showTitle ? 'ECharts 折线图示例' : '',
+                textStyle: {
+                    color: '#333333', // 标题颜色
+                    fontWeight: 'normal'
+                }
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                backgroundColor: 'rgba(50, 50, 50, 0.7)', // 半透明背景
+                borderWidth: 0,
+                textStyle: {
+                    color: '#ffffff'
+                }
             },
             xAxis: {
                 type: 'category',
                 axisLabel: {
-                    interval: 0
+                    interval: 0,
+                    color: '#333333', // X轴标签颜色
+                    fontWeight: 'lighter'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#dddddd' // X轴线颜色
+                    }
                 },
                 data: props.xAxisData
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    color: '#333333', // Y轴标签颜色
+                    fontWeight: 'lighter'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#dddddd' // Y轴线颜色
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#eeeeee' // 网格线颜色
+                    }
+                }
             },
             series: [
                 {
                     data: props.chartData,
-                    type: 'line'
+                    type: 'line',
+                    smooth: true, // 平滑曲线
+                    symbol: 'circle', // 圆形点
+                    symbolSize: 8, // 点的大小
+                    itemStyle: {
+                        color: '#00aaff', // 折线点颜色
+                        borderColor: '#ffffff', // 外圈颜色
+                        borderWidth: 2
+                    },
+                    lineStyle: {
+                        color: '#00aaff', // 折线颜色
+                        width: 3 // 折线宽度
+                    },
+                    areaStyle: {
+                        // 背景渐变填充
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(0, 170, 255, 0.5)' },
+                            { offset: 1, color: 'rgba(0, 170, 255, 0)' }
+                        ])
+                    }
                 }
-            ]
+            ],
+            backgroundColor: '#ffffff' // 背景颜色设置为简约白色
         };
+
         // 将配置项应用到图表实例中
         chart.setOption(option);
     };
