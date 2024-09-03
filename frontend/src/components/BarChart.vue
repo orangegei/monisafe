@@ -31,16 +31,32 @@ onMounted(() => {
             title: {
                 text: props.title
             },
+            color: ['#3398DB'],
             tooltip: {},
             xAxis: {
-                data: props.xAxisData
+                data: props.xAxisData,
+                axisLabel: {
+                    rotate: -30 // 旋转标签
+                }
             },
-            yAxis: {},
+            yAxis: {
+                axisLine: {
+                    lineStyle: {
+                        width: 2 // 将 Y 轴线宽度设为 2 像素
+                    }
+                }
+            },
             series: [
                 {
                     name: 'Sales',
                     type: 'bar',
-                    data: props.chartData
+                    data: props.chartData,
+                    barWidth: '50%', // 设置柱宽
+                    animationDuration: 5000, // 动画时长
+                    animationEasing: 'elasticOut', // 动画效果
+                    itemStyle: {
+                        borderRadius: [5, 5, 5, 5] // 设置柱子的圆角，顺序为 [左上, 右上, 右下, 左下]
+                    }
                 }
             ]
         };

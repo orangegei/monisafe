@@ -43,8 +43,8 @@ onMounted(() => {
                     radius: ['40%', '70%'], // 设置内外半径，形成环形图
                     avoidLabelOverlap: false,
                     label: {
-                        show: false,
-                        position: 'center'
+                        show: true,
+                        position: 'outside', // 标签显示在外侧
                     },
                     emphasis: {
                         label: {
@@ -54,7 +54,9 @@ onMounted(() => {
                         }
                     },
                     labelLine: {
-                        show: false
+                        show: true, // 显示引线
+                        length: 10, // 引线第一段长度
+                        length2: 15 // 引线第二段长度
                     },
                     data: props.chartData
                 }

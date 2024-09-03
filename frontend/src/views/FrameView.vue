@@ -138,6 +138,7 @@ body {
     height: 98vh;
     overflow: hidden;
     border-radius: 10px;
+    /* background-color: #E8F3FB; */
     /* background-color: #E8F3EB; */
     /* background: linear-gradient(to bottom, #80A4CB 0%,#dfeefe 25%, #e5f1fa); */
     /* background: linear-gradient(to bottom, #ecf5fc 0%, #FFFFFF 45%, #FFFFFF 80%, #ECF5FC 100%); */
@@ -209,13 +210,12 @@ body {
 }
 
 .item:hover {
-    background-color: #E2E6F9;
+    background-color: #B0D4F0;
     border-radius: 8px;
 }
 
 .business-item {
     position: relative;
-    /* 保证弹窗相对于业务菜单项定位 */
 }
 
 .business-item {
@@ -229,7 +229,7 @@ body {
     /* 根据需要调整弹窗的垂直位置 */
     left: 260px;
     /* 将弹窗放置在业务栏的右侧 */
-    background-color: #f9fbfd;
+    background-color: #F0F8FF;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 10px;
@@ -253,7 +253,7 @@ body {
 }
 
 .submenu-item:hover {
-    background-color: #E2E6F9;
+    background-color: #B0D4F0;
     border-radius: 5px;
 }
 
@@ -301,6 +301,7 @@ body {
     padding: 10px 20px;
     height: auto;
     border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
 .header-content {

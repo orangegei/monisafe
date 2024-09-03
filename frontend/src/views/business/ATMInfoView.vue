@@ -17,7 +17,7 @@ yesterday.setDate(today.getDate() - 1);
 // 日期范围（默认展示昨天一天的数据）
 const dateRange = ref<[Date, Date]>([
     yesterday,
-    yesterday,
+    today,
 ]);
 
 // 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
@@ -41,22 +41,9 @@ function sendDateRangeToBackend() {
 }
 
 // 柱状图数据
-const barData = ref([]);
-const categories = ref([]);
+const barData = ref([120, 60, 150, 100]);
+const categories = ref(['A', 'B', 'C', 'D']);
 
-<<<<<<< HEAD
-const fetchData = async () => {
-    try {
-        const response = await axios.get('http://localhost:8081/business/atm/range'); // 替换成你的后端API路径
-        // 假设后端返回的数据格式如下:
-        // { data: [10, 30, 50, 20], categories: ['E', 'F', 'G', 'H'] }
-        barData.value = response.data.ydata;
-        categories.value = response.data.xdata;
-    } catch (error) {
-        console.error('Failed to fetch data:', error);
-    }
-};
-=======
 // 发送柱状图数据到后端
 function sendBarDataToBackend() {
     const params = {
@@ -82,7 +69,6 @@ function sendAllDataToBackend() {
 onMounted(() => {
     sendAllDataToBackend();
 });
->>>>>>> c118318fd47d381e2059c49d8da174f72ab57c11
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
@@ -138,8 +124,8 @@ const doughnutChartData = ref([
                         <div class="line-chart-area">
                             <div class="line-chart-text">
                                 <span>总交易金额最多的时间是</span><br>
-                                <span style="font-size: 48px;">周六</span><br>
-                                <span class="line-chart-number">17,165￥</span>
+                                <span class="line-chart-cn">20~30</span><br>
+                                <span class="line-chart-number" style="color: black;">17,165￥</span>
                             </div>
                             <div class="line-chart-wrapper">
                                 <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
@@ -152,8 +138,9 @@ const doughnutChartData = ref([
                             </div>
                             <div class="line-chart-text">
                                 <span>总交易笔数最多的时间是</span><br>
-                                <span style="font-size: 48px;">周三</span><br>
-                                <span class="line-chart-number">2,436 deals</span>
+                                <span class="line-chart-cn">周三</span><br>
+                                <span class="line-chart-number" style="color: black;">2,436 </span>
+                                <span class="bar-chart-english">deals</span>
                             </div>
                         </div>
                     </div>
@@ -229,6 +216,11 @@ const doughnutChartData = ref([
     color: white;
 }
 
+.line-chart-cn {
+    font-family: 'FZZJ LongYTWJ', sans-serif;
+    font-size: 64px;
+}
+
 .bar-chart-number,
 .line-chart-number {
     font-family: "Libre Baskerville", serif;
@@ -269,7 +261,7 @@ const doughnutChartData = ref([
     width: 40%;
     height: 100%;
     box-sizing: border-box;
-    line-height: 2;
+    line-height: 1.5;
     padding: 10px;
 }
 
