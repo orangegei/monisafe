@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import FrameView from '@/views/FrameView.vue'
 import InfoView from '@/views/settings/UpdateInfoView.vue'
 import ModifyView from '@/views/settings/UpdatePwdView.vue'
 import SecuritylogView from '@/views/settings/SecuritylogView.vue'
@@ -9,15 +8,11 @@ import ForgetPasswordView from '../views/login/ForgetPasswordView.vue';
 import MapView from '@/views/business/MapView.vue'
 import ATMInfoView from '@/views/business/ATMInfoView.vue'
 import MonitorView from '@/views/monitor/MonitorView.vue'
+import LogInfoView from '@/views/log/LogInfoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/frame',
-      name: 'frame',
-      component: FrameView
-    },
     {
       path: '/settings',
       redirect: '/user/settings/updateInfo'
@@ -74,6 +69,11 @@ const router = createRouter({
       path: '/monitor',
       name: 'monitor',
       component: MonitorView
+    },
+    {
+      path: '/log',
+      name: 'log',
+      component: LogInfoView
     }
   ]
 })

@@ -81,7 +81,6 @@ onMounted(() => {
         chart.setOption(option);
     };
 
-
     // 初始化图表
     setChartOption();
 

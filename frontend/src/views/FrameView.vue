@@ -98,9 +98,25 @@ const hideSubMenu = () => {
                             <div class="icon-button">
                                 <img src="@/assets/moon-夜间模式.svg" alt="Moon Icon" class="button-icon">
                             </div>
-                            <div class="icon-button">
+
+
+                            <RouterLink to="/log" class="icon-button" style="text-decoration: none;">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">
-                            </div>
+                            </RouterLink>
+
+
+
+                            <!-- <div class="icon-button">
+                                <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">
+                            </div> -->
+
+
+
+
+
+
+
+
                             <div class="picture" style="padding:0 5px;cursor: pointer;">
                                 <img src="../assets/profile-头像.jpeg" alt="Profile Icon"
                                     style="width: 50px;height: 50px;border-radius: 50%;">
