@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from 'vue';
 import axios from 'axios';
+import instance from '@/utils/request'
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
@@ -34,7 +35,7 @@ const router = useRouter();
 // 重置密码方法
 const resetPassword = async () => {
     try {
-        const response = await axios.patch('http://localhost:8081/user/forgetPassword', forgetPasswordForm);
+        const response = await instance.patch('/user/forgetPassword', forgetPasswordForm);
         if (response.data.code === 0) {
             ElMessage.success("密码重置成功");
             router.push({ path: '/user/login' });

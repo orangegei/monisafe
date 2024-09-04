@@ -7,6 +7,7 @@ import RegisterView from '../views/login/RegisterView.vue';
 import ForgetPasswordView from '../views/login/ForgetPasswordView.vue';
 import MapView from '@/views/business/MapView.vue'
 import ATMInfoView from '@/views/business/ATMInfoView.vue'
+import ForexInfoView from '@/views/business/ForexInfoView.vue';
 import MonitorView from '@/views/monitor/MonitorView.vue'
 import LogInfoView from '@/views/log/LogInfoView.vue'
 
@@ -64,6 +65,11 @@ const router = createRouter({
       path: '/business/chart/atm',
       name: 'atm',
       component: ATMInfoView
+    },
+    {
+      path: '/business/chart/forex',
+      name: 'forex',
+      component: ForexInfoView
     },
     {
       path: '/monitor',

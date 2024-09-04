@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import axios from 'axios';
+import instance from '@/utils/request'
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
@@ -59,7 +60,7 @@ const router = useRouter();
 const register = async () => {
     formRef.value.validate((valid) => {
         if (valid) {
-            axios.post('http://localhost:8081/user/register', registerForm)
+            instance.post('/user/register', registerForm)
                 .then(response => {
                     if (response.data.code === 0) {
                         ElMessage.success("注册成功");

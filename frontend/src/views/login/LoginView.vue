@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from 'vue';
 import axios from 'axios';
+import instance from '@/utils/request'
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
@@ -15,7 +16,7 @@ const router = useRouter();
 // 登录方法
 const login = async () => {
     try {
-        const response = await axios.post('http://localhost:8081/user/login', loginForm);
+        const response = await instance.post('/user/login', loginForm);
         if (response.data.code === 0) {
             ElMessage.success("登录成功");
             sessionStorage.setItem("token", response.data.data);

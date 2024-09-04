@@ -14,7 +14,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: 'Chart'
+        default: ''
     },
 });
 
@@ -34,8 +34,8 @@ onMounted(() => {
                 textStyle: {
                     color: '#333333', // 标题颜色
                     fontSize: 18,
-                    fontWeight: 'bold',
-                }
+                    fontWeight: 'bold'
+                },
             },
             tooltip: {
                 trigger: 'axis',

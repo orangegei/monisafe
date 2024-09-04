@@ -16,7 +16,9 @@
     "echarts": "^5.5.1",
     "echarts-gl": "^2.0.9",
     "element-plus": "^2.8.1",
-    "vue-router": "^4.3.3"
+    "print-js": "^1.6.0",
+    "vue-router": "^4.3.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",

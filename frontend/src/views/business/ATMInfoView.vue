@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import instance  from '@/utils/request'
+import instance from '@/utils/request';
+import { ElMessage } from 'element-plus';
+import { ElButton } from 'element-plus';
+import { useRouter } from 'vue-router';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -34,18 +37,14 @@ function formatDate(date: Date): string {
 
 // 发送日期范围到后端
 function sendDateRangeToBackend() {
-    
     const params = {
         startDate: formatDate(dateRange.value[0]),
         endDate: formatDate(dateRange.value[1]),
     };
 
-    return axios.get('/business/atm/range', { params });
+    return instance.get('/business/atm/range', { params });
 }
 
-// 柱状图数据
-const barData = ref([120, 60, 150, 100]);
-const categories = ref(['A', 'B', 'C', 'D']);
 
 // 发送柱状图数据到后端
 function sendBarDataToBackend() {
@@ -54,12 +53,12 @@ function sendBarDataToBackend() {
         categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
     };
 
-    return axios.get('/business/atm/range', { params });
+    return instance.get('/business/atm/range', { params });
 }
 
 // 并行发送请求
 function sendAllDataToBackend() {
-    axios.all([sendDateRangeToBackend(), sendBarDataToBackend()])
+    return axios.all([sendDateRangeToBackend(), sendBarDataToBackend()])
         .then(axios.spread((dateRangeResponse, barDataResponse) => {
             console.log('Date Range Response:', dateRangeResponse.data);
             console.log('Bar Data Response:', barDataResponse.data);
@@ -69,15 +68,58 @@ function sendAllDataToBackend() {
         });
 }
 
+const router = useRouter();
+const businessType = ref<string>('ATM'); 
+// 当用户在业务类型选择器中选择新的业务类型时，该函数将被调用
+function handleTypeChange(type: string) {
+    businessType.value = type;
+}
+
+// 验证日期和业务类型是否已选择
+function validateSelections() {
+    if (!dateRange.value || !businessType.value) {
+        ElMessage.error('日期或业务内容不能为空');
+        return false;
+    }
+    return true;
+}
+
+// 点击确认按钮时的处理方法
+function handleConfirmClick() {
+    if (!validateSelections()) {
+        return;
+    }
+    console.log('Selected business type:', businessType.value); // 添加调试信息
+
+    sendAllDataToBackend().then(() => {
+        if (businessType.value === 'ATM') {
+            // 留在原页面
+            ElMessage.success('已加载ATM数据');
+        } else if (businessType.value === '外汇') {
+            // 跳转到外汇页面
+            router.push('/business/chart/forex');
+        }
+    }).catch(error => {
+        ElMessage.error('发送数据时出错');
+        console.error('Error sending data:', error);
+    });
+}
+
+
+
+
+// 组件挂载后初始化数据
 onMounted(() => {
     sendAllDataToBackend();
 });
 
-// 折线图数据
+
+// 图表数据
+const barData = ref([120, 60, 150, 100]);
+const categories = ref(['A', 'B', 'C', 'D']);
+
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-
-// 饼状图数据
 const pieData = ref([
     { value: 1048, name: 'Search Engine' },
     { value: 735, name: 'Direct' },
@@ -85,8 +127,6 @@ const pieData = ref([
     { value: 484, name: 'Union Ads' },
     { value: 300, name: 'Video Ads' },
 ]);
-
-// 环形图数据
 const doughnutChartData = ref([
     { value: 1048, name: 'Search Engine' },
     { value: 735, name: 'Direct' },
@@ -94,8 +134,6 @@ const doughnutChartData = ref([
     { value: 484, name: 'Union Ads' },
     { value: 300, name: 'Video Ads' }
 ]);
-
-//时间线数据
 const timelineItems  = ref([
   { text: '事件1', color: '#DDE8F2' },
   { text: '事件2', color: '#ebe5e5' },
@@ -115,8 +153,9 @@ const timelineItems  = ref([
                         <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
                     </div>
                     <div class="type-selector">
-                        <SelectIcon></SelectIcon>
+                        <SelectIcon v-model="businessType" @update:internalValue="handleTypeChange" />
                     </div>
+                    <ElButton type="primary" class="confirm-button" @click="handleConfirmClick">确认</ElButton>
                 </div>
 
                 <div class="display">
@@ -127,21 +166,21 @@ const timelineItems  = ref([
                     <div class="chart-section">
                         <div class="chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄占比"></PieChart>
+                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
                             </div>
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="Custom Bar Chart Title"  />
+                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数"  />
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="doughnutChartData" title="各阶段占比" ></DoughnutChart>
+                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比" ></DoughnutChart>
                             </div>
                         </div>
-                        <div class="chart-row2">
+                        <div class="chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="各年龄占比"/>
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势"/>
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="各阶段占比"/>
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易笔数趋势"/>
                             </div>
                         </div>
                     </div>
@@ -168,6 +207,10 @@ const timelineItems  = ref([
     gap: 5%;
 }
 
+.confirm-button {
+    border-radius: 10px;
+}
+
 .display {
     width: 100%;
     height: 100%;
@@ -192,13 +235,6 @@ const timelineItems  = ref([
 }
 
 .chart-row {
-    height: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.chart-row2 {
     height: 50%;
     width: 100%;
     display: flex;
@@ -241,5 +277,4 @@ const timelineItems  = ref([
     border-radius: 15px;
     /* background-color: rgba(211, 207, 207, 0.642); */
 }
-
 </style>

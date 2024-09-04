@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import instance from '@/utils/request'
 import GaugeChart from '@/components/GaugeChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import FrameView from '@/views/FrameView.vue';
@@ -36,16 +37,23 @@ const getAlertIcon = (message) => {
 // 获取ATM数据的函数
 const fetchAtmData = async () => {
     try {
-        const response = await axios.get('/moniter/atm', {
-            params: { time: new Date().toISOString() }
+        const response = await instance.get('/moniter/atm', {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
         });
         if (response.data.code === 0) {
             const data = response.data.data;
             atmGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
             atmLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
             xAxisData.value = data.map(item => item.time); // 更新X轴数据
-            atmAmount.value = data[9].totalAmount; // 更新交易金额
-            atmCount.value = data[9].totalCount; // 更新交易笔数
+            atmAmount.value = data[9].transactionAmount; // 更新交易金额
+            atmCount.value = data[9].transactionCount; // 更新交易笔数
+
+            xAxisData.value = data.map(item => {
+                const date = new Date(item.transactionTime);
+                return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }); // 更新x轴数据
         }
     } catch (error) {
         console.error('Failed to fetch ATM data', error);
@@ -55,16 +63,18 @@ const fetchAtmData = async () => {
 // 获取Forex数据的函数
 const fetchForexData = async () => {
     try {
-        const response = await axios.get('/moniter/forex', {
-            params: { time: new Date().toISOString() }
+        const response = await instance.get('/moniter/forex', {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
         });
         if (response.data.code === 0) {
             const data = response.data.data;
             forexGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
             forexLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
-            xAxisData.value = data.map(item => item.time); // 更新X轴数据
-            forexAmount.value = data[9].totalAmount; // 更新交易金额
-            forexCount.value = data[9].totalCount; // 更新交易笔数
+            // xAxisData.value = data.map(item => item.time);
+            forexAmount.value = data[9].transactionAmount; // 更新交易金额
+            forexCount.value = data[9].transactionCount; // 更新交易笔数
         }
     } catch (error) {
         console.error('Failed to fetch Forex data', error);
@@ -74,7 +84,7 @@ const fetchForexData = async () => {
 // 获取告警数据的函数
 const fetchAlerts = async () => {
     try {
-        const response = await axios.get('/moniter/logs', {
+        const response = await instance.get('/moniter/logs', {
             params: { time: new Date().toISOString() }
         });
         if (response.data.code === 0) {
