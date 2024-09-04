@@ -152,7 +152,8 @@ body {
     justify-content: space-between;
     padding: 0;
     transition: width 0.3s ease;
-    /* background-color: #f9fbfd; */
+    /* background-color: #85aede; */
+    border-radius: 15px;
 }
 
 .content {

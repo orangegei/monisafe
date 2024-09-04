@@ -95,7 +95,7 @@ function handleConfirmClick() {
         if (businessType.value === 'ATM') {
             // 留在原页面
             ElMessage.success('已加载ATM数据');
-        } else if (businessType.value === '外汇') {
+        } else if (businessType.value === 'forex') {
             // 跳转到外汇页面
             router.push('/business/chart/forex');
         }
