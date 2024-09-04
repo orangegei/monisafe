@@ -11,7 +11,11 @@ const props = defineProps({
     xAxisData: {
         type: Array,
         required: true,
-    }
+    },
+    title: {
+        type: String,
+        default: 'Chart'
+    },
 });
 
 // 定义一个 ref，用于指向 DOM 元素
@@ -25,10 +29,12 @@ onMounted(() => {
     const setChartOption = () => {
         const option = {
             title: {
-                text: props.showTitle ? 'ECharts 折线图示例' : '',
+                text: props.title,
+                left: 'center',
                 textStyle: {
                     color: '#333333', // 标题颜色
-                    fontWeight: 'normal'
+                    fontSize: 18,
+                    fontWeight: 'bold',
                 }
             },
             tooltip: {

@@ -100,8 +100,8 @@ const timelineItems  = ref([
   { text: '事件1', color: '#DDE8F2' },
   { text: '事件2', color: '#ebe5e5' },
   { text: '事件3', color: '#cdeded' },
-  { text: '事件4' },
-  { text: '事件5' },
+  { text: '事件4', color: '#e0f4fe' },
+  { text: '事件5', color: '#e0f4fe' },
 ]);
 
 </script>
@@ -138,10 +138,10 @@ const timelineItems  = ref([
                         </div>
                         <div class="chart-row2">
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="各年龄占比"/>
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="各阶段占比"/>
                             </div>
                         </div>
                     </div>
@@ -188,6 +188,7 @@ const timelineItems  = ref([
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap:7%;
 }
 
 .chart-row {
