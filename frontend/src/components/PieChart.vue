@@ -45,7 +45,7 @@ onMounted(() => {
             {
                 name: 'Access Source',
                 type: 'pie',
-                radius: ['0%', '40%'], // 增大饼图的尺寸
+                radius: ['0%', '50%'], // 增大饼图的尺寸
                 center: ['50%', '50%'], // 确保饼图居中显示
                 avoidLabelOverlap: false,
                 label: {

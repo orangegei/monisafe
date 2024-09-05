@@ -45,17 +45,6 @@ function sendDateRangeToBackend() {
     return instance.get('/business/atm/range', { params });
 }
 
-
-// 发送柱状图数据到后端
-// function sendBarDataToBackend() {
-//     const params = {
-//         barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
-//         categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
-//     };
-
-//     return instance.get('/business/atm/range', { params });
-// }
-
 // 并行发送请求
 function sendAllDataToBackend() {
     return axios.all([sendDateRangeToBackend()])
@@ -105,9 +94,6 @@ function handleConfirmClick() {
     });
 }
 
-
-
-
 // 组件挂载后初始化数据
 onMounted(() => {
     sendAllDataToBackend();
@@ -115,8 +101,8 @@ onMounted(() => {
 
 
 // 图表数据
-const barData = ref([120, 60, 150, 100]);
-const categories = ref(['A', 'B', 'C', 'D']);
+const barData = ref([120, 60, 150,80, 100,130,110,50,70]);
+const categories = ref(['A', 'B', 'C', 'D','E','F','G','H','i']);
 
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
@@ -135,11 +121,11 @@ const doughnutChartData = ref([
     { value: 300, name: 'Video Ads' }
 ]);
 const timelineItems  = ref([
-  { text: '事件1', color: '#DDE8F2' },
-  { text: '事件2', color: '#ebe5e5' },
-  { text: '事件3', color: '#cdeded' },
-  { text: '事件4', color: '#e0f4fe' },
-  { text: '事件5', color: '#e0f4fe' },
+  { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+  { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+  { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+  { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+  { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
 ]);
 
 </script>
@@ -165,16 +151,20 @@ const timelineItems  = ref([
 
                     <div class="chart-section">
                         <div class="chart-row">
-                            <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
-                            </div>
                             <div class="bar-chart">
                                 <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数"  />
+                            </div>
+                        </div>
+
+                        <div class="chart-row">
+                            <div class="pie-chart">
+                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
                             </div>
                             <div class="doughnut-chart">
                                 <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比" ></DoughnutChart>
                             </div>
                         </div>
+
                         <div class="chart-row">
                             <div class="line-chart">
                                 <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势"/>
@@ -222,27 +212,38 @@ const timelineItems  = ref([
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
 }
 
 .chart-section {
     width: 65%;
-    height: 100%;
+    height: 150%;
     display: flex;
     flex-direction: column;
-    gap:7%;
+    gap:5%;
 }
 
 .chart-row {
-    height: 50%;
+    height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
+.bar-chart {
+    flex:1;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 15px;
+    background-color: #ebe5e5;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .pie-chart{
-    flex: 7;
+    /* flex: 1; */
+    width: 47%;
     height: 100%;
     box-sizing: border-box;
     border-radius: 15px;
@@ -250,18 +251,9 @@ const timelineItems  = ref([
     padding-top:3%;
 }
 
-.bar-chart {
-    flex: 6;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 15px;
-    background-color: #ebe5e5;
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
 .doughnut-chart{
-    flex: 7;
+    /* flex: 1; */
+    width: 47%;
     height: 100%;
     box-sizing: border-box;
     border-radius: 15px;
