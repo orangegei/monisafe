@@ -37,12 +37,10 @@ function formatDate(date: Date): string {
 
 // 发送日期范围到后端
 function sendDateRangeToBackend() {
-    
     const params = {
         startDate: formatDate(dateRange.value[0]),
         endDate: formatDate(dateRange.value[1]),
     };
-
     return instance.get('/business/forex/range', { params });
 }
 

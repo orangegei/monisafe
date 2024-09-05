@@ -5,6 +5,8 @@ import instance from '@/utils/request'
 import GaugeChart from '@/components/GaugeChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import FrameView from '@/views/FrameView.vue';
+import severeIcon from '@/assets/severe.svg';
+import warningIcon from '@/assets/warning.svg';
 
 // 实时数据状态
 const atmGaugeValue = ref(0);
@@ -18,26 +20,22 @@ const forexCount = ref(0);
 const xAxisData = ref([]);
 
 // 告警数据
-const alerts = ref([]);
+// const alerts = ref([]);
+const alerts = ref([
+    { time: '09:01:20', message: 'ATM响应时间过长', status: 'severe' },
+    { time: '09:01:30', message: '外汇交易金额异常', status: 'warning' },
+    { time: '09:01:49', message: 'ATM正常运行', status: 'severe' },
+]);
 
 const atmLineChartData = ref([]);
 const forexLineChartData = ref([]);
 
-// 获取告警图标
-const getAlertIcon = (message) => {
-    if (message.includes('响应时间过长')) {
-        return '❌'; // 叉图标
-    } else if (message.includes('金额异常')) {
-        return '❗'; // 感叹号图标
-    } else {
-        return '✔'; // 钩图标
-    }
-};
+
 
 // 获取ATM数据的函数
 const fetchAtmData = async () => {
     try {
-        const response = await instance.get('/moniter/atm', {
+        const response = await instance.get('/monitor/atm', {
             headers: {
                 Authorization: sessionStorage.getItem('token')
             }
@@ -63,7 +61,7 @@ const fetchAtmData = async () => {
 // 获取Forex数据的函数
 const fetchForexData = async () => {
     try {
-        const response = await instance.get('/moniter/forex', {
+        const response = await instance.get('/monitor/forex', {
             headers: {
                 Authorization: sessionStorage.getItem('token')
             }
@@ -84,7 +82,7 @@ const fetchForexData = async () => {
 // 获取告警数据的函数
 const fetchAlerts = async () => {
     try {
-        const response = await instance.get('/moniter/logs', {
+        const response = await instance.get('/monitor/logs', {
             params: { time: new Date().toISOString() }
         });
         if (response.data.code === 0) {
@@ -99,11 +97,11 @@ const fetchAlerts = async () => {
 onMounted(() => {
     fetchAtmData();
     fetchForexData();
-    fetchAlerts();
+    // fetchAlerts();
     setInterval(() => {
         fetchAtmData();
         fetchForexData();
-        fetchAlerts();
+        // fetchAlerts();
     }, 60000); // 每分钟请求一次
 });
 </script>
@@ -194,19 +192,17 @@ onMounted(() => {
                     <el-card class="chart-card alert-card" shadow="hover">
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe>
-                            <el-table-column prop="time" label="时间" width="65" />
-                            <el-table-column prop="message" label="告警内容" width="140" class="alerts-label" />
-                            <el-table-column label=" " width="50">
-                                <template #default="{ row }">
-                                    <div class="alert-icon">
-                                        <i v-if="getAlertIcon(row.message) === '✔'" class="el-icon-check"></i>
-                                        <i v-if="getAlertIcon(row.message) === '❗'" class="el-icon-warning"></i>                                            <i v-if="getAlertIcon(row.message) === '❌'" class="el-icon-close"></i>
-                                    </div>
+                            <el-table-column prop="time" label="时间" width="90" />
+                            <el-table-column prop="message" label="告警内容" width="150" class-name="alerts-label" />
+                            <el-table-column label="状态" width="55">
+                                <template #default="scope">
+                                    <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警" class="alert-icon" />
+                                    <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告" class="alert-icon" />
                                 </template>
                             </el-table-column>
                         </el-table>
                     </el-card>
-                </div>
+                </div>a
             </div>
         </template>
     </FrameView>
@@ -324,7 +320,7 @@ onMounted(() => {
     text-align: center;
 }
 
-.center-align .cell {
+.alerts-label .cell {
     text-align: center;
 }
 
@@ -333,18 +329,9 @@ onMounted(() => {
 }
 
 .alert-icon {
-    text-align: center;
-}
-
-.el-icon-check {
-    color: green;
-}
-
-.el-icon-warning {
-    color: orange;
-}
-
-.el-icon-close {
-    color: red;
+    width: 24px;
+    height: 24px;
+    display: block;
+    margin: 0 auto;
 }
 </style>
