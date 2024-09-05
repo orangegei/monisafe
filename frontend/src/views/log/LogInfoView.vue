@@ -102,9 +102,9 @@ const exportToPDF = () => {
                         <span style="white-space: nowrap;">交易日志记录</span>
                         <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
                         <div class="function-buttons">
-                            <el-button style="margin-right: 10px; background-color: #109968; color: white;"
+                            <el-button style="background-color: #109968; color: white;"
                                 @click="exportToExcel">导出为 Excel</el-button>
-                            <el-button style="margin-right: 10px; background-color: #DF4023; color: white;"
+                            <el-button style="background-color: #DF4023; color: white;"
                                 @click="exportToPDF">导出为 PDF</el-button>
                             <el-button style="background-color: #3B64FC; color: white;"
                                 @click="clearLogs">清空日志</el-button>
