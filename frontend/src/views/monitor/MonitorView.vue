@@ -37,7 +37,7 @@ const getAlertIcon = (message) => {
 // 获取ATM数据的函数
 const fetchAtmData = async () => {
     try {
-        const response = await instance.get('/moniter/atm', {
+        const response = await instance.get('/monitor/atm', {
             headers: {
                 Authorization: sessionStorage.getItem('token')
             }
@@ -63,7 +63,7 @@ const fetchAtmData = async () => {
 // 获取Forex数据的函数
 const fetchForexData = async () => {
     try {
-        const response = await instance.get('/moniter/forex', {
+        const response = await instance.get('/monitor/forex', {
             headers: {
                 Authorization: sessionStorage.getItem('token')
             }
@@ -84,7 +84,7 @@ const fetchForexData = async () => {
 // 获取告警数据的函数
 const fetchAlerts = async () => {
     try {
-        const response = await instance.get('/moniter/logs', {
+        const response = await instance.get('/monitor/logs', {
             params: { time: new Date().toISOString() }
         });
         if (response.data.code === 0) {
