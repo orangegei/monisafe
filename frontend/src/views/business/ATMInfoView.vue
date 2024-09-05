@@ -30,32 +30,119 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// 将日期转换为字符串并进行URL编码
-function formatDate(date: Date): string {
-    return encodeURIComponent(date.toISOString());
+// 将日期转换为字符串
+const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0]; // 只保留日期部分
+};
+
+const ATM_bar_xdata = ref([]);
+const ATM_bar_ydata = ref([]);
+
+function handleATMChartData(chartData) {
+    ATM_bar_xdata.value = chartData.xdata;
+    ATM_bar_ydata.value = chartData.ydata;
 }
 
-// 发送日期范围到后端
-function sendDateRangeToBackend() {
-    const params = {
-        startDate: formatDate(dateRange.value[0]),
-        endDate: formatDate(dateRange.value[1]),
+
+const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
+const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+
+const ATM_pieData = ref([]);
+
+
+// 将 ChartData 转换为 pieData 格式
+function ATM_transformChartDataToPieData(chartData) {
+  const transformedData = chartData.xdata.map((name, index) => {
+    return {
+      name: name,
+      value: chartData.ydata[index]
     };
-
-    return instance.get('/business/atm/range', { params });
+  });
+  ATM_pieData.value = transformedData;
+//   console.log(ATM_pieData.value);
 }
 
-// 并行发送请求
-function sendAllDataToBackend() {
-    return axios.all([sendDateRangeToBackend()])
-        .then(axios.spread((dateRangeResponse, barDataResponse) => {
-            console.log('Date Range Response:', dateRangeResponse.data);
-            console.log('Bar Data Response:', barDataResponse.data);
-        }))
-        .catch(error => {
-            console.error('Error sending data:', error);
+const ATM_doughnutChartData = ref([]);
+
+
+function ATM_transformChartDataTodChartData(chartData) {
+  const transformedData = chartData.xdata.map((name, index) => {
+    return {
+      name: name,
+      value: chartData.ydata[index]
+    };
+  });
+  ATM_doughnutChartData.value = transformedData;
+//   console.log(ATM_doughnutChartData.value);
+}
+
+// 获取ATM data的函数
+const getAllData = async () => {
+    try {
+        const params = {
+            startTime: formatDate(dateRange.value[0]),
+            endTime: formatDate(dateRange.value[1]),
+        };
+
+        const requests = [
+            // ATM
+            instance.get('/business/atm/age/amount', {
+                params,
+                headers: {
+                    Authorization: sessionStorage.getItem('token')
+                }
+            }),
+            instance.get('/business/atm/age/count', {
+                params,
+                headers: {
+                    Authorization: sessionStorage.getItem('token')
+                }
+            }),
+            instance.get('/business/atm/range', {
+                params,
+                headers: {
+                    Authorization: sessionStorage.getItem('token')
+                }
+            }),
+
+            
+        ];
+
+        // 使用 Promise.all 并行发送请求
+        const responses = await Promise.all(requests);
+
+
+        // 遍历响应并调用相应的处理函数
+        responses.forEach((response, index) => {
+            if (response.data.code === 0) {
+                const data = response.data.data;
+                // console.log(data);
+                switch (index) {
+                    case 0:
+                        ATM_transformChartDataToPieData(data);
+                        break;
+                    case 1:
+                        ATM_transformChartDataTodChartData(data);
+                        break;
+                    case 2:
+                        handleATMChartData(data);
+                        break;
+
+
+                    default:
+                        console.log('Unknown response');
+                }
+            } else {
+                console.error('Error in response:', response.message);
+            }
         });
-}
+
+
+    } catch (error) {
+        console.error('Failed to fetch forex data', error);
+    }
+};
+
 
 const router = useRouter();
 const businessType = ref<string>('ATM'); 
@@ -80,7 +167,7 @@ function handleConfirmClick() {
     }
     console.log('Selected business type:', businessType.value); // 添加调试信息
 
-    sendAllDataToBackend().then(() => {
+    getAllData().then(() => {
         if (businessType.value === 'atm') {
             // 留在原页面
             // ElMessage.success('已加载ATM数据');
@@ -96,30 +183,30 @@ function handleConfirmClick() {
 
 // 组件挂载后初始化数据
 onMounted(() => {
-    sendAllDataToBackend();
+    getAllData();
 });
 
 
 // 图表数据
-const barData = ref([120, 60, 150,80, 100,130,110,50,70]);
-const categories = ref(['A', 'B', 'C', 'D','E','F','G','H','i']);
+// const barData = ref([120, 60, 150,80, 100,130,110,50]);
+// const categories = ref(['A', 'B', 'C', 'D','E','F','G','H']);
 
-const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-const pieData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' },
-]);
-const doughnutChartData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' }
-]);
+// const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
+// const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+// const pieData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' },
+// ]);
+// const doughnutChartData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' }
+// ]);
 const timelineItems  = ref([
   { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
   { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
@@ -152,16 +239,16 @@ const timelineItems  = ref([
                     <div class="chart-section">
                         <div class="chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数"  />
+                                <BarChart :chartData="ATM_bar_ydata" :xAxisData="ATM_bar_xdata" title="ATM交易金额对应笔数"  />
                             </div>
                         </div>
 
                         <div class="chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
+                                <PieChart :chartData="ATM_pieData" title="各年龄ATM总交易金额占比"></PieChart>
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比" ></DoughnutChart>
+                                <DoughnutChart :chartData="ATM_doughnutChartData" title="各年龄段ATM总交易笔数占比" ></DoughnutChart>
                             </div>
                         </div>
 
@@ -203,7 +290,7 @@ const timelineItems  = ref([
 
 .display {
     width: 100%;
-    height: 100%;
+    height: 105%;
     display: flex;
 }
 
@@ -237,8 +324,8 @@ const timelineItems  = ref([
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #ebe5e5;
-    margin-left: 10px;
-    margin-right: 10px;
+    /* margin-left: 10px;
+    margin-right: 10px; */
 }
 
 .pie-chart{
@@ -258,7 +345,6 @@ const timelineItems  = ref([
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #cdeded;
-    margin-right: 15px;
     padding-top:3%;
 }
 

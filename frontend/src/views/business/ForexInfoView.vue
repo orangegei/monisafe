@@ -47,8 +47,8 @@ function sendDateRangeToBackend() {
 }
 
 // 柱状图数据
-const barData = ref([120, 60, 150,80, 100,130,110,50,70]);
-const categories = ref(['A', 'B', 'C', 'D','E','F','G','H','i']);
+const barData = ref([120, 60, 150,80, 100,130,110,50]);
+const categories = ref(['A', 'B', 'C', 'D','E','F','G','H']);
 
 // 并行发送请求
 function sendAllDataToBackend() {
@@ -132,10 +132,10 @@ const timelineItems  = ref([
   { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
   { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
   { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-  { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-  { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
   { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
   { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
+  { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+  { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
 ]);
 
 </script>
@@ -174,19 +174,19 @@ const timelineItems  = ref([
                             </div>
                         </div>
                         <div class="chart-row">
-                            <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易金额趋势"/>
-                            </div>
-                            <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易笔数趋势"/>
-                            </div>
-                        </div>
-                        <div class="chart-row">
                             <div class="doughnut-chart2">
                                 <DoughnutChart :chartData="doughnutChartData" title="外汇换汇目的比例" ></DoughnutChart>
                             </div>
                             <div class="pie-chart2">
                                 <PieChart :chartData="pieData" title="外汇换汇货币种类比例"></PieChart>
+                            </div>
+                        </div>
+                        <div class="chart-row">
+                            <div class="line-chart">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易金额趋势"/>
+                            </div>
+                            <div class="line-chart">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易笔数趋势"/>
                             </div>
                         </div>
                     </div>
@@ -219,7 +219,7 @@ const timelineItems  = ref([
 
 .display {
     width: 100%;
-    height: 100%;
+    height: 93%;
     display: flex;
 }
 
@@ -236,7 +236,7 @@ const timelineItems  = ref([
     height: 150%;
     display: flex;
     flex-direction: column;
-    gap:3%;
+    gap: 3%;
 }
 
 .chart-row {
@@ -252,8 +252,8 @@ const timelineItems  = ref([
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #ebe5e5;
-    margin-left: 10px;
-    margin-right: 10px;
+    /* margin-left: 10px;
+    margin-right: 10px; */
 }
 
 .pie-chart{
@@ -273,7 +273,6 @@ const timelineItems  = ref([
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #cdeded;
-    margin-right: 15px;
     padding-top:3%;
 }
 
@@ -286,24 +285,20 @@ const timelineItems  = ref([
 }
 
 .pie-chart2{
-    flex: 7;
+    width: 47%;
     height: 100%;
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #f5f8e8;
-    margin-right: 5%;
-    margin-right: 5%;
     padding-top:3%;
 }
 
 .doughnut-chart2{
-    flex: 7;
+    width:47%;
     height: 100%;
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #f8f1f7;
-    margin-left: 5%;
-    margin-right: 5%;
     padding-top:3%;
 }
 

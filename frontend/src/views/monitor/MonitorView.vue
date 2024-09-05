@@ -195,7 +195,7 @@ onMounted(() => {
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe>
                             <el-table-column prop="time" label="时间" width="65" />
-                            <el-table-column prop="message" label="告警内容" width="140" class-name="center-align" />
+                            <el-table-column prop="message" label="告警内容" width="140" class="alerts-label" />
                             <el-table-column label=" " width="50">
                                 <template #default="{ row }">
                                     <div class="alert-icon">
@@ -320,6 +320,9 @@ onMounted(() => {
     width: 100%;
 }
 
+.alerts-label {
+    text-align: center;
+}
 
 .center-align .cell {
     text-align: center;

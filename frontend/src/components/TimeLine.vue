@@ -33,14 +33,12 @@ function isLeft(index) {
 .time-line {
     position: relative;
     width: 100%;
-    /* padding: 20px 0; */
-    /* margin-top: 30%; */
 }
 
 .time-line-item {
     position: relative;
     margin-right: 25%;
-    margin-bottom: 60%;
+    margin-bottom: 65%;
 }
 
 .time-line-content {

@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+<script setup>
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import * as echarts from 'echarts';
 
 // 接收父组件传递的 props
