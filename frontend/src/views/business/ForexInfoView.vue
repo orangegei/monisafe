@@ -4,6 +4,7 @@ import axios from 'axios';
 import instance from '@/utils/request'
 import { ElMessage } from 'element-plus';
 import { ElButton } from 'element-plus'; 
+import { useRouter } from 'vue-router';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -42,7 +43,7 @@ function sendDateRangeToBackend() {
         endDate: formatDate(dateRange.value[1]),
     };
 
-    return axios.get('/business/forex/range', { params });
+    return instance.get('/business/forex/range', { params });
 }
 
 // 柱状图数据
@@ -50,18 +51,18 @@ const barData = ref([120, 60, 150, 100]);
 const categories = ref(['A', 'B', 'C', 'D']);
 
 // 发送柱状图数据到后端
-function sendBarDataToBackend() {
-    const params = {
-        barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
-        categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
-    };
+// function sendBarDataToBackend() {
+//     const params = {
+//         barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
+//         categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
+//     };
 
-    return axios.get('/business/forex/range', { params });
-}
+//     return instance.get('/business/forex/range', { params });
+// }
 
 // 并行发送请求
 function sendAllDataToBackend() {
-    axios.all([sendDateRangeToBackend(), sendBarDataToBackend()])
+    return axios.all([sendDateRangeToBackend()])
         .then(axios.spread((dateRangeResponse, barDataResponse) => {
             console.log('Date Range Response:', dateRangeResponse.data);
             console.log('Bar Data Response:', barDataResponse.data);
@@ -71,10 +72,45 @@ function sendAllDataToBackend() {
         });
 }
 
+
+const router = useRouter();
+const businessType = ref<string>('forex'); 
+// 当用户在业务类型选择器中选择新的业务类型时，该函数将被调用
+function handleTypeChange(type: string) {
+    businessType.value = type;
+}
+
+// 验证日期和业务类型是否已选择
+function validateSelections() {
+    if (!dateRange.value || !businessType.value) {
+        ElMessage.error('日期或业务内容不能为空');
+        return false;
+    }
+    return true;
+}
+
 // 点击确认按钮时的处理方法
 function handleConfirmClick() {
-    sendAllDataToBackend();
+    if (!validateSelections()) {
+        return;
+    }
+    console.log('Selected business type:', businessType.value); // 添加调试信息
+
+    sendAllDataToBackend().then(() => {
+        if (businessType.value === 'forex') {
+            // 留在原页面
+            // ElMessage.success('已加载外汇数据');
+        } else if (businessType.value === 'atm') {
+            // 跳转到ATM页面
+            router.push('/business/chart/atm');
+        }
+    }).catch(error => {
+        ElMessage.error('发送数据时出错');
+        console.error('Error sending data:', error);
+    });
 }
+
+
 
 onMounted(() => {
     sendAllDataToBackend();
@@ -121,10 +157,10 @@ const timelineItems  = ref([
             <div class="container">
                 <div class="picker">
                     <div class="date-picker-wrapper">
-                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
+                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange" :disabled-date="disableFutureDates" ></DatePicker>
                     </div>
                     <div class="type-selector">
-                        <SelectIcon></SelectIcon>
+                        <SelectIcon v-model="businessType" @update:internalValue="handleTypeChange" />
                     </div>
                     <ElButton type="primary" class="confirm-button" @click="handleConfirmClick">确认</ElButton>
                 </div>
@@ -199,7 +235,7 @@ const timelineItems  = ref([
 }
 
 .time-line {
-    width: 25%;
+    width: 35%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -207,7 +243,7 @@ const timelineItems  = ref([
 }
 
 .chart-section {
-    width: 75%;
+    width: 65%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -226,7 +262,7 @@ const timelineItems  = ref([
     flex: 7;
     height: 100%;
     box-sizing: border-box;
-    border-radius: 15px;
+    border-radius: 15px; 
     background-color: #DDE8F2;
     padding-top:3%;
 }

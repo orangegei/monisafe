@@ -33,7 +33,7 @@ onMounted(() => {
                 left: 'center',
                 textStyle: {
                     color: '#333333', // 标题颜色
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 'bold'
                 },
             },

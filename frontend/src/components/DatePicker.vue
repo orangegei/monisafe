@@ -16,14 +16,27 @@ const internalValue = ref<[Date, Date]>(props.time)
 watch(internalValue, (newValue) => {
     emit('update:internalValue', newValue)
 })
+
+// 禁用今天及以后的日期
+function disableFutureDates(date: Date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 确保时间部分为 00:00:00
+    return date > today;
+}
 </script>
 
 <template>
     <div class="date-picker">
         <div class="block">
-            <el-date-picker v-model="internalValue" type="daterange" start-placeholder="Start date"
-                end-placeholder="End date" :default-time="time"
-                style="width: 300px; height: 40px; border-radius: 30px;" />
+            <el-date-picker 
+                v-model="internalValue" a
+                type="daterange" 
+                start-placeholder="Start date"
+                end-placeholder="End date" 
+                :default-time="time"
+                :disabled-date="disableFutureDates"
+                style="width: 300px; height: 40px; border-radius: 30px;" 
+            />
         </div>
     </div>
 </template>

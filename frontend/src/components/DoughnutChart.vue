@@ -29,7 +29,7 @@ onMounted(() => {
                 left: 'center',
                 textStyle: {
                     color: '#333333',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 'bold'
                 }
             },
@@ -48,7 +48,7 @@ onMounted(() => {
                 {
                     name: 'Data',
                     type: 'pie',
-                    radius: ['20%', '45%'], // 调整内外半径使其更占空间
+                    radius: ['15%', '40%'], // 调整内外半径使其更占空间
                     center: ['50%', '50%'], // 确保饼图居中
                     avoidLabelOverlap: false,
                     label: {
@@ -61,7 +61,7 @@ onMounted(() => {
                 },
                 labelLine: {
                     show: true, // 显示引线
-                    length: 15, // 引线第一段长度
+                    length: 10, // 引线第一段长度
                     length2: 10, // 引线第二段长度
                     smooth: true, // 引线圆滑处理
                     lineStyle: {
@@ -73,7 +73,7 @@ onMounted(() => {
                         ...item,
                         itemStyle: {
                             color: ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1'][index % 5], // 使用简约风格的配色
-                            borderRadius: 8,
+                            borderRadius: 6,
                             borderColor: '#ffffff',
                             borderWidth: 1
                         }

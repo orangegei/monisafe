@@ -6,10 +6,14 @@ import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
 import DataTable from '@/components/DataTable.vue';
 
-// 日期范围
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(today.getDate() - 1);
+
+// 日期范围（默认展示昨天一天的数据）
 const dateRange = ref<[Date, Date]>([
-    new Date(2024, 8, 1),
-    new Date(2024, 8, 2),
+    yesterday,
+    today,
 ]);
 
 function handleDateChange(newRange: [Date, Date]) {
@@ -152,7 +156,7 @@ const tableData = ref<Record[]>([
 }
 
 .display {
-    width: 35%;
+    width: 40%;
     height: 100%;
     display: flex;
     flex-direction: column;

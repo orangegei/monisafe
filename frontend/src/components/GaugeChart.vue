@@ -61,7 +61,7 @@ onMounted(() => {
                         valueAnimation: true,
                         formatter: '{value} ms',
                         color: 'inherit',
-                        fontSize: 15,
+                        fontSize: 14,
                         offsetCenter: [0, '100%']
                     },
                     data: [

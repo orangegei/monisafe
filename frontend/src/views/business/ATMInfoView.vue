@@ -47,18 +47,18 @@ function sendDateRangeToBackend() {
 
 
 // 发送柱状图数据到后端
-function sendBarDataToBackend() {
-    const params = {
-        barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
-        categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
-    };
+// function sendBarDataToBackend() {
+//     const params = {
+//         barData: JSON.stringify(barData.value), // 转换为字符串进行URL编码
+//         categories: JSON.stringify(categories.value), // 转换为字符串进行URL编码
+//     };
 
-    return instance.get('/business/atm/range', { params });
-}
+//     return instance.get('/business/atm/range', { params });
+// }
 
 // 并行发送请求
 function sendAllDataToBackend() {
-    return axios.all([sendDateRangeToBackend(), sendBarDataToBackend()])
+    return axios.all([sendDateRangeToBackend()])
         .then(axios.spread((dateRangeResponse, barDataResponse) => {
             console.log('Date Range Response:', dateRangeResponse.data);
             console.log('Bar Data Response:', barDataResponse.data);
@@ -92,10 +92,10 @@ function handleConfirmClick() {
     console.log('Selected business type:', businessType.value); // 添加调试信息
 
     sendAllDataToBackend().then(() => {
-        if (businessType.value === 'ATM') {
+        if (businessType.value === 'atm') {
             // 留在原页面
-            ElMessage.success('已加载ATM数据');
-        } else if (businessType.value === '外汇') {
+            // ElMessage.success('已加载ATM数据');
+        } else if (businessType.value === 'forex') {
             // 跳转到外汇页面
             router.push('/business/chart/forex');
         }
@@ -150,7 +150,7 @@ const timelineItems  = ref([
             <div class="container">
                 <div class="picker">
                     <div class="date-picker-wrapper">
-                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
+                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange" :disabled-date="disableFutureDates" ></DatePicker>
                     </div>
                     <div class="type-selector">
                         <SelectIcon v-model="businessType" @update:internalValue="handleTypeChange" />
@@ -218,7 +218,7 @@ const timelineItems  = ref([
 }
 
 .time-line {
-    width: 25%;
+    width: 35%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -227,7 +227,7 @@ const timelineItems  = ref([
 }
 
 .chart-section {
-    width: 75%;
+    width: 65%;
     height: 100%;
     display: flex;
     flex-direction: column;

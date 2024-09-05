@@ -53,12 +53,12 @@ function isLeft(index) {
 }
 
 .time-line-content.left {
-  left: -210%;
+  left: -180%;
   text-align: left;
 }
 
 .time-line-content.right {
-  right: -70%;
+  right: -60%;
   text-align: right;
   margin-left: auto;
 }

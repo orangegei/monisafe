@@ -25,7 +25,7 @@ onMounted(() => {
             left: 'center',
             textStyle: {
                 color: '#333333', // 标题颜色
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: 'bold'
             }
             
@@ -45,7 +45,7 @@ onMounted(() => {
             {
                 name: 'Access Source',
                 type: 'pie',
-                radius: ['0%', '45%'], // 增大饼图的尺寸
+                radius: ['0%', '40%'], // 增大饼图的尺寸
                 center: ['50%', '50%'], // 确保饼图居中显示
                 avoidLabelOverlap: false,
                 label: {
@@ -58,7 +58,7 @@ onMounted(() => {
                 },
                 labelLine: {
                     show: true, // 显示引线
-                    length: 15, // 引线第一段长度
+                    length: 10, // 引线第一段长度
                     length2: 10, // 引线第二段长度
                     smooth: true, // 引线圆滑处理
                     lineStyle: {
@@ -68,7 +68,7 @@ onMounted(() => {
                 },
                 data: props.chartData,
                 itemStyle: {
-                    borderRadius: 8, // 让饼图的每个部分边缘圆润
+                    borderRadius: 6, // 让饼图的每个部分边缘圆润
                     borderColor: '#ffffff', // 设置分隔线颜色
                     borderWidth: 1 // 设置分隔线宽度
                 },

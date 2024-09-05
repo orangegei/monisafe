@@ -35,7 +35,7 @@ onMounted(() => {
                 top: '10%',
                 textStyle: {
                     color: '#333333', // 标题颜色
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 'bold'
                 }
             },
@@ -76,7 +76,7 @@ onMounted(() => {
                     name: 'Sales',
                     type: 'bar',
                     data: props.chartData,
-                    barWidth: '75%', // 控制柱状图的宽度
+                    barWidth: '70%', // 控制柱状图的宽度
                     itemStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: '#83bff6' },
