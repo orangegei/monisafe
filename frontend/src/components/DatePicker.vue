@@ -35,7 +35,7 @@ function disableFutureDates(date: Date) {
                 end-placeholder="End date" 
                 :default-time="time"
                 :disabled-date="disableFutureDates"
-                style="width: 300px; height: 40px; border-radius: 30px;" 
+                style="width: 260px; height: 40px; border-radius: 30px;" 
             />
         </div>
     </div>

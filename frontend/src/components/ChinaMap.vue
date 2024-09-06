@@ -22,7 +22,17 @@ onMounted(() => {
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
-                return `${params.name}<br/>数据值: ${params.value ? params.value : '无数据'}`;
+                const data = params.data;
+                console.log(params);
+                console.log("--------------");
+                console.log(data);
+                if (data) {
+                    return `${params.name}<br/>
+                            数据值1: ${data.value1}<br/>
+                            数据值2: ${data.value2}<br/>`;
+                } else {
+                    return `${params.name}<br/>无数据`;
+                }
             }
         },
         visualMap: {
@@ -51,7 +61,13 @@ onMounted(() => {
                         areaColor: '#ffcc00'
                     }
                 },
-                data: props.data // 使用传递的数据
+                // data: props.data // 使用传递的数据
+                data: props.data.map(item => ({
+                    name: item.name,
+                    value: item.value1,  // 使用 value1 来映射颜色
+                    value1: item.value1,
+                    value2: item.value2,
+                }))
             }
         ]
     };

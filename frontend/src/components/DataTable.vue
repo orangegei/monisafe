@@ -1,6 +1,6 @@
 <template>
     <el-table :data="props.tableData" :default-sort="{ prop: 'money', order: 'descending' }" style="width: 100%">
-        <el-table-column prop="city" label="城市" style="width: 30%;" />
+        <el-table-column prop="city" label="省份" style="width: 30%;" />
         <el-table-column prop="money" label="总交易金额" sortable style="width: 35%;" />
         <el-table-column prop="amount" label="总交易笔数" sortable :formatter="formatter" style="width: 35%;" />
     </el-table>

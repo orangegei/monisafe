@@ -15,7 +15,7 @@ const options = [
 </script>
 
 <template>
-    <el-select v-model="value" clearable placeholder="Select" style="width: 100px">
+    <el-select v-model="value" clearable placeholder="Select" style="width: 90px">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
 </template>

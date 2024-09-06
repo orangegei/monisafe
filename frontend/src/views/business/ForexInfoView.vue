@@ -19,11 +19,22 @@ const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(today.getDate() - 1);
 
+onMounted(() => {
+    const savedRange = sessionStorage.getItem('savedDateRange');
+    if (savedRange) {
+        const [start, end] = JSON.parse(savedRange);
+        dateRange.value = [new Date(start), new Date(end)];
+    }
+    // sendAllDataToBackend();
+});
+
 // 日期范围（默认展示昨天一天的数据）
 const dateRange = ref<[Date, Date]>([
     yesterday,
     today,
 ]);
+// const dateRange = ref<[Date, Date]>();
+
 
 // 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
 function handleDateChange(newRange: [Date, Date]) {
@@ -84,6 +95,9 @@ function handleConfirmClick() {
     }
     console.log('Selected business type:', businessType.value); // 添加调试信息
 
+    const [startDate, endDate] = dateRange.value;
+    sessionStorage.setItem('savedDateRange', JSON.stringify([formatDate(startDate), formatDate(endDate)]));
+
     sendAllDataToBackend().then(() => {
         if (businessType.value === 'forex') {
             // 留在原页面
@@ -99,10 +113,6 @@ function handleConfirmClick() {
 }
 
 
-
-onMounted(() => {
-    sendAllDataToBackend();
-});
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
