@@ -48,7 +48,7 @@ onMounted(() => {
                 {
                     name: 'Data',
                     type: 'pie',
-                    radius: ['20%', '50%'], // 调整内外半径使其更占空间
+                    radius: ['35%', '65%'], // 调整内外半径使其更占空间
                     center: ['50%', '50%'], // 确保饼图居中
                     avoidLabelOverlap: false,
                     label: {

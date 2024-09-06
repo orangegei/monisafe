@@ -12,7 +12,6 @@ import BarChart from '@/components/BarChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
-import TimeLine from '@/components/TimeLine.vue';
 
 // 获取当前时间的前一天
 const today = new Date();
@@ -242,25 +241,25 @@ const timelineItems = ref([
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top">
+                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top">
+                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top">
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top">
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -308,7 +307,7 @@ const timelineItems = ref([
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 3vh;
 }
 
 /* 选择器布局 */
@@ -316,9 +315,8 @@ const timelineItems = ref([
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
     margin-bottom: 10px;
-    gap: 20px;
+    gap: 3vw;
 }
 
 .confirm-button {
@@ -328,17 +326,15 @@ const timelineItems = ref([
 /* 时间线和图表的布局 */
 .display {
     display: flex;
-    justify-content: space-between;
-    /* align-items: center; */
-    /* height: 100vh; */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
     /* 确保整个页面占满视口 */
 }
 
 /* 时间线部分的样式 */
 .time-line {
-    width: 40%;
-    /* height: 100%; */
-    box-sizing: border-box;
+    width: 30%;
 }
 
 .number-text {
@@ -350,29 +346,27 @@ const timelineItems = ref([
 /* 图表部分的样式 */
 .chart {
     width: 70%;
-    /* height: 100%; */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 3vh;
+    gap: 4vh;
 }
 
 .bar-chart-row {
     width: 100%;
     height: 30vh;
-    
 }
 
 .bar-chart {
     flex: 1;
     height: 100%;
-    box-sizing: border-box;
     border-radius: 15px;
     background-color: #ebe5e5;
 }
 
 .pie-doughnut-chart-row {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     width: 100%;
     gap: 3vh;
@@ -381,11 +375,10 @@ const timelineItems = ref([
 .pie-chart,
 .doughnut-chart {
     width: 50%;
-    /* box-sizing: border-box; */
     border-radius: 15px;
     height: 40vh;
     background-color: antiquewhite;
-    padding-top: 1vh;
+    box-sizing: border-box;
 }
 
 .line-chart-row {
@@ -397,8 +390,7 @@ const timelineItems = ref([
 
 .line-chart {
     width: 50%;
-    box-sizing: border-box;
     border-radius: 15px;
-    height: 39vh;
+    height: 40vh;
 }
 </style>

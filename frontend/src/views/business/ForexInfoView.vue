@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import instance from '@/utils/request'
 import { ElMessage } from 'element-plus';
-import { ElButton } from 'element-plus'; 
+import { ElButton } from 'element-plus';
 import { useRouter } from 'vue-router';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
@@ -12,29 +12,17 @@ import BarChart from '@/components/BarChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
-import TimeLine from '@/components/TimeLine.vue';
 
 // 获取当前时间的前一天
 const today = new Date();
 const yesterday = new Date(today);
 yesterday.setDate(today.getDate() - 1);
 
-onMounted(() => {
-    const savedRange = sessionStorage.getItem('savedDateRange');
-    if (savedRange) {
-        const [start, end] = JSON.parse(savedRange);
-        dateRange.value = [new Date(start), new Date(end)];
-    }
-    // sendAllDataToBackend();
-});
-
 // 日期范围（默认展示昨天一天的数据）
 const dateRange = ref<[Date, Date]>([
     yesterday,
     today,
 ]);
-// const dateRange = ref<[Date, Date]>();
-
 
 // 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
 function handleDateChange(newRange: [Date, Date]) {
@@ -56,8 +44,8 @@ function sendDateRangeToBackend() {
 }
 
 // 柱状图数据
-const barData = ref([120, 60, 150,80, 100,130,110,50]);
-const categories = ref(['A', 'B', 'C', 'D','E','F','G','H']);
+const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
 // 并行发送请求
 function sendAllDataToBackend() {
@@ -73,7 +61,7 @@ function sendAllDataToBackend() {
 
 
 const router = useRouter();
-const businessType = ref<string>('forex'); 
+const businessType = ref<string>('forex');
 // 当用户在业务类型选择器中选择新的业务类型时，该函数将被调用
 function handleTypeChange(type: string) {
     businessType.value = type;
@@ -95,9 +83,6 @@ function handleConfirmClick() {
     }
     console.log('Selected business type:', businessType.value); // 添加调试信息
 
-    const [startDate, endDate] = dateRange.value;
-    sessionStorage.setItem('savedDateRange', JSON.stringify([formatDate(startDate), formatDate(endDate)]));
-
     sendAllDataToBackend().then(() => {
         if (businessType.value === 'forex') {
             // 留在原页面
@@ -113,6 +98,10 @@ function handleConfirmClick() {
 }
 
 
+
+onMounted(() => {
+    sendAllDataToBackend();
+});
 
 // 折线图数据
 const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
@@ -136,14 +125,14 @@ const doughnutChartData = ref([
     { value: 300, name: 'Video Ads' }
 ]);
 
-const timelineItems  = ref([
-  { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-  { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-  { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-  { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
-  { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
-  { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-  { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
+const timelineItems = ref([
+    { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+    { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+    { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+    { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
+    { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
+    { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+    { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
 ]);
 
 </script>
@@ -154,7 +143,8 @@ const timelineItems  = ref([
             <div class="container">
                 <div class="picker">
                     <div class="date-picker-wrapper">
-                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange" :disabled-date="disableFutureDates" ></DatePicker>
+                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange"
+                            :disabled-date="disableFutureDates"></DatePicker>
                     </div>
                     <div class="type-selector">
                         <SelectIcon v-model="businessType" @update:internalValue="handleTypeChange" />
@@ -164,37 +154,85 @@ const timelineItems  = ref([
 
                 <div class="display">
                     <div class="time-line">
-                        <TimeLine :items="timelineItems"/>
+                        <el-timeline style="width: 80%;">
+                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;">
+                                <el-card style="height: 28vh;">
+                                    <div>交易笔数最多的金额区间是：</div>
+                                    <div class="number-text">￥0~5000</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易金额最多的年龄段是：</div>
+                                    <div class="number-text">20~30</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易笔数最多的年龄段是：</div>
+                                    <div class="number-text">30~40</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易金额最多的时间点是：</div>
+                                    <div class="number-text">周三</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易笔数最多的时间点是：</div>
+                                    <div class="number-text">周五</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易金额最多的时间点是：</div>
+                                    <div class="number-text">周三</div>
+                                </el-card>
+                            </el-timeline-item>
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                                <el-card>
+                                    <div>交易笔数最多的时间点是：</div>
+                                    <div class="number-text">周五</div>
+                                </el-card>
+                            </el-timeline-item>
+                        </el-timeline>
                     </div>
 
-                    <div class="chart-section">
-                        <div class="chart-row">
+                    <div class="chart">
+                        <div class="bar-chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="外汇交易金额对应笔数"  />
+                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数" />
                             </div>
                         </div>
-                        <div class="chart-row">
+
+                        <div class="pie-doughnut-chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄外汇总交易金额占比"></PieChart>
+                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="doughnutChartData" title="各年龄外汇段总交易笔数占比" ></DoughnutChart>
+                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比">
+                                </DoughnutChart>
                             </div>
                         </div>
-                        <div class="chart-row">
-                            <div class="doughnut-chart2">
-                                <DoughnutChart :chartData="doughnutChartData" title="外汇换汇目的比例" ></DoughnutChart>
+
+                        <div class="line-chart-row">
+                            <div class="line-chart">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势" />
                             </div>
-                            <div class="pie-chart2">
-                                <PieChart :chartData="pieData" title="外汇换汇货币种类比例"></PieChart>
+                            <div class="line-chart">
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易笔数趋势" />
                             </div>
                         </div>
-                        <div class="chart-row">
-                            <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易金额趋势"/>
+
+                        <div class="pie-doughnut-chart-row">
+                            <div class="pie-chart">
+                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
                             </div>
-                            <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="外汇时间段交易笔数趋势"/>
+                            <div class="doughnut-chart">
+                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比">
+                                </DoughnutChart>
                             </div>
                         </div>
                     </div>
@@ -205,107 +243,98 @@ const timelineItems  = ref([
 </template>
 
 <style scoped>
+/* 容器布局 */
 .container {
     width: 100%;
-    height: 150%;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    gap: 3vh;
 }
 
+/* 选择器布局 */
 .picker {
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 2%;
-    gap: 5%;
+    margin-bottom: 10px;
+    gap: 3vw;
 }
 
 .confirm-button {
     border-radius: 10px;
 }
 
+/* 时间线和图表的布局 */
 .display {
-    width: 100%;
-    height: 93%;
     display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
+    /* 确保整个页面占满视口 */
 }
 
+/* 时间线部分的样式 */
 .time-line {
-    width: 35%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 30%;
 }
 
-.chart-section {
-    width: 65%;
-    height: 150%;
-    display: flex;
-    flex-direction: column;
-    gap: 3%;
+.number-text {
+    font-family: 'FZZJ LongYTWJ', sans-serif;
+    font-size: 36px;
+    line-height: 2.5;
 }
 
-.chart-row {
-    height: 100%;
+/* 图表部分的样式 */
+.chart {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4vh;
+}
+
+.bar-chart-row {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    height: 30vh;
 }
 
 .bar-chart {
     flex: 1;
     height: 100%;
-    box-sizing: border-box;
     border-radius: 15px;
     background-color: #ebe5e5;
 }
 
-.pie-chart{
-    /* flex: 7; */
-    width: 47%;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 15px; 
-    background-color: #DDE8F2;
-    padding-top:3%;
+.pie-doughnut-chart-row {
+    width: 100%;
+    height: 40vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 3vh;
 }
 
-.doughnut-chart{
-    /* flex: 7; */  
-    width: 47%;
-    height: 100%;
-    box-sizing: border-box;
+.pie-chart,
+.doughnut-chart {
+    flex: 1;
+    width: 50%;
     border-radius: 15px;
-    background-color: #cdeded;
-    padding-top:3%;
+    background-color: antiquewhite;
+    box-sizing: border-box;
+}
+
+.line-chart-row {
+    width: 100%;
+    height: 40vh;
+    display: flex;
+    justify-content: space-between;
+    gap: 3vh;
 }
 
 .line-chart {
     flex: 1;
-    box-sizing: border-box;
-    height: 80%;
+    width: 50%;
     border-radius: 15px;
-    /* background-color: rgba(211, 207, 207, 0.642); */
 }
-
-.pie-chart2{
-    width: 47%;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 15px;
-    background-color: #f5f8e8;
-    padding-top:3%;
-}
-
-.doughnut-chart2{
-    width:47%;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 15px;
-    background-color: #f8f1f7;
-    padding-top:3%;
-}
-
 </style>

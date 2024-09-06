@@ -126,7 +126,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="lineChart" style="width: 100%; height: 125%;"></div>
+    <div ref="lineChart" style="width: 100%; height: 100%;"></div>
 </template>
 
 <style scoped>

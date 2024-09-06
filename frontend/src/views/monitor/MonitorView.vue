@@ -20,16 +20,15 @@ const forexCount = ref(0);
 const xAxisData = ref([]);
 
 // 告警数据
-// const alerts = ref([]);
-const alerts = ref([
-    { time: '09:01:20', message: 'ATM响应时间过长', status: 'severe' },
-    { time: '09:01:30', message: '外汇交易金额异常', status: 'warning' },
-    { time: '09:01:49', message: 'ATM正常运行', status: 'severe' },
-]);
+// const alerts = ref([
+//     { time: '09:01:20', message: 'ATM响应时间过长', status: 'severe' },
+//     { time: '09:01:30', message: '外汇交易金额异常', status: 'warning' },
+//     { time: '09:01:49', message: 'ATM正常运行', status: 'severe' },
+// ]);
 
 const atmLineChartData = ref([]);
 const forexLineChartData = ref([]);
-
+const alerts = ref([]);
 
 
 // 获取ATM数据的函数
@@ -83,10 +82,21 @@ const fetchForexData = async () => {
 const fetchAlerts = async () => {
     try {
         const response = await instance.get('/monitor/logs', {
-            params: { time: new Date().toISOString() }
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
         });
         if (response.data.code === 0) {
-            alerts.value = response.data.data; // 更新告警数据
+            // console.log('success to fetch alerts data');   
+            // console.log('alerts data:', alerts.value);
+            const data = response.data.data; // 更新告警数据
+            alerts.value = data.map(data => ({
+                time: data.transactionTime,
+                message: data.eventType,
+                status: data.status,
+            }));
+            console.log(alerts.value);
+
         }
     } catch (error) {
         console.error('Failed to fetch alerts data', error);
@@ -97,11 +107,11 @@ const fetchAlerts = async () => {
 onMounted(() => {
     fetchAtmData();
     fetchForexData();
-    // fetchAlerts();
+    fetchAlerts();
     setInterval(() => {
         fetchAtmData();
         fetchForexData();
-        // fetchAlerts();
+        fetchAlerts();
     }, 60000); // 每分钟请求一次
 });
 </script>
@@ -192,9 +202,9 @@ onMounted(() => {
                     <el-card class="chart-card alert-card" shadow="hover">
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe>
-                            <el-table-column prop="time" label="时间" width="90" />
-                            <el-table-column prop="message" label="告警内容" width="150" class-name="alerts-label" />
-                            <el-table-column label="状态" width="60">
+                            <el-table-column prop="alerts.value.time" label="时间" width="90" />
+                            <el-table-column prop="alerts.value.message" label="告警内容" width="150" class-name="alerts-label" />
+                            <el-table-column prop="alerts.value.status" label="状态" width="60">
                                 <template #default="scope">
                                     <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警" class="alert-icon" />
                                     <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告" class="alert-icon" />

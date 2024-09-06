@@ -137,7 +137,7 @@ body {
 }
 
 .common-layout {
-    height: 98vh;
+    height: 97vh;
     overflow: hidden;
     border-radius: 10px;
     /* background-color: #E8F3FB; */
