@@ -93,12 +93,12 @@ onMounted(() => {
     watch(() => props.chartData, setChartOption, { deep: true });
 
     // 监听窗口尺寸变化，自动调整图表大小
-    window.addEventListener('resize', chart.resize);
+    window.addEventListener('resize', myChart.resize);
 
     // 组件卸载前销毁 ECharts 实例
     onBeforeUnmount(() => {
-        window.removeEventListener('resize', chart.resize);
-        chart.dispose();
+        window.removeEventListener('resize', myChart.resize);
+        myChart.dispose();
     });
 });
 

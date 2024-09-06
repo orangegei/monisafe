@@ -116,7 +116,7 @@ const exportToPDF = () => {
                             <el-table-column prop="province" label="省份" width="auto"></el-table-column>
                             <el-table-column prop="age" label="年龄" width="auto"></el-table-column>
                             <el-table-column prop="transaction_amount" label="交易金额" width="auto"></el-table-column>
-                            <el-table-column prop="transaction_time" label="交易时间" width="auto"></el-table-column>
+                            <el-table-column prop="transaction_time" label="交易时间" width="200%"></el-table-column>
                             <el-table-column prop="status" label="状态" width="auto"></el-table-column>
                             <el-table-column prop="event_type" label="事件类型" width="auto"></el-table-column>
                             <el-table-column prop="transaction_type" label="交易类型" width="auto"></el-table-column>
@@ -153,7 +153,7 @@ const exportToPDF = () => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 1%;
 }
 
 .function-buttons {

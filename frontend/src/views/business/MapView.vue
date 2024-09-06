@@ -161,7 +161,7 @@ const tableData = ref<Record[]>([
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 15px;
+    gap: 2%;
 }
 
 .picker {

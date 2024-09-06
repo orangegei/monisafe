@@ -194,7 +194,7 @@ onMounted(() => {
                         <el-table :data="alerts" stripe>
                             <el-table-column prop="time" label="时间" width="90" />
                             <el-table-column prop="message" label="告警内容" width="150" class-name="alerts-label" />
-                            <el-table-column label="状态" width="55">
+                            <el-table-column label="状态" width="60">
                                 <template #default="scope">
                                     <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警" class="alert-icon" />
                                     <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告" class="alert-icon" />
@@ -329,8 +329,8 @@ onMounted(() => {
 }
 
 .alert-icon {
-    width: 24px;
-    height: 24px;
+    width: 60%;
+    height: 60%;
     display: block;
     margin: 0 auto;
 }

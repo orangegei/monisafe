@@ -182,9 +182,9 @@ function handleConfirmClick() {
 }
 
 // 组件挂载后初始化数据
-onMounted(() => {
-    getAllData();
-});
+// onMounted(() => {
+//     getAllData();
+// });
 
 
 // 图表数据
@@ -324,8 +324,6 @@ const timelineItems  = ref([
     box-sizing: border-box;
     border-radius: 15px;
     background-color: #ebe5e5;
-    /* margin-left: 10px;
-    margin-right: 10px; */
 }
 
 .pie-chart{
