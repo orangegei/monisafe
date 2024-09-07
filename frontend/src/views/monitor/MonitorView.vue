@@ -19,17 +19,19 @@ const forexCount = ref(0);
 // X轴数据
 const xAxisData = ref([]);
 
-// 告警数据
-// const alerts = ref([
-//     { time: '09:01:20', message: 'ATM响应时间过长', status: 'severe' },
-//     { time: '09:01:30', message: '外汇交易金额异常', status: 'warning' },
-//     { time: '09:01:49', message: 'ATM正常运行', status: 'severe' },
-// ]);
-
 const atmLineChartData = ref([]);
 const forexLineChartData = ref([]);
 const alerts = ref([]);
 
+
+// 转换时间格式函数
+const formattedTime = (timeString) => {
+    const date = new Date(timeString);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+};
 
 // 获取ATM数据的函数
 const fetchAtmData = async () => {
@@ -91,8 +93,9 @@ const fetchAlerts = async () => {
             // console.log('alerts data:', alerts.value);
             const data = response.data.data; // 更新告警数据
             alerts.value = data.map(data => ({
-                time: data.transactionTime,
-                message: data.eventType,
+                // time: data.transactionTime,
+                time: formattedTime(data.transactionTime),
+                eventType: data.eventType,
                 status: data.status,
             }));
             console.log(alerts.value);
@@ -202,9 +205,9 @@ onMounted(() => {
                     <el-card class="chart-card alert-card" shadow="hover">
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe>
-                            <el-table-column prop="alerts.value.time" label="时间" width="90" />
-                            <el-table-column prop="alerts.value.message" label="告警内容" width="150" class-name="alerts-label" />
-                            <el-table-column prop="alerts.value.status" label="状态" width="60">
+                            <el-table-column prop="time" label="时间" width="90" />
+                            <el-table-column prop="eventType" label="告警内容" width="150" class-name="alerts-label" />
+                            <el-table-column prop="status" label="状态" width="60">
                                 <template #default="scope">
                                     <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警" class="alert-icon" />
                                     <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告" class="alert-icon" />
@@ -212,7 +215,7 @@ onMounted(() => {
                             </el-table-column>
                         </el-table>
                     </el-card>
-                </div>a
+                </div>
             </div>
         </template>
     </FrameView>

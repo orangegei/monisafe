@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import instance from '@/utils/request';
 import { ElMessage } from 'element-plus';
-import { ElButton } from 'element-plus';
-import { useRouter } from 'vue-router';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -24,58 +23,41 @@ const dateRange = ref<[Date, Date]>([
     today,
 ]);
 
-// 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
+// 当用户在日期选择器中选择新的日期范围时
 function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
 // 将日期转换为字符串
 const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0]; // 只保留日期部分
+    return date.toISOString().split('T')[0];
 };
 
+// ATM业务数据
 const ATM_bar_xdata = ref([]);
 const ATM_bar_ydata = ref([]);
+const ATM_pieData = ref([]);
+const ATM_doughnutChartData = ref([]);
 
+// 处理函数
 function handleATMChartData(chartData) {
     ATM_bar_xdata.value = chartData.xdata;
     ATM_bar_ydata.value = chartData.ydata;
 }
-
-
-const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-
-const ATM_pieData = ref([]);
-
-
-// 将 ChartData 转换为 pieData 格式
 function ATM_transformChartDataToPieData(chartData) {
-    const transformedData = chartData.xdata.map((name, index) => {
-        return {
-            name: name,
-            value: chartData.ydata[index]
-        };
-    });
-    ATM_pieData.value = transformedData;
-    //   console.log(ATM_pieData.value);
+    ATM_pieData.value = chartData.xdata.map((name, index) => ({
+        name: name,
+        value: chartData.ydata[index]
+    }));
 }
-
-const ATM_doughnutChartData = ref([]);
-
-
 function ATM_transformChartDataTodChartData(chartData) {
-    const transformedData = chartData.xdata.map((name, index) => {
-        return {
-            name: name,
-            value: chartData.ydata[index]
-        };
-    });
-    ATM_doughnutChartData.value = transformedData;
-    //   console.log(ATM_doughnutChartData.value);
+    ATM_doughnutChartData.value = chartData.xdata.map((name, index) => ({
+        name: name,
+        value: chartData.ydata[index]
+    }));
 }
 
-// 获取ATM data的函数
+// 获取ATM数据
 const getAllData = async () => {
     try {
         const params = {
@@ -84,73 +66,50 @@ const getAllData = async () => {
         };
 
         const requests = [
-            // ATM
-            instance.get('/business/atm/age/amount', {
-                params,
-                headers: {
-                    Authorization: sessionStorage.getItem('token')
-                }
-            }),
-            instance.get('/business/atm/age/count', {
-                params,
-                headers: {
-                    Authorization: sessionStorage.getItem('token')
-                }
-            }),
-            instance.get('/business/atm/range', {
-                params,
-                headers: {
-                    Authorization: sessionStorage.getItem('token')
-                }
-            }),
-
-
+            instance.get('/business/atm/age/amount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/age/count', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/range', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
         ];
 
-        // 使用 Promise.all 并行发送请求
         const responses = await Promise.all(requests);
-
-
-        // 遍历响应并调用相应的处理函数
         responses.forEach((response, index) => {
             if (response.data.code === 0) {
                 const data = response.data.data;
-                // console.log(data);
                 switch (index) {
-                    case 0:
-                        ATM_transformChartDataToPieData(data);
-                        break;
-                    case 1:
-                        ATM_transformChartDataTodChartData(data);
-                        break;
-                    case 2:
-                        handleATMChartData(data);
-                        break;
-
-
-                    default:
-                        console.log('Unknown response');
+                    case 0: ATM_transformChartDataToPieData(data); break;
+                    case 1: ATM_transformChartDataTodChartData(data); break;
+                    case 2: handleATMChartData(data); break;
                 }
             } else {
                 console.error('Error in response:', response.message);
             }
         });
-
-
     } catch (error) {
-        console.error('Failed to fetch forex data', error);
+        console.error('Failed to fetch ATM data', error);
     }
 };
 
+// 监听路由参数变化
+const route = useRoute();
+onMounted(() => {
+    const startTime = route.query.startTime ? new Date(route.query.startTime as string) : yesterday;
+    const endTime = route.query.endTime ? new Date(route.query.endTime as string) : today;
+    dateRange.value = [startTime, endTime];
+    getAllData();
+});
+watch(route, (newRoute) => {
+    const startTime = newRoute.query.startTime ? new Date(newRoute.query.startTime as string) : yesterday;
+    const endTime = newRoute.query.endTime ? new Date(newRoute.query.endTime as string) : today;
+    dateRange.value = [startTime, endTime];
+    getAllData();
+});
 
+// 选择器和确认按钮逻辑
 const router = useRouter();
-const businessType = ref<string>('ATM');
-// 当用户在业务类型选择器中选择新的业务类型时，该函数将被调用
+const businessType = ref<string>('atm');
 function handleTypeChange(type: string) {
     businessType.value = type;
 }
-
-// 验证日期和业务类型是否已选择
 function validateSelections() {
     if (!dateRange.value || !businessType.value) {
         ElMessage.error('日期或业务内容不能为空');
@@ -158,33 +117,18 @@ function validateSelections() {
     }
     return true;
 }
-
-// 点击确认按钮时的处理方法
 function handleConfirmClick() {
-    if (!validateSelections()) {
-        return;
+    if (!validateSelections()) return;
+
+    const startTime = formatDate(dateRange.value[0]);
+    const endTime = formatDate(dateRange.value[1]);
+
+    if (businessType.value === 'atm') {
+        getAllData();
+    } else if (businessType.value === 'forex') {
+        router.push({ path: '/business/chart/forex', query: { startTime, endTime } });
     }
-    console.log('Selected business type:', businessType.value); // 添加调试信息
-
-    getAllData().then(() => {
-        if (businessType.value === 'atm') {
-            // 留在原页面
-            // ElMessage.success('已加载ATM数据');
-        } else if (businessType.value === 'forex') {
-            // 跳转到外汇页面
-            router.push('/business/chart/forex');
-        }
-    }).catch(error => {
-        ElMessage.error('发送数据时出错');
-        console.error('Error sending data:', error);
-    });
 }
-
-// 组件挂载后初始化数据
-// onMounted(() => {
-//     getAllData();
-// });
-
 
 // 柱状图数据
 const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
@@ -206,13 +150,13 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 //     { value: 484, name: 'Union Ads' },
 //     { value: 300, name: 'Video Ads' }
 // ]);
-const timelineItems = ref([
-    { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-    { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-    { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-    { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-    { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
-]);
+// const timelineItems = ref([
+//     { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+//     { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+//     { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+//     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+//     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
+// ]);
 
 </script>
 

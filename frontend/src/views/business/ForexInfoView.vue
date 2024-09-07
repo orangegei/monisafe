@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import instance from '@/utils/request'
+import instance from '@/utils/request';
 import { ElMessage } from 'element-plus';
 import { ElButton } from 'element-plus';
 import { useRouter } from 'vue-router';
@@ -24,7 +24,7 @@ const dateRange = ref<[Date, Date]>([
     today,
 ]);
 
-// 当用户在日期选择器中选择新的日期范围时，该函数将被调用它的作用是更新应用内部状态（dateRange.value）以反映用户的新选择
+// 当用户在日期选择器中选择新的日期范围时，该函数将被调用
 function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
@@ -35,10 +35,10 @@ function formatDate(date: Date): string {
 }
 
 // 发送日期范围到后端
-function sendDateRangeToBackend() {
+function sendTimeRangeToBackend() {
     const params = {
-        startDate: formatDate(dateRange.value[0]),
-        endDate: formatDate(dateRange.value[1]),
+        startTime: formatDate(dateRange.value[0]),
+        endTime: formatDate(dateRange.value[1]),
     };
     return instance.get('/business/forex/range', { params });
 }
@@ -49,7 +49,7 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
 // 并行发送请求
 function sendAllDataToBackend() {
-    return axios.all([sendDateRangeToBackend()])
+    return axios.all([sendTimeRangeToBackend()])
         .then(axios.spread((dateRangeResponse, barDataResponse) => {
             console.log('Date Range Response:', dateRangeResponse.data);
             console.log('Bar Data Response:', barDataResponse.data);
@@ -59,9 +59,9 @@ function sendAllDataToBackend() {
         });
 }
 
-
 const router = useRouter();
 const businessType = ref<string>('forex');
+
 // 当用户在业务类型选择器中选择新的业务类型时，该函数将被调用
 function handleTypeChange(type: string) {
     businessType.value = type;
@@ -81,23 +81,27 @@ function handleConfirmClick() {
     if (!validateSelections()) {
         return;
     }
-    console.log('Selected business type:', businessType.value); // 添加调试信息
 
-    sendAllDataToBackend().then(() => {
-        if (businessType.value === 'forex') {
-            // 留在原页面
-            // ElMessage.success('已加载外汇数据');
-        } else if (businessType.value === 'atm') {
-            // 跳转到ATM页面
-            router.push('/business/chart/atm');
-        }
-    }).catch(error => {
-        ElMessage.error('发送数据时出错');
-        console.error('Error sending data:', error);
-    });
+    console.log('Selected business type:', businessType.value);
+
+    if (businessType.value === 'forex') {
+        sendAllDataToBackend().then(() => {
+            console.log('Forex data has been updated and re-rendered');
+        }).catch(error => {
+            ElMessage.error('发送数据时出错');
+            console.error('Error sending data:', error);
+        });
+    } else if (businessType.value === 'atm') {
+        // 跳转到ATM页面，传递时间参数
+        router.push({
+            path: '/business/chart/atm',
+            query: {
+                startTime: formatDate(dateRange.value[0]),
+                endTime: formatDate(dateRange.value[1])
+            }
+        });
+    }
 }
-
-
 
 onMounted(() => {
     sendAllDataToBackend();
