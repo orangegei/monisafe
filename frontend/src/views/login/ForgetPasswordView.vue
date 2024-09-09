@@ -95,7 +95,7 @@ const resetPassword = async () => {
     align-items: center;
     justify-content: flex-start;
     padding-left: 5%;
-    width: 171ch;
+    width: 167ch;
     height: 97.8vh;
     background: url('../../assets/background.png') no-repeat center center;
     background-size: cover;

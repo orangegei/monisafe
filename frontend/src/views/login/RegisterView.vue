@@ -172,7 +172,7 @@ const register = async () => {
     align-items: center;
     justify-content: flex-start;
     padding-left: 5%;
-    width: 171ch;
+    width: 167ch;
     height: 97.8vh;
     background: url('../../assets/background.png') no-repeat center center;
     background-size: cover;
@@ -184,6 +184,8 @@ const register = async () => {
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 .header {

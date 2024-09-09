@@ -19,14 +19,16 @@ onMounted(() => {
             series: [
                 {
                     type: 'gauge',
-                    radius: '70%',
+                    radius: '75%',
                     center: ['40%', '40%'],
+                    min: 0,         // 设置最小值
+                    max: 200,       // 设置最大值
                     axisLine: {
                         lineStyle: {
                             width: 8,
                             color: [
-                                [0.3, '#67e0e3'],
-                                [0.7, '#37a2da'],
+                                [0.7, '#67e0e3'],
+                                [0.9, '#fea443'],
                                 [1, '#fd666d']
                             ]
                         }
@@ -48,7 +50,7 @@ onMounted(() => {
                         distance: -10,
                         length: 10,
                         lineStyle: {
-                            color: 'rgba(255, 255, 255, 1)',
+                            color: '#fff',
                             width: 4
                         }
                     },
