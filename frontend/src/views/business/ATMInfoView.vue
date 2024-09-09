@@ -91,21 +91,6 @@ const getAllData = async () => {
     }
 };
 
-// 监听路由参数变化
-const route = useRoute();
-onMounted(() => {
-    const startTime = route.query.startTime ? new Date(route.query.startTime as string) : yesterday;
-    const endTime = route.query.endTime ? new Date(route.query.endTime as string) : today;
-    dateRange.value = [startTime, endTime];
-    getAllData();
-});
-watch(route, (newRoute) => {
-    const startTime = newRoute.query.startTime ? new Date(newRoute.query.startTime as string) : yesterday;
-    const endTime = newRoute.query.endTime ? new Date(newRoute.query.endTime as string) : today;
-    dateRange.value = [startTime, endTime];
-    getAllData();
-});
-
 // 选择器和确认按钮逻辑
 const router = useRouter();
 const businessType = ref<string>('atm');
@@ -119,8 +104,10 @@ function validateSelections() {
     }
     return true;
 }
+
 function handleConfirmClick() {
-    if (!validateSelections()) return;
+    if (!validateSelections())
+        return;
 
     const startTime = formatDate(dateRange.value[0]);
     const endTime = formatDate(dateRange.value[1]);
@@ -132,9 +119,13 @@ function handleConfirmClick() {
     }
 }
 
+onMounted(() => {
+    getAllData();
+});
+
 // 柱状图数据
-const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
 // const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 // const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
@@ -181,31 +172,36 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;" color="#FF0000">
+                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;"
+                                color="#E85827">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -260,8 +256,9 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 .picker {
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: flex-start;
-    margin-bottom: 10px;
+    align-items: center;
     gap: 3vw;
 }
 

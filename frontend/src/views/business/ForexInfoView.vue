@@ -43,10 +43,6 @@ function sendTimeRangeToBackend() {
     return instance.get('/business/forex/range', { params });
 }
 
-// 柱状图数据
-const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
-
 // 并行发送请求
 function sendAllDataToBackend() {
     return axios.all([sendTimeRangeToBackend()])
@@ -78,9 +74,8 @@ function validateSelections() {
 
 // 点击确认按钮时的处理方法
 function handleConfirmClick() {
-    if (!validateSelections()) {
+    if (!validateSelections())
         return;
-    }
 
     console.log('Selected business type:', businessType.value);
 
@@ -107,38 +102,41 @@ onMounted(() => {
     sendAllDataToBackend();
 });
 
-// 折线图数据
-const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+// // 柱状图数据
+// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
-// 饼状图数据
-const pieData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' },
-]);
+// // 折线图数据
+// const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
+// const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
-// 环形图数据
-const doughnutChartData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' }
-]);
+// // 饼状图数据
+// const pieData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' },
+// ]);
 
-const timelineItems = ref([
-    { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-    { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-    { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-    { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
-    { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
-    { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-    { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
-]);
+// // 环形图数据
+// const doughnutChartData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' }
+// ]);
 
+// const timelineItems = ref([
+//     { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+//     { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+//     { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+//     { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
+//     { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
+//     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+//     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
+// ]);
 </script>
 
 <template>
@@ -261,6 +259,7 @@ const timelineItems = ref([
     width: 100%;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
     margin-bottom: 10px;
     gap: 3vw;
 }

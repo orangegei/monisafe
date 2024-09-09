@@ -56,7 +56,7 @@ const hideMonitorSubMenu = () => {
         <el-container style="height: 100%; display: flex; position: relative;">
             <!-- Aside -->
             <el-aside :width="isSidebarCollapsed ? '80px' : '250px'" class="monisafe-sidebar">
-                <div class="content">
+                <div class="business-content">
                     <div class="logo-item-container" :style="{ textAlign: isSidebarCollapsed ? 'center' : 'left' }">
                         <img src="../assets/logo-MoniSafe-透明.png" alt="MoniSafe Logo" class="logo"
                             :style="{ width: isSidebarCollapsed ? '80px' : '150px' }">
@@ -200,7 +200,7 @@ body {
     border-radius: 15px;
 }
 
-.content {
+.business-content {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
