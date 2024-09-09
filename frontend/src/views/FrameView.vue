@@ -53,6 +53,11 @@ const hideSubMenu = () => {
                             <span class="text" v-show="!isSidebarCollapsed">监控</span>
                         </RouterLink>
 
+                        <RouterLink to="/dispatch" class="item" style="text-decoration: none;">
+                            <img src="../assets/dispatch-调度.svg" alt="dispatch" class="menu-icon">
+                            <span class="text" v-show="!isSidebarCollapsed">调度</span>
+                        </RouterLink>
+
                         <!-- Business Menu Item with Hover Submenu -->
                         <div class="item business-item" @mouseenter="showSubMenu" @mouseleave="hideSubMenu"
                             style="text-decoration: none; position: relative;">
@@ -233,7 +238,7 @@ body {
 .submenu {
     position: fixed;
     /* 固定位置 */
-    top: 210px;
+    top: 300px;
     /* 根据需要调整弹窗的垂直位置 */
     left: 260px;
     /* 将弹窗放置在业务栏的右侧 */
@@ -248,7 +253,7 @@ body {
 }
 
 .submenu.collapsed {
-    top: 180px;
+    top: 230px;
     left: 90px;
     /* 当侧边栏收起时，将弹窗左移到收起后的边栏右侧 */
 }
