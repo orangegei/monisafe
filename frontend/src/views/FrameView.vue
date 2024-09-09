@@ -4,7 +4,10 @@ import { ref } from 'vue';
 // 控制侧边栏显示状态的变量
 const isSidebarCollapsed = ref(false);
 
-// 控制子菜单的显示状态
+// 控制监控子菜单的显示状态
+const isMonitorHovered = ref(false);
+
+// 控制业务子菜单的显示状态
 const isBusinessHovered = ref(false);
 
 // 切换侧边栏的显示状态
@@ -15,8 +18,8 @@ const toggleSidebar = () => {
 // 定义定时器
 let hoverTimer = null;
 
-// 鼠标移入业务菜单项或子菜单时触发，确保弹窗显示
-const showSubMenu = () => {
+// 鼠标悬浮在业务菜单项上时触发，显示弹窗
+const showBusinessSubMenu = () => {
     clearTimeout(hoverTimer);  // 清除之前的定时器
     hoverTimer = setTimeout(() => {
         isBusinessHovered.value = true;
@@ -24,11 +27,27 @@ const showSubMenu = () => {
 };
 
 // 鼠标移出业务菜单项或子菜单时触发，隐藏弹窗
-const hideSubMenu = () => {
+const hideBusinessSubMenu = () => {
     clearTimeout(hoverTimer);  // 清除之前的定时器
     hoverTimer = setTimeout(() => {
         isBusinessHovered.value = false;
-    }, 100);  // 300ms 延迟隐藏弹窗
+    }, 100);  // 100ms 延迟隐藏弹窗
+};
+
+// 鼠标悬浮在监控菜单项上时触发，显示弹窗
+const showMonitorSubMenu = () => {
+    clearTimeout(hoverTimer);  // 清除之前的定时器
+    hoverTimer = setTimeout(() => {
+        isMonitorHovered.value = true;
+    }, 300);  // 300ms 延迟显示弹窗
+};
+
+// 鼠标移出监控菜单项或子菜单时触发，隐藏弹窗
+const hideMonitorSubMenu = () => {
+    clearTimeout(hoverTimer);  // 清除之前的定时器
+    hoverTimer = setTimeout(() => {
+        isMonitorHovered.value = false;
+    }, 100);  // 100ms 延迟隐藏弹窗
 };
 </script>
 
@@ -48,10 +67,17 @@ const hideSubMenu = () => {
                             Main Menu
                         </div>
 
-                        <RouterLink to="/monitor" class="item" style="text-decoration: none;">
+                        <!-- <RouterLink to="/monitor" class="item" style="text-decoration: none;">
                             <img src="../assets/monitor-监控.svg" alt="monitor" class="menu-icon">
                             <span class="text" v-show="!isSidebarCollapsed">监控</span>
-                        </RouterLink>
+                        </RouterLink> -->
+
+                        <!-- Monitor Menu Item with Hover Submenu -->
+                        <div class="item monitor-item" @mouseenter="showMonitorSubMenu" @mouseleave="hideMonitorSubMenu"
+                            style="text-decoration: none; position: relative;">
+                            <img src="../assets/monitor-监控.svg" alt="monitor" class="menu-icon">
+                            <span class="text" v-show="!isSidebarCollapsed">监控</span>
+                        </div>
 
                         <RouterLink to="/dispatch" class="item" style="text-decoration: none;">
                             <img src="../assets/dispatch-调度.svg" alt="dispatch" class="menu-icon">
@@ -59,8 +85,8 @@ const hideSubMenu = () => {
                         </RouterLink>
 
                         <!-- Business Menu Item with Hover Submenu -->
-                        <div class="item business-item" @mouseenter="showSubMenu" @mouseleave="hideSubMenu"
-                            style="text-decoration: none; position: relative;">
+                        <div class="item business-item" @mouseenter="showBusinessSubMenu"
+                            @mouseleave="hideBusinessSubMenu" style="text-decoration: none; position: relative;">
                             <img src="../assets/business-业务.svg" alt="business" class="menu-icon">
                             <span class="text" v-show="!isSidebarCollapsed">业务</span>
                         </div>
@@ -100,9 +126,9 @@ const hideSubMenu = () => {
                         </div>
 
                         <div class="header-icons">
-                            <div class="icon-button">
+                            <!-- <div class="icon-button">
                                 <img src="@/assets/moon-夜间模式.svg" alt="Moon Icon" class="button-icon">
-                            </div>
+                            </div> -->
 
                             <RouterLink to="/log" class="icon-button" style="text-decoration: none;">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">
@@ -123,9 +149,17 @@ const hideSubMenu = () => {
             </el-container>
         </el-container>
 
-        <!-- Submenu placed outside the container -->
-        <div class="submenu" :class="{ collapsed: isSidebarCollapsed }" v-if="isBusinessHovered"
-            @mouseenter="showSubMenu" @mouseleave="hideSubMenu">
+        <!-- monitor-submenu placed outside the container -->
+        <div class="monitor-submenu" :class="{ collapsed: isSidebarCollapsed }" v-if="isMonitorHovered"
+            @mouseenter="showMonitorSubMenu" @mouseleave="hideMonitorSubMenu">
+            <RouterLink to="/monitor" class="submenu-item">主监控</RouterLink>
+            <RouterLink to="/monitor/node" class="submenu-item">节点</RouterLink>
+            <RouterLink to="/monitor/plat" class="submenu-item">地图</RouterLink>
+        </div>
+
+        <!-- business-submenu placed outside the container -->
+        <div class="business-submenu" :class="{ collapsed: isSidebarCollapsed }" v-if="isBusinessHovered"
+            @mouseenter="showBusinessSubMenu" @mouseleave="hideBusinessSubMenu">
             <RouterLink to="/business/map" class="submenu-item">地图</RouterLink>
             <RouterLink to="/business/chart/atm" class="submenu-item">图表</RouterLink>
         </div>
@@ -227,15 +261,35 @@ body {
     border-radius: 8px;
 }
 
-.business-item {
+.business-item,
+.monitor-item {
     position: relative;
 }
 
-.business-item {
-    position: relative;
+.monitor-submenu {
+    position: fixed;
+    /* 固定位置 */
+    top: 140px;
+    /* 根据需要调整弹窗的垂直位置 */
+    left: 260px;
+    /* 将弹窗放置在业务栏的右侧 */
+    background-color: #F0F8FF;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+    /* 提高 z-index 确保弹窗显示在header和body上方 */
 }
 
-.submenu {
+.monitor-submenu.collapsed {
+    top: 100px;
+    left: 90px;
+    /* 当侧边栏收起时，将弹窗左移到收起后的边栏右侧 */
+}
+
+.business-submenu {
     position: fixed;
     /* 固定位置 */
     top: 300px;
@@ -252,7 +306,7 @@ body {
     /* 提高 z-index 确保弹窗显示在header和body上方 */
 }
 
-.submenu.collapsed {
+.business-submenu.collapsed {
     top: 230px;
     left: 90px;
     /* 当侧边栏收起时，将弹窗左移到收起后的边栏右侧 */
@@ -348,9 +402,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: white; */
     cursor: pointer;
-    /* transition: background-color 0.3s ease; */
 }
 
 .icon-button:hover {
