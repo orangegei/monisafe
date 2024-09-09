@@ -157,9 +157,12 @@ onMounted(() => {
                             </div>
                         </el-card>
 
-                         <el-card class="chart-card line-chart-card" shadow="hover">
+                        <el-card class="chart-card line-chart-card" shadow="hover">
                             <div class="chart-title">过去10分钟ATM取款响应时间</div>
-                            <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100% ; height: 250%;" />
+                            <div class="line-chart">
+                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false"
+                                    style="width: 100% ; height: 250%;" />
+                            </div>
                         </el-card>
                     </div>
 
@@ -167,7 +170,11 @@ onMounted(() => {
                     <div class="forex-container">
                         <el-card class="chart-card line-chart-card" shadow="hover">
                             <div class="chart-title">过去10分钟外汇交易响应时间</div>
-                            <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false" style="width: 100% ; height: 250%;"/>
+                            <div class="line-chart">
+                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false"
+                                    style="width: 100% ; height: 250%;" />
+                            </div>
+
                         </el-card>
 
                         <el-card class="chart-card gauge-card" shadow="hover">
@@ -183,7 +190,7 @@ onMounted(() => {
                                                 <el-statistic title="交易金额/元" :value="forexAmount" />
                                                 <template #suffix>
                                                     <span class="custom-suffix">元</span>
-                                                </template>           
+                                                </template>
                                             </el-col>
                                         </el-row>
                                     </el-card>
@@ -204,13 +211,15 @@ onMounted(() => {
                 <div class="alerts-container">
                     <el-card class="chart-card alert-card" shadow="hover">
                         <div class="chart-title">实时告警信息</div>
-                        <el-table :data="alerts" stripe>
-                            <el-table-column prop="time" label="时间" width="90" />
-                            <el-table-column prop="eventType" label="告警内容" width="150" class-name="alerts-label" />
-                            <el-table-column prop="status" label="状态" width="60">
+                        <el-table :data="alerts" stripe class="custom-table">
+                            <el-table-column prop="time" label="时间" width="auto" />
+                            <el-table-column prop="eventType" label="告警内容" width="auto" />
+                            <el-table-column prop="status" label="状态" width="auto">
                                 <template #default="scope">
-                                    <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警" class="alert-icon" />
-                                    <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告" class="alert-icon" />
+                                    <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警"
+                                        class="alert-icon" />
+                                    <img v-if="scope.row.status === 'warning'" src="@/assets/warning.svg" alt="警告"
+                                        class="alert-icon" />
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -230,20 +239,20 @@ onMounted(() => {
 }
 
 .monitor-container {
-    flex:2;
+    flex: 2;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .alerts-container {
-    flex:1;
+    flex: 1;
     height: 100%;
 }
 
 .atm-container {
     display: flex;
-    flex:1;
+    flex: 1;
     height: 50%;
     width: 100%;
     gap: 3%;
@@ -251,7 +260,7 @@ onMounted(() => {
 
 .forex-container {
     display: flex;
-    flex:1;
+    flex: 1;
     height: 50%;
     width: 100%;
     gap: 3%;
@@ -279,7 +288,7 @@ onMounted(() => {
     align-items: flex-end;
 }
 
-.right-section > *:not(:last-child) {
+.right-section>*:not(:last-child) {
     margin-top: 20%;
     margin-bottom: 50%;
 }
@@ -290,17 +299,27 @@ onMounted(() => {
 }
 
 .chart-card {
+    /* border-radius: 15px;
+    position: relative; */
     border-radius: 15px;
-    /* padding: 4%; */
+    position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    /* 设置透明背景 */
+    backdrop-filter: blur(10px);
+    /* 毛玻璃效果 */
+    -webkit-backdrop-filter: blur(10px);
+    /* 兼容Safari浏览器 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* 添加阴影 */
 }
 
 .gauge-card {
-    flex:3;
+    flex: 3;
     height: 90%;
-}   
+}
 
 .line-chart-card {
-    flex:4;
+    flex: 4;
     height: 90%;
 }
 
@@ -309,6 +328,15 @@ onMounted(() => {
     font-weight: bold;
     text-align: center;
 }
+
+/* .line-chart {
+    position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+} */
 
 .chart-content {
     display: flex;
@@ -346,5 +374,18 @@ onMounted(() => {
     height: 60%;
     display: block;
     margin: 0 auto;
+}
+
+.custom-table {
+    position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    /* 设置透明背景 */
+    backdrop-filter: blur(10px);
+    /* 毛玻璃效果 */
+    -webkit-backdrop-filter: blur(10px);
+    /* 兼容Safari浏览器 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* 添加阴影 */
+    margin-top: 15px;
 }
 </style>

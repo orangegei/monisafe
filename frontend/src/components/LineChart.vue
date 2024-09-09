@@ -101,7 +101,7 @@ onMounted(() => {
                     }
                 }
             ],
-            backgroundColor: '#ffffff' // 背景颜色设置为简约白色
+            // backgroundColor: '#ffffff' // 背景颜色设置为简约白色
         };
 
         // 将配置项应用到图表实例中

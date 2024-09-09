@@ -140,6 +140,11 @@ body {
     height: 97vh;
     overflow: hidden;
     border-radius: 10px;
+    background: radial-gradient(circle at top, #bfdcffdf, transparent);
+    /* background: 
+        radial-gradient(circle at top, rgba(255, 0, 0, 0.5), transparent),
+        linear-gradient(to bottom right, blue, green); */
+    /* background-color: #B0D4F0; */
     /* background-color: #E8F3FB; */
     /* background-color: #E8F3EB; */
     /* background: linear-gradient(to bottom, #80A4CB 0%,#dfeefe 25%, #e5f1fa); */
@@ -338,9 +343,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    /* background-color: white; */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    /* transition: background-color 0.3s ease; */
 }
 
 .icon-button:hover {

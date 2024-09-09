@@ -102,21 +102,21 @@ const exportToPDF = () => {
                         <span style="white-space: nowrap;">交易日志记录</span>
                         <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
                         <div class="function-buttons">
-                            <el-button style="background-color: #109968; color: white;"
-                                @click="exportToExcel">导出为 Excel</el-button>
-                            <el-button style="background-color: #DF4023; color: white;"
-                                @click="exportToPDF">导出为 PDF</el-button>
+                            <el-button style="background-color: #109968; color: white;" @click="exportToExcel">导出为
+                                Excel</el-button>
+                            <el-button style="background-color: #DF4023; color: white;" @click="exportToPDF">导出为
+                                PDF</el-button>
                             <el-button style="background-color: #3B64FC; color: white;"
                                 @click="clearLogs">清空日志</el-button>
                         </div>
                     </div>
 
                     <div class="table-container">
-                        <el-table :data="paginatedLogs" border style="width: 100%" id="content">
+                        <el-table :data="paginatedLogs" border style="width: 100%;" id="content">
                             <el-table-column prop="province" label="省份" width="auto"></el-table-column>
                             <el-table-column prop="age" label="年龄" width="auto"></el-table-column>
                             <el-table-column prop="transaction_amount" label="交易金额" width="auto"></el-table-column>
-                            <el-table-column prop="transaction_time" label="交易时间" width="200%"></el-table-column>
+                            <el-table-column prop="transaction_time" label="交易时间" width="auto"></el-table-column>
                             <el-table-column prop="status" label="状态" width="auto"></el-table-column>
                             <el-table-column prop="event_type" label="事件类型" width="auto"></el-table-column>
                             <el-table-column prop="transaction_type" label="交易类型" width="auto"></el-table-column>
@@ -137,7 +137,6 @@ const exportToPDF = () => {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    /* 确保外层容器不会有滚动条 */
 }
 
 .box-card {
@@ -146,6 +145,14 @@ const exportToPDF = () => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    /* 设置透明背景 */
+    backdrop-filter: blur(10px);
+    /* 毛玻璃效果 */
+    -webkit-backdrop-filter: blur(10px);
+    /* 兼容Safari浏览器 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .clearfix {

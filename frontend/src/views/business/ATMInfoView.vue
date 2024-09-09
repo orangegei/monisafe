@@ -44,12 +44,14 @@ function handleATMChartData(chartData) {
     ATM_bar_xdata.value = chartData.xdata;
     ATM_bar_ydata.value = chartData.ydata;
 }
+
 function ATM_transformChartDataToPieData(chartData) {
     ATM_pieData.value = chartData.xdata.map((name, index) => ({
         name: name,
         value: chartData.ydata[index]
     }));
 }
+
 function ATM_transformChartDataTodChartData(chartData) {
     ATM_doughnutChartData.value = chartData.xdata.map((name, index) => ({
         name: name,
@@ -179,7 +181,7 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;">
+                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;" color="#FF0000">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
