@@ -45,10 +45,10 @@ onMounted(() => {
                         }
                     },
                     splitLine: {
-                        distance: -30,
-                        length: 30,
+                        distance: -10,
+                        length: 10,
                         lineStyle: {
-                            color: '#fff',
+                            color: 'rgba(255, 255, 255, 1)',
                             width: 4
                         }
                     },
