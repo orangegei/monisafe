@@ -11,7 +11,7 @@ interface Record {
 }
 
 // 定义表格数据
-const tableData = ref < Record[] > ([]);
+const tableData = ref<Record[]>([]);
 
 // 定义地图数据
 const mapData = ref([
@@ -20,23 +20,6 @@ const mapData = ref([
     { name: '上海市', value: Math.round(Math.random() * 1000) },
     { name: '重庆市', value: Math.round(Math.random() * 1000) },
 ]);
-
-function updateMapData(data: any) {
-    // 根据返回的数据更新地图显示
-    mapData.value = data.map((item: any) => ({
-        name: item.city,
-        value: item.money,
-    }));
-}
-
-function updateTableData(data: any) {
-    // 根据返回的数据更新表格显示
-    tableData.value = data.map((item: any) => ({
-        city: item.city,
-        money: item.money,
-        amount: item.amount,
-    }));
-}
 </script>
 
 <template>
@@ -48,7 +31,12 @@ function updateTableData(data: any) {
                 </div>
 
                 <div class="display">
+                    <div class="business-area">
+                        
+                    </div>
+                    <div class="maintain-area">
 
+                    </div>
                 </div>
             </div>
         </template>
@@ -70,11 +58,21 @@ function updateTableData(data: any) {
 }
 
 .display {
-    width: 40%;
+    width: 35%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 2%;
+}
+
+.business-area{
+    background-color: black;
+    height: 48%;
+    border-radius: 15px;
+}
+
+.maintain-area{
+    height: 48%;
 }
 </style>
