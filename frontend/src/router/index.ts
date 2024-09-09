@@ -11,6 +11,7 @@ import ForexInfoView from '@/views/business/ForexInfoView.vue';
 import MonitorView from '@/views/monitor/MonitorView.vue';
 import LogInfoView from '@/views/log/LogInfoView.vue';
 import DispatchView from '@/views/dispatch/DispatchView.vue';
+import PlatView from '@/views/monitor/PlatView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -87,6 +88,11 @@ const router = createRouter({
       name: 'dispatch',
       component: DispatchView
     },
+    {
+      path: '/monitor/plat',
+      name: 'plat',
+      component: PlatView
+    }
   ]
 })
 

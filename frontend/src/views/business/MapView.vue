@@ -37,6 +37,13 @@ function handleBusinessTypeChange(type: string) {
     businessType.value = type;
 }
 
+// 定义 Record 接口
+interface Record {
+    city: string
+    money: number
+    amount: number
+}
+
 // 定义表格数据
 const tableData = ref<Record[]>([]);
 const mapData = ref([]);
@@ -66,14 +73,6 @@ const mapData = ref([]);
 //         amount: item.amount,
 //     }));
 // }
-
-
-// 定义 Record 接口
-interface Record {
-    city: string
-    money: number
-    amount: number
-}
 
 // 验证日期和业务类型是否已选择
 function validateSelections() {
@@ -110,9 +109,9 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
                 Authorization: sessionStorage.getItem('token')
             }
         });
-        if(response.data.code===0) {
+        if (response.data.code === 0) {
             const { province, count, amount } = response.data.data;
-            
+
             // 更新表格和地图数据
             tableData.value = province.map((name: string, index: number) => ({
                 city: name,
@@ -121,9 +120,9 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
             }));
 
             mapData.value = province.map((name: string, index: number) => ({
-                name:name,
-                value1:amount[index],
-                value2:count[index],
+                name: name,
+                value1: amount[index],
+                value2: count[index],
             }));
             // console.log(mapData);
         }
@@ -180,7 +179,7 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
 }
 
 .display {
-    width: 40%;
+    width: 35%;
     height: 100%;
     display: flex;
     flex-direction: column;
