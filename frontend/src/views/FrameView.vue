@@ -49,6 +49,24 @@ const hideMonitorSubMenu = () => {
         isMonitorHovered.value = false;
     }, 100);  // 100ms 延迟隐藏弹窗
 };
+
+const exit = async () => {
+    try {
+        const response = await instance.post('/user/exit', {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        });
+        if (response.data.code === 0) {
+            // 退出成功，清除会话中的用户信息
+            sessionStorage.removeItem('token');
+        } else {
+            console.error('Failed to logout:', response.data.message);
+        }
+    } catch (error) {
+        console.error('Error during logout:', error);
+    }
+};
 </script>
 
 <template>
@@ -126,9 +144,9 @@ const hideMonitorSubMenu = () => {
                         </div>
 
                         <div class="header-icons">
-                            <!-- <div class="icon-button">
-                                <img src="@/assets/moon-夜间模式.svg" alt="Moon Icon" class="button-icon">
-                            </div> -->
+                            <RouterLink to="/user/login" class="icon-button" style="text-decoration: none;">
+                                <img src="@/assets/exit-退出.svg" alt="Exit Icon" class="button-icon" @click="exit">
+                            </RouterLink>
 
                             <RouterLink to="/log" class="icon-button" style="text-decoration: none;">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">

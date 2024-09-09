@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import FrameView from '../FrameView.vue';
@@ -7,14 +7,21 @@ import DatePicker from '@/components/DatePicker.vue';
 import instance from '@/utils/request';
 
 // 日期范围
+const today = new Date();
+const lastmonth = new Date(today);
+lastmonth.setDate(today.getDate() - 30);
 const dateRange = ref<[Date, Date]>([
-    new Date(2024, 8, 1),
-    new Date(2024, 8, 2),
+    lastmonth,
+    today,
 ]);
 
 function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
+
+const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+};
 
 // 分页相关数据
 const currentPage = ref(1);
@@ -22,41 +29,18 @@ const pageSize = ref(10);
 
 // 所有日志数据
 const logs = ref([]);
-// const logs = ref([
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-// ]);
 
-
+// 获取日志数据的函数
 const fetchLogs = async () => {
     try {
-        const response = await instance.get('/monitor/logs', {
-            headers: {
-                Authorization: sessionStorage.getItem('token')
-            },
+        const response = await instance.get('/monitor/detailedlogs', {
             params: {
-                startDate: dateRange.value[0].toISOString(),
-                endDate: dateRange.value[1].toISOString(),
-            }
+                startTime: formatDate(dateRange.value[0]),
+                endTime: formatDate(dateRange.value[1]),
+            },
+            headers: {
+                Authorization: sessionStorage.getItem('token'),
+            },
         });
 
         if (response.data.code === 0) {
@@ -65,13 +49,13 @@ const fetchLogs = async () => {
             logs.value = data.map((log: any) => ({
                 serial_number: log.serialNumber, 
                 province: log.province,
-                age: log.age,
-                transaction_amount: log.transactionAmount,
+                age: log.age || '无',
+                transaction_amount: log.transactionAmount || '无',
                 transaction_time: log.transactionTime,
                 status: log.status,
                 event_type: log.eventType,
-                transaction_type: log.transactionType
             }));
+            console.log(logs);
         }
     } catch (error) {
         console.error('Failed to fetch logs data', error);
@@ -82,6 +66,9 @@ const fetchLogs = async () => {
 onMounted(() => {
     fetchLogs();
 });
+
+// 监听日期范围变化，并自动重新获取数据
+watch(dateRange, fetchLogs);
 
 // 计算当前页显示的数据
 const paginatedLogs = computed(() => {
