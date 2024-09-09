@@ -108,36 +108,36 @@ onMounted(() => {
 });
 
 // 折线图数据
-const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+// const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
+// const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
-// 饼状图数据
-const pieData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' },
-]);
+// // 饼状图数据
+// const pieData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' },
+// ]);
 
-// 环形图数据
-const doughnutChartData = ref([
-    { value: 1048, name: 'Search Engine' },
-    { value: 735, name: 'Direct' },
-    { value: 580, name: 'Email' },
-    { value: 484, name: 'Union Ads' },
-    { value: 300, name: 'Video Ads' }
-]);
+// // 环形图数据
+// const doughnutChartData = ref([
+//     { value: 1048, name: 'Search Engine' },
+//     { value: 735, name: 'Direct' },
+//     { value: 580, name: 'Email' },
+//     { value: 484, name: 'Union Ads' },
+//     { value: 300, name: 'Video Ads' }
+// ]);
 
-const timelineItems = ref([
-    { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-    { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-    { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-    { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
-    { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
-    { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-    { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
-]);
+// const timelineItems = ref([
+//     { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+//     { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+//     { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+//     { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
+//     { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
+//     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+//     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
+// ]);
 
 </script>
 
@@ -159,43 +159,43 @@ const timelineItems = ref([
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;">
+                            <el-timeline-item timestamp="外汇交易金额与笔数柱状图" placement="top" style="height: 30vh;">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -207,26 +207,26 @@ const timelineItems = ref([
                     <div class="chart">
                         <div class="bar-chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数" />
+                                <BarChart :chartData="barData" :xAxisData="categories" title="外汇交易金额与笔数柱状图" />
                             </div>
                         </div>
 
                         <div class="pie-doughnut-chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
+                                <PieChart :chartData="pieData" title="外汇年龄段与交易金额饼状图"></PieChart>
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比">
+                                <DoughnutChart :chartData="doughnutChartData" title="外汇年龄段与交易笔数环形图">
                                 </DoughnutChart>
                             </div>
                         </div>
 
                         <div class="line-chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="过去一周外汇交易金额与时间折线图" />
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易笔数趋势" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="过去一周外汇交易笔数与时间折线图" />
                             </div>
                         </div>
 
