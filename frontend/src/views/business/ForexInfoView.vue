@@ -43,10 +43,6 @@ function sendTimeRangeToBackend() {
     return instance.get('/business/forex/range', { params });
 }
 
-// 柱状图数据
-const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
-
 // 并行发送请求
 function sendAllDataToBackend() {
     return axios.all([sendTimeRangeToBackend()])
@@ -78,9 +74,8 @@ function validateSelections() {
 
 // 点击确认按钮时的处理方法
 function handleConfirmClick() {
-    if (!validateSelections()) {
+    if (!validateSelections())
         return;
-    }
 
     console.log('Selected business type:', businessType.value);
 
@@ -107,7 +102,11 @@ onMounted(() => {
     sendAllDataToBackend();
 });
 
-// 折线图数据
+// // 柱状图数据
+// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+
+// // 折线图数据
 // const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 // const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
@@ -138,7 +137,6 @@ onMounted(() => {
 //     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
 //     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
 // ]);
-
 </script>
 
 <template>
@@ -261,6 +259,7 @@ onMounted(() => {
     width: 100%;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
     margin-bottom: 10px;
     gap: 3vw;
 }

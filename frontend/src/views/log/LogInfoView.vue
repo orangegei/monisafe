@@ -47,7 +47,7 @@ const fetchLogs = async () => {
             // 获取并更新日志数据
             const data = response.data.data;
             logs.value = data.map((log: any) => ({
-                serial_number: log.serialNumber, 
+                serial_number: log.serialNumber,
                 province: log.province,
                 age: log.age || '无',
                 transaction_amount: log.transactionAmount || '无',
@@ -90,7 +90,7 @@ const exportToExcel = () => {
 
 const exportToPDF = () => {
     printJS({
-        printable: 'content',
+        printable: 'business-content',
         type: 'html',
         targetStyles: ['*'],
         style: `

@@ -123,10 +123,8 @@ onMounted(() => {
     <FrameView>
         <template #main-body>
             <div class="main-body-container">
-
                 <!-- 监控部分 -->
                 <div class="monitor-container">
-
                     <!-- ATM监控部分 -->
                     <div class="atm-container">
                         <el-card class="chart-card gauge-card" shadow="hover">
