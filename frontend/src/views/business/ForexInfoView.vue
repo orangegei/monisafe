@@ -157,43 +157,43 @@ onMounted(() => {
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;">
+                            <el-timeline-item timestamp="外汇交易金额与笔数柱状图" placement="top" style="height: 30vh;">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -205,26 +205,26 @@ onMounted(() => {
                     <div class="chart">
                         <div class="bar-chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数" />
+                                <BarChart :chartData="barData" :xAxisData="categories" title="外汇交易金额与笔数柱状图" />
                             </div>
                         </div>
 
                         <div class="pie-doughnut-chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="pieData" title="各年龄ATM总交易金额占比"></PieChart>
+                                <PieChart :chartData="pieData" title="外汇年龄段与交易金额饼状图"></PieChart>
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="doughnutChartData" title="各年龄段ATM总交易笔数占比">
+                                <DoughnutChart :chartData="doughnutChartData" title="外汇年龄段与交易笔数环形图">
                                 </DoughnutChart>
                             </div>
                         </div>
 
                         <div class="line-chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="过去一周外汇交易金额与时间折线图" />
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易笔数趋势" />
+                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="过去一周外汇交易笔数与时间折线图" />
                             </div>
                         </div>
 

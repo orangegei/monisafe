@@ -38,6 +38,9 @@ const ATM_bar_xdata = ref([]);
 const ATM_bar_ydata = ref([]);
 const ATM_pieData = ref([]);
 const ATM_doughnutChartData = ref([]);
+const ATM_line_amount_data = ref([]);
+const ATM_line_count_data = ref([]);
+const daysOfWeek = ref(['Mon.', 'Tue.', 'Wed.', 'Thus.', 'Fri.', 'Sat.', 'Sun.']);
 
 // 处理函数
 function handleATMChartData(chartData) {
@@ -59,6 +62,14 @@ function ATM_transformChartDataTodChartData(chartData) {
     }));
 }
 
+function handleATMLineChartData(chartData, dataType) {
+    if (dataType === 'amount') {
+        ATM_line_amount_data.value = chartData.ydata;
+    } else if (dataType === 'count') {
+        ATM_line_count_data.value = chartData.ydata;
+    }
+}
+
 // 获取ATM数据
 const getAllData = async () => {
     try {
@@ -71,6 +82,8 @@ const getAllData = async () => {
             instance.get('/business/atm/age/amount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/atm/age/count', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/atm/range', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/weekamount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/weekcount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
         ];
 
         const responses = await Promise.all(requests);
@@ -81,6 +94,8 @@ const getAllData = async () => {
                     case 0: ATM_transformChartDataToPieData(data); break;
                     case 1: ATM_transformChartDataTodChartData(data); break;
                     case 2: handleATMChartData(data); break;
+                    case 3: handleATMLineChartData(data, 'amount'); break;
+                    case 4: handleATMLineChartData(data, 'count'); break; 
                 }
             } else {
                 console.error('Error in response:', response.message);
@@ -119,13 +134,9 @@ function handleConfirmClick() {
     }
 }
 
-onMounted(() => {
-    getAllData();
-});
-
 // 柱状图数据
-// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
 // const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 // const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
@@ -172,36 +183,31 @@ onMounted(() => {
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;"
-                                color="#E85827">
+                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;" color="#FF0000">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
-                                color="#E85827">
+                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
-                                color="#E85827">
+                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;"
-                                color="#E85827">
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;"
-                                color="#E85827">
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -213,26 +219,26 @@ onMounted(() => {
                     <div class="chart">
                         <div class="bar-chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额对应笔数" />
+                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额与笔数柱状图" />
                             </div>
                         </div>
 
                         <div class="pie-doughnut-chart-row">
                             <div class="pie-chart">
-                                <PieChart :chartData="ATM_pieData" title="各年龄ATM总交易金额占比"></PieChart>
+                                <PieChart :chartData="ATM_pieData" title="ATM年龄段与交易金额饼状图"></PieChart>
                             </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="ATM_doughnutChartData" title="各年龄段ATM总交易笔数占比">
+                                <DoughnutChart :chartData="ATM_doughnutChartData" title="ATM年龄段与交易笔数环形图">
                                 </DoughnutChart>
                             </div>
                         </div>
 
                         <div class="line-chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易金额趋势" />
+                                <LineChart :chartData="ATM_line_amount_data" :xAxisData="daysOfWeek" title="过去一周ATM交易金额与时间折线图" />
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="lineData" :xAxisData="daysOfWeek" title="ATM时间段交易笔数趋势" />
+                                <LineChart :chartData="ATM_line_count_data" :xAxisData="daysOfWeek" title="过去一周ATM交易笔数与时间折线图" />
                             </div>
                         </div>
                     </div>
@@ -243,7 +249,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 容器布局 */
 .container {
     width: 100%;
     display: flex;
@@ -252,7 +257,6 @@ onMounted(() => {
     gap: 3vh;
 }
 
-/* 选择器布局 */
 .picker {
     width: 100%;
     display: flex;
@@ -266,7 +270,6 @@ onMounted(() => {
     border-radius: 10px;
 }
 
-/* 时间线和图表的布局 */
 .display {
     display: flex;
     flex-direction: row;
@@ -275,7 +278,6 @@ onMounted(() => {
     /* 确保整个页面占满视口 */
 }
 
-/* 时间线部分的样式 */
 .time-line {
     width: 30%;
 }
@@ -286,7 +288,6 @@ onMounted(() => {
     line-height: 2.5;
 }
 
-/* 图表部分的样式 */
 .chart {
     width: 70%;
     display: flex;
