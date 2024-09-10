@@ -66,17 +66,17 @@ const paginatedStaff = computed(() => {
                     <div class="table-container">
                         <el-table :data="paginatedStaff" border style="width: 100%">
                             <!-- 用户角色列 -->
-                            <el-table-column prop="user_role" label="用户角色" width="150px">
+                            <el-table-column prop="user_role" label="用户角色" width="auto" align="center">
                                 <template #default="{ row }">
                                     {{ row.user_role === 1 ? '维修人员' : '业务人员' }}
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="id" label="人员ID" width="150px"></el-table-column>
-                            <el-table-column prop="province" label="所属省份" width="150px"></el-table-column>
-                            <el-table-column prop="phone" label="手机号" width="200px"></el-table-column>
-                            <el-table-column prop="email" label="邮箱" width="250px"></el-table-column>
-                            <el-table-column prop="status" label="当前状态" width="auto"></el-table-column>
+                            <el-table-column prop="id" label="人员ID" width="auto" align="center"></el-table-column>
+                            <el-table-column prop="province" label="所属省份" width="auto" align="center"></el-table-column>
+                            <el-table-column prop="phone" label="手机号" width="auto" align="center"></el-table-column>
+                            <el-table-column prop="email" label="邮箱" width="auto" align="center"></el-table-column>
+                            <el-table-column prop="status" label="当前状态" width="auto" align="center"></el-table-column>
                         </el-table>
                     </div>
 
