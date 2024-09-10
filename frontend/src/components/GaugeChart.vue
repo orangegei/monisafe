@@ -42,7 +42,7 @@ onMounted(() => {
                         distance: 30,
                         length: 8,
                         lineStyle: {
-                            color: '#fff',
+                            color: '#4EB9EC',
                             width: 2
                         }
                     },
@@ -57,13 +57,13 @@ onMounted(() => {
                     axisLabel: {
                         color: 'inherit',
                         distance: 18,
-                        fontSize: 12
+                        fontSize: 10
                     },
                     detail: {
                         valueAnimation: true,
                         formatter: '{value} ms',
                         color: 'inherit',
-                        fontSize: 14,
+                        fontSize: 18,
                         offsetCenter: [0, '100%']
                     },
                     data: [

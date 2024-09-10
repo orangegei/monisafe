@@ -1,25 +1,41 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import FrameView from '../FrameView.vue';
-import ChinaMap from '@/components/ChinaMap.vue';
+import ChinaPlat from '@/components/ChinaPlat.vue';
+import instance from '@/utils/request';
 
 // 定义 Record 接口
 interface Record {
-    city: string
-    money: number
-    amount: number
+    province: string;
+    highCount: number;
+    timeCount: number;
+    atmresponseCount: number;
+    forexResponseCount: number;
 }
 
-// 定义表格数据
-const tableData = ref<Record[]>([]);
+async function fetchData() {
+    try {
+        const response = await instance.get("/monitor/plat",  {
+                headers: {
+                    Authorization: sessionStorage.getItem('token')
+                }
+            });
+        if (response.data.code === 0) {
+            platData.value = response.data.data as Record[];
+            console.log(platData.value);
+        }
+
+    } catch (error) {
+        console.error('请求失败:', error);
+    }
+}
+
+onMounted(() => {
+    fetchData();
+});
 
 // 定义地图数据
-const mapData = ref([
-    { name: '北京市', value: Math.round(Math.random() * 1000) },
-    { name: '天津市', value: Math.round(Math.random() * 1000) },
-    { name: '上海市', value: Math.round(Math.random() * 1000) },
-    { name: '重庆市', value: Math.round(Math.random() * 1000) },
-]);
+const platData = ref<Record[]>([]);
 
 // 切换状态
 const showBusiness = ref(true);
@@ -35,7 +51,7 @@ const toggleView = () => {
         <template #main-body>
             <div class="container">
                 <div class="china-map">
-                    <ChinaMap :data="mapData" />
+                    <ChinaPlat :data="platData" />
                 </div>
 
                 <div class="results">
@@ -49,20 +65,20 @@ const toggleView = () => {
                             <transition name="slide" mode="out-in">
                                 <div class="business" v-if="showBusiness" key="business-content">
                                     <div>大额交易异常次数Top3：</div>
-                                    <div class="city-list">上海市，南京市，广州市</div>
+                                    <div class="province-list">上海市，南京市，广州市</div>
                                     <div>异常时间取款笔数Top3：</div>
-                                    <div class="city-list">上海市，北京市，杭州市</div>
-                                    <div>需重点关注的城市：</div>
-                                    <div class="city-list">上海市</div>
+                                    <div class="province-list">上海市，北京市，杭州市</div>
+                                    <div>需重点关注的省份：</div>
+                                    <div class="province-list">上海市</div>
                                 </div>
 
                                 <div class="maintain" v-else key="maintain-content">
                                     <div>ATM-entry响应时间异常次数Top3：</div>
-                                    <div class="city-list">上海市，南京市，广州市</div>
+                                    <div class="province-list">上海市，南京市，广州市</div>
                                     <div>forex-entry响应时间异常次数Top3：</div>
-                                    <div class="city-list">上海市，北京市，杭州市</div>
-                                    <div>需重点关注的城市：</div>
-                                    <div class="city-list">上海市</div>
+                                    <div class="province-list">上海市，北京市，杭州市</div>
+                                    <div>需重点关注的省份：</div>
+                                    <div class="province-list">上海市</div>
                                 </div>
                             </transition>
                         </div>
@@ -146,7 +162,7 @@ const toggleView = () => {
     z-index: 0;
 }
 
-.city-list {
+.province-list {
     font-family: 'FZZJ LongYTWJ', sans-serif;
     font-size: 36px;
 }

@@ -1,32 +1,17 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import FrameView from '../FrameView.vue';
+import instance from '@/utils/request';
 
 // 分页相关数据
 const currentPage = ref(1);
 const pageSize = ref(11);
 
-// 所有运维人员数据（包含 user_role 字段）
-const maintenanceStaff = ref([
-    { id: 101, province: '北京', phone: '13812345678', email: 'beijing101@example.com', status: '在线', user_role: 1 },
-    { id: 102, province: '上海', phone: '13712345679', email: 'shanghai102@example.com', status: '离线', user_role: 2 },
-    { id: 103, province: '广东', phone: '13912345680', email: 'guangdong103@example.com', status: '在线', user_role: 2 },
-    { id: 104, province: '浙江', phone: '13512345681', email: 'zhejiang104@example.com', status: '休息', user_role: 1 },
-    { id: 105, province: '湖北', phone: '13612345682', email: 'hubei105@example.com', status: '在线', user_role: 2 },
-    { id: 106, province: '江苏', phone: '13812345683', email: 'jiangsu106@example.com', status: '在线', user_role: 1 },
-    { id: 107, province: '湖南', phone: '13712345684', email: 'hunan107@example.com', status: '离线', user_role: 1 },
-    { id: 108, province: '重庆', phone: '13912345685', email: 'chongqing108@example.com', status: '在线', user_role: 2 },
-    { id: 109, province: '四川', phone: '13512345686', email: 'sichuan109@example.com', status: '休息', user_role: 2 },
-    { id: 110, province: '福建', phone: '13612345687', email: 'fujian110@example.com', status: '在线', user_role: 1 },
-    { id: 111, province: '江西', phone: '13312290686', email: 'jiangxi111@example.com', status: '在线', user_role: 1 },
-    { id: 111, province: '江西', phone: '13312290686', email: 'jiangxi111@example.com', status: '在线', user_role: 1 },
-    { id: 111, province: '江西', phone: '13312290686', email: 'jiangxi111@example.com', status: '在线', user_role: 1 },
-    { id: 111, province: '江西', phone: '13312290686', email: 'jiangxi111@example.com', status: '在线', user_role: 1 },
-    // 更多数据...
-]);
+// 所有人员数据
+const maintenanceStaff = ref([]);
 
 // 筛选方法
-const filterStaff = (role: string | number) => {
+const filterStaff = (role: string) => {
     if (role === 'all') {
         filteredStaff.value = maintenanceStaff.value;
     } else {
@@ -47,6 +32,37 @@ const paginatedStaff = computed(() => {
     const end = start + pageSize.value;
     return filteredStaff.value.slice(start, end);
 });
+
+const fetchStaff = async () => {
+    try {
+        const response = await instance.get('/dispatch', {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            },
+        });
+
+        if (response.data.code === 0) {
+            // 更新人员数据
+            maintenanceStaff.value = response.data.data.map((log: any) => ({
+                id: log.userId,
+                province: log.province,
+                phone: log.phoneNumber,
+                email: log.emailAddress,
+                status: log.status,
+                user_role: log.userRole,
+            }));
+            // console.log(maintenanceStaff);
+            filterStaff('all'); // 默认筛选所有人员
+        }
+    } catch (error) {
+        console.error('Failed to fetch logs data', error);
+    }
+};
+
+// 在组件挂载时调用 fetchStaff 来获取人员数据
+onMounted(() => {
+    fetchStaff();
+});
 </script>
 
 <template>
@@ -58,8 +74,9 @@ const paginatedStaff = computed(() => {
                         <span style="white-space: nowrap;">人员查询</span>
                         <el-button-group>
                             <el-button @click="filterStaff('all')">所有人员</el-button>
-                            <el-button @click="filterStaff(1)">维修人员</el-button>
-                            <el-button @click="filterStaff(2)">业务人员</el-button>
+                            <el-button @click="filterStaff('运维人员')">运维人员</el-button>
+                            <el-button @click="filterStaff('业务人员')">业务人员</el-button>
+                            <el-button @click="filterStaff('监控人员')">监控人员</el-button>
                         </el-button-group>
                     </div>
 
@@ -71,7 +88,6 @@ const paginatedStaff = computed(() => {
                                     {{ row.user_role === 1 ? '维修人员' : '业务人员' }}
                                 </template>
                             </el-table-column>
-
                             <el-table-column prop="id" label="人员ID" width="auto" align="center"></el-table-column>
                             <el-table-column prop="province" label="所属省份" width="auto" align="center"></el-table-column>
                             <el-table-column prop="phone" label="手机号" width="auto" align="center"></el-table-column>
@@ -93,7 +109,6 @@ const paginatedStaff = computed(() => {
         </template>
     </FrameView>
 </template>
-
 
 <style scoped>
 .container {

@@ -26,8 +26,10 @@ onMounted(() => {
                     const data = params.data;
                     if (data) {
                         return `${params.name}<br/>
-                                总交易金额: ${data.value1}<br/>
-                                总交易笔数: ${data.value2}<br/>`;
+                                异常金额次数: ${data.value1}<br/>
+                                异常时间次数: ${data.value2}<br/>
+                                ATMEntry异常次数: ${data.value3}<br/>
+                                ForexEntry异常次数: ${data.value4}<br/>`;
                     } else {
                         // console.log(params.name);
                         return `${params.name}<br/>无数据`;
@@ -68,6 +70,8 @@ onMounted(() => {
                     value: item.value1,  // 使用 value1 来映射颜色
                     value1: item.value1,
                     value2: item.value2,
+                    value3: item.value3,
+                    value4: item.value4,
                 }))
                 }
             ]

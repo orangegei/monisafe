@@ -45,7 +45,7 @@ const fetchAtmData = async () => {
             const data = response.data.data;
             atmGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
             atmLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
-            xAxisData.value = data.map(item => item.time); // 更新X轴数据
+            // xAxisData.value = data.map(item => item.time); // 更新X轴数据
             atmAmount.value = data[9].transactionAmount; // 更新交易金额
             atmCount.value = data[9].transactionCount; // 更新交易笔数
 
@@ -74,6 +74,11 @@ const fetchForexData = async () => {
             // xAxisData.value = data.map(item => item.time);
             forexAmount.value = data[9].transactionAmount; // 更新交易金额
             forexCount.value = data[9].transactionCount; // 更新交易笔数
+
+            // xAxisData.value = data.map(item => {
+            //     const date = new Date(item.transactionTime);
+            //     return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            // }); // 更新x轴数据
         }
     } catch (error) {
         console.error('Failed to fetch Forex data', error);
@@ -128,7 +133,7 @@ onMounted(() => {
                     <!-- ATM监控部分 -->
                     <div class="atm-container">
                         <el-card class="chart-card gauge-card" shadow="hover">
-                            <div class="chart-title">ATM 实时数据</div>
+                            <div class="chart-title">ATM 业务实时数据</div>
                             <div class="chart-content">
                                 <div class="left-section">
                                     <GaugeChart :value="atmGaugeValue" />
@@ -176,7 +181,7 @@ onMounted(() => {
                         </el-card>
 
                         <el-card class="chart-card gauge-card" shadow="hover">
-                            <div class="chart-title">外汇实时数据</div>
+                            <div class="chart-title">外汇业务实时数据</div>
                             <div class="chart-content">
                                 <div class="left-section">
                                     <GaugeChart :value="forexGaugeValue" />
@@ -288,7 +293,7 @@ onMounted(() => {
 
 .right-section>*:not(:last-child) {
     margin-top: 20%;
-    margin-bottom: 50%;
+    margin-bottom: 40%;
 }
 
 .chart {
@@ -346,6 +351,7 @@ onMounted(() => {
     background-color: #eff3f8;
     width: 120%;
     height: 25%;
+    margin-right: 5%;
     display: flex;
     justify-content: center;
     align-items: center;
