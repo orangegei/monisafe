@@ -24,7 +24,7 @@ async function fetchData() {
             });
         if (response.data.code === 0) {
             platData.value = response.data.data;
-            console.log(platData);
+            // console.log(platData);
         }
 
     } catch (error) {
