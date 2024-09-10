@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
+import axios from 'axios';
+import instance from '@/utils/request'
 
 // 控制侧边栏显示状态的变量
 const isSidebarCollapsed = ref(false);
@@ -74,7 +76,8 @@ const selectedStatus = ref('');
 
 const updateStatus = async (status) => {
     try {
-        const response = await instance.get('/updateStatus', { status }, {
+        console.log(status);
+        const response = await instance.post('/user/updateStatus', { "status": status }, {
             headers: {
                 Authorization: sessionStorage.getItem('token')
             }
@@ -94,7 +97,7 @@ const handleCommand = async (command) => {
         // 发送状态到后端
         await updateStatus(selectedStatus.value);
         ElMessage({
-            message: `修改成功，当前状态为 ${selectedStatus.value === 'free' ? '空闲' : '忙碌'}`,
+            message: `修改成功，当前状态为 ${selectedStatus.value === '空闲' ? '空闲' : '忙碌'}`,
             type: 'success',
         });
     } catch (error) {
@@ -105,6 +108,31 @@ const handleCommand = async (command) => {
         console.error('Error updating status:', error);
     }
 };
+
+// 当前用户的用户名
+const currentUsername = ref('');
+
+// 在组件挂载时获取当前用户的用户名
+onMounted(async () => {
+    try {
+        const response = await instance.get('/user/getUserName' , {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        });
+        if (response.data.code === 0) {
+            currentUsername.value = response.data.data;
+        } else {
+            throw new Error(response.data.message);
+        }
+    } catch (error) {
+        ElMessage({
+            message: '获取用户信息失败，请重试',
+            type: 'error',
+        });
+        console.error('Error fetching current user:', error);
+    }
+});
 
 </script>
 
@@ -170,7 +198,7 @@ const handleCommand = async (command) => {
                 <el-header class="monisafe-header">
                     <div class="header-content">
                         <div class="welcome-message">
-                            <h1>Welcome back, Jack!</h1>
+                            <h1>Welcome back, {{ currentUsername }}!</h1>
                         </div>
 
                         <div class="atm-forex-btn">
@@ -184,8 +212,8 @@ const handleCommand = async (command) => {
                                 </div>
                                 <template #dropdown>
                                     <el-dropdown-menu>
-                                        <el-dropdown-item command="free">空闲</el-dropdown-item>
-                                        <el-dropdown-item command="busy">忙碌</el-dropdown-item>
+                                        <el-dropdown-item command="空闲">空闲</el-dropdown-item>
+                                        <el-dropdown-item command="忙碌">忙碌</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>

@@ -78,7 +78,7 @@ const updateChart = (data) => {
             }
         },
         legend: {
-            data: ['ATMServer', 'FXServer', 'CoreEntry', 'CoreService'],
+            data: ['ATMServer', 'FXServer', 'FXCoreEntry', 'CoreService'],
             right: '5%',
             top: '10%'
         },
@@ -161,6 +161,9 @@ onMounted(() => {
 
                 <div class="bottom-row">
                     <div class="content">
+                        <div style="text-align: center; font-size: 18px; font-weight: bold; padding: 10px;">
+                            Table: 各个节点响应时间
+                        </div>
                         <el-table :data="serverData" border style="width: 100%">
                             <el-table-column prop="name" label="节点名称" align="center"></el-table-column>
                             <el-table-column prop="maxResponse" label="最大响应时间" align="center"></el-table-column>

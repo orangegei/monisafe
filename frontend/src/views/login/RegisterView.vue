@@ -24,9 +24,9 @@ const provinces = [
 ];
 
 const roles = [
-    { label: '监控人员', value: 'monitor' },
-    { label: '维修人员', value: 'maintenance' },
-    { label: '业务人员', value: 'business' }
+    { label: '监控人员', value: '监控人员' },
+    { label: '维修人员', value: '维修人员' },
+    { label: '业务人员', value: '业务人员' }
 ];
 
 const rules = {
