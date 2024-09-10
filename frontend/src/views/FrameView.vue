@@ -226,6 +226,9 @@ body {
     height: 97vh;
     overflow: hidden;
     border-radius: 10px;
+    /* background-color: #dce9f3; */
+    /* background-color: #E7EAF1; */
+    /* background-color: #e8e4e4ca; */
     /* background: radial-gradient(circle at top, #bfdcffdf, transparent); */
     /* background: 
         radial-gradient(circle at top, rgba(255, 0, 0, 0.5), transparent),
@@ -245,6 +248,7 @@ body {
     transition: width 0.3s ease;
     /* background-color: #85aede; */
     border-radius: 15px;
+    background-color: #dce9f3;
 }
 
 .business-content {

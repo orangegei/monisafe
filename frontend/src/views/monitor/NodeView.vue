@@ -133,15 +133,12 @@ onMounted(() => {
                 </div>
 
                 <div class="bottom-row">
-                    <!-- 左侧显示服务节点的最大响应时间和平均响应时间 -->
                     <div class="content">
-                        <el-card>
-                            <el-table :data="serverData" border style="width: 100%">
-                                <el-table-column prop="name" label="节点名称" align="center"></el-table-column>
-                                <el-table-column prop="maxResponse" label="最大响应时间" align="center"></el-table-column>
-                                <el-table-column prop="avgResponse" label="平均响应时间" align="center"></el-table-column>
-                            </el-table>
-                        </el-card>
+                        <el-table :data="serverData" border style="width: 100%">
+                            <el-table-column prop="name" label="节点名称" align="center"></el-table-column>
+                            <el-table-column prop="maxResponse" label="最大响应时间" align="center"></el-table-column>
+                            <el-table-column prop="avgResponse" label="平均响应时间" align="center"></el-table-column>
+                        </el-table>
                     </div>
 
                     <!-- 右侧显示建议内容 -->

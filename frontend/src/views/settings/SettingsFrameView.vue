@@ -39,7 +39,7 @@
                 </div>
             </el-aside>
 
-            <el-main>
+            <el-main style="background-color: aliceblue;">
                 <slot name="main-body"></slot>
             </el-main>
         </el-container>

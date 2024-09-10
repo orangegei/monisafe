@@ -1,8 +1,9 @@
 <template>
     <el-table :data="props.tableData" :default-sort="{ prop: 'money', order: 'descending' }" style="width: 100%">
-        <el-table-column prop="province" label="省份" style="width: 30%;" />
-        <el-table-column prop="money" label="总交易金额" sortable style="width: 35%;" />
-        <el-table-column prop="amount" label="总交易笔数" sortable :formatter="formatter" style="width: 35%;" />
+        <el-table-column prop="province" label="省份" style="width: 30%;" align="center" />
+        <el-table-column prop="money" label="总交易金额" sortable style="width: 35%;" align="center" />
+        <el-table-column prop="amount" label="总交易笔数" sortable :formatter="formatter" style="width: 35%;"
+            align="center" />
     </el-table>
 </template>
 

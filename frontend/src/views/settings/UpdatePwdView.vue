@@ -68,7 +68,15 @@ import SettingsFrameView from './SettingsFrameView.vue';
     align-items: center;
     width: 450px;
     border-radius: 20px;
-    background-color: #F5F6F8;
+    position: relative;
+    background: rgba(255, 255, 255, 0.3);
+    /* 设置透明背景 */
+    backdrop-filter: blur(10px);
+    /* 毛玻璃效果 */
+    -webkit-backdrop-filter: blur(10px);
+    /* 兼容Safari浏览器 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* 添加阴影 */
 }
 
 .oldPwd,
