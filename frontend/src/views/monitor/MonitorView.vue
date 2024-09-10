@@ -215,9 +215,9 @@ onMounted(() => {
                     <el-card class="chart-card alert-card" shadow="hover">
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe class="custom-table">
-                            <el-table-column prop="time" label="时间" width="auto" />
-                            <el-table-column prop="eventType" label="告警内容" width="120px" />
-                            <el-table-column prop="status" label="状态" width="auto">
+                            <el-table-column prop="time" label="时间" width="auto" align="center" />
+                            <el-table-column prop="eventType" label="告警内容" width="120px" align="center" />
+                            <el-table-column prop="status" label="状态" width="auto" align="center">
                                 <template #default="scope">
                                     <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警"
                                         class="alert-icon" />
