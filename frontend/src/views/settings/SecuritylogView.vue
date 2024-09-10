@@ -35,7 +35,7 @@ const tableRowClassName = ({
 <template>
     <SettingsFrameView>
         <template #main-body>
-            <div class="container">
+            <div class="container-box">
                 <h1>安全日志</h1>
                 <div>
                     <el-table :data="securityRecords" :row-class-name="tableRowClassName" style="width: 100%">
@@ -50,7 +50,7 @@ const tableRowClassName = ({
 </template>
 
 <style>
-.container {
+.container-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
