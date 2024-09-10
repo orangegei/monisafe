@@ -10,6 +10,12 @@ const isMonitorHovered = ref(false);
 // 控制业务子菜单的显示状态
 const isBusinessHovered = ref(false);
 
+// 控制状态选择框的显示状态
+const showStatusDialog = ref(false);
+
+// 选择的状态
+const selectedStatus = ref('');
+
 // 切换侧边栏的显示状态
 const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
@@ -67,6 +73,15 @@ const exit = async () => {
         console.error('Error during logout:', error);
     }
 };
+
+const handleClose = () => {
+    showStatusDialog.value = false;
+};
+
+const confirmStatus = () => {
+    console.log(`Selected Status: ${selectedStatus.value}`);
+    showStatusDialog.value = false;
+};
 </script>
 
 <template>
@@ -84,11 +99,6 @@ const exit = async () => {
                         <div class="menu-title" v-show="!isSidebarCollapsed">
                             Main Menu
                         </div>
-
-                        <!-- <RouterLink to="/monitor" class="item" style="text-decoration: none;">
-                            <img src="../assets/monitor-监控.svg" alt="monitor" class="menu-icon">
-                            <span class="text" v-show="!isSidebarCollapsed">监控</span>
-                        </RouterLink> -->
 
                         <!-- Monitor Menu Item with Hover Submenu -->
                         <div class="item monitor-item" @mouseenter="showMonitorSubMenu" @mouseleave="hideMonitorSubMenu"
@@ -144,14 +154,33 @@ const exit = async () => {
                         </div>
 
                         <div class="header-icons">
-                            <RouterLink to="/user/login" class="icon-button" style="text-decoration: none;">
-                                <img src="@/assets/exit-退出.svg" alt="Exit Icon" class="button-icon" @click="exit">
-                            </RouterLink>
+                            <div class="button-icon"  @click="showStatusDialog">
+                                <img src="@/assets/switch-切换状态.svg" alt="Switch Icon">
+                            </div>
+
+                            <!-- 状态选择框 -->
+                            <el-dialog
+                                title="选择在线状态"
+                                :visible.sync="showStatusDialog"
+                                @close="handleClose">
+                                <el-select v-model="selectedStatus" placeholder="请选择状态">
+                                    <el-option label="空闲" value="free"></el-option>
+                                    <el-option label="忙碌" value="busy"></el-option>
+                                </el-select>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="handleClose">取消</el-button>
+                                    <el-button type="primary" @click="confirmStatus">确定</el-button>
+                                </span>
+                            </el-dialog>
 
                             <RouterLink to="/log" class="icon-button" style="text-decoration: none;">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">
                             </RouterLink>
 
+                            <RouterLink to="/user/login" class="icon-button" style="text-decoration: none;">
+                                <img src="@/assets/exit-退出.svg" alt="Exit Icon" class="button-icon" @click="exit">
+                            </RouterLink>
+                           
                             <div class="picture" style="padding:0 5px;cursor: pointer;">
                                 <img src="../assets/profile-头像.jpeg" alt="Profile Icon"
                                     style="width: 50px;height: 50px;border-radius: 50%;">

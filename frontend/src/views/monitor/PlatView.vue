@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import FrameView from '../FrameView.vue';
 import ChinaPlat from '@/components/ChinaPlat.vue';
 import instance from '@/utils/request';
@@ -12,6 +12,8 @@ interface Record {
     atmresponseCount: number;
     forexResponseCount: number;
 }
+// 定义地图数据
+const platData = ref([]);
 
 async function fetchData() {
     try {
@@ -21,8 +23,8 @@ async function fetchData() {
                 }
             });
         if (response.data.code === 0) {
-            platData.value = response.data.data as Record[];
-            console.log(platData.value);
+            platData.value = response.data.data;
+            console.log(platData);
         }
 
     } catch (error) {
@@ -34,8 +36,6 @@ onMounted(() => {
     fetchData();
 });
 
-// 定义地图数据
-const platData = ref<Record[]>([]);
 
 // 切换状态
 const showBusiness = ref(true);
@@ -44,6 +44,46 @@ const showBusiness = ref(true);
 const toggleView = () => {
     showBusiness.value = !showBusiness.value;
 };
+
+// 计算大额交易异常次数Top3、省份列表
+const topHighCountProvinces = computed(() => {
+    const sorted = [...platData.value].sort((a, b) => b.highCount - a.highCount);
+    return sorted.slice(0, 3).map(record => record.province);
+});
+
+// 计算异常时间取款笔数Top3、省份列表
+const topTimeCountProvinces = computed(() => {
+    const sorted = [...platData.value].sort((a, b) => b.timeCount - a.timeCount);
+    return sorted.slice(0, 3).map(record => record.province);
+});
+
+// 计算重点关注的省份
+const focusProvinces = computed(() => {
+    const highCountProvinces = new Set(topHighCountProvinces.value);
+    const timeCountProvinces = new Set(topTimeCountProvinces.value);
+    const intersection = [...highCountProvinces].filter(province => timeCountProvinces.has(province));
+    return intersection.length ? intersection : ['无'];
+});
+
+// 计算ATM-entry响应时间异常次数Top3、省份列表
+const topAtmResponseProvinces = computed(() => {
+    const sorted = [...platData.value].sort((a, b) => b.atmresponseCount - a.atmresponseCount);
+    return sorted.slice(0, 3).map(record => record.province);
+});
+
+// 计算forex-entry响应时间异常次数Top3、省份列表
+const topForexResponseProvinces = computed(() => {
+    const sorted = [...platData.value].sort((a, b) => b.forexResponseCount - a.forexResponseCount);
+    return sorted.slice(0, 3).map(record => record.province);
+});
+
+// 计算重点关注的省份
+const focusAtmForexProvinces = computed(() => {
+    const atmResponseProvinces = new Set(topAtmResponseProvinces.value);
+    const forexResponseProvinces = new Set(topForexResponseProvinces.value);
+    const intersection = [...atmResponseProvinces].filter(province => forexResponseProvinces.has(province));
+    return intersection.length ? intersection : ['无'];
+});
 </script>
 
 <template>
@@ -65,20 +105,20 @@ const toggleView = () => {
                             <transition name="slide" mode="out-in">
                                 <div class="business" v-if="showBusiness" key="business-content">
                                     <div>大额交易异常次数Top3：</div>
-                                    <div class="province-list">上海市，南京市，广州市</div>
+                                    <div class="province-list">{{ topHighCountProvinces.join('，') }}</div>
                                     <div>异常时间取款笔数Top3：</div>
-                                    <div class="province-list">上海市，北京市，杭州市</div>
+                                    <div class="province-list">{{ topTimeCountProvinces.join('，') }}</div>
                                     <div>需重点关注的省份：</div>
-                                    <div class="province-list">上海市</div>
+                                    <div class="province-list">{{ focusProvinces.join('，') }}</div>
                                 </div>
 
                                 <div class="maintain" v-else key="maintain-content">
                                     <div>ATM-entry响应时间异常次数Top3：</div>
-                                    <div class="province-list">上海市，南京市，广州市</div>
+                                    <div class="province-list">{{ topAtmResponseProvinces.join('，') }}</div>
                                     <div>forex-entry响应时间异常次数Top3：</div>
-                                    <div class="province-list">上海市，北京市，杭州市</div>
+                                    <div class="province-list">{{ topForexResponseProvinces.join('，') }}</div>
                                     <div>需重点关注的省份：</div>
-                                    <div class="province-list">上海市</div>
+                                    <div class="province-list">{{ focusAtmForexProvinces.join('，') }}</div>
                                 </div>
                             </transition>
                         </div>
@@ -92,6 +132,7 @@ const toggleView = () => {
         </template>
     </FrameView>
 </template>
+
 
 <style scoped>
 .container {

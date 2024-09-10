@@ -75,10 +75,10 @@ const fetchForexData = async () => {
             forexAmount.value = data[9].transactionAmount; // 更新交易金额
             forexCount.value = data[9].transactionCount; // 更新交易笔数
 
-            // xAxisData.value = data.map(item => {
-            //     const date = new Date(item.transactionTime);
-            //     return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-            // }); // 更新x轴数据
+            xAxisData.value = data.map(item => {
+                const date = new Date(item.transactionTime);
+                return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }); // 更新x轴数据
         }
     } catch (error) {
         console.error('Failed to fetch Forex data', error);
@@ -163,7 +163,7 @@ onMounted(() => {
                         <el-card class="chart-card line-chart-card" shadow="hover">
                             <div class="chart-title">过去10分钟ATM取款响应时间</div>
                             <div class="line-chart">
-                                <LineChart :chartData="forexLineChartData" :xAxisData="xAxisData" :showTitle="false"
+                                <LineChart :chartData="atmLineChartData" :xAxisData="xAxisData" :showTitle="false"
                                     style="width: 100% ; height: 250%;" />
                             </div>
                         </el-card>
@@ -216,7 +216,7 @@ onMounted(() => {
                         <div class="chart-title">实时告警信息</div>
                         <el-table :data="alerts" stripe class="custom-table">
                             <el-table-column prop="time" label="时间" width="auto" />
-                            <el-table-column prop="eventType" label="告警内容" width="auto" />
+                            <el-table-column prop="eventType" label="告警内容" width="120px" />
                             <el-table-column prop="status" label="状态" width="auto">
                                 <template #default="scope">
                                     <img v-if="scope.row.status === 'severe'" src="@/assets/severe.svg" alt="严重告警"
@@ -374,8 +374,8 @@ onMounted(() => {
 }
 
 .alert-icon {
-    width: 60%;
-    height: 60%;
+    width: 30%;
+    height: 30%;
     display: block;
     margin: 0 auto;
 }
