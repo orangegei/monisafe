@@ -58,6 +58,6 @@ const tableRowClassName = ({
 }
 
 .el-table .item-row {
-    --el-table-tr-bg-color: var(--el-color-warning-light-9);
+    --el-table-tr-bg-color: #F0F4FA;
 }
 </style>
