@@ -29,9 +29,17 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// 将日期转换为字符串并进行URL编码
+// // 将日期转换为字符串并进行URL编码
+// const formatDate = (date: Date): string => {
+//     return date.toISOString().split('T')[0];
+// };
+
+// 修改后的日期格式化函数，确保按本地时间处理
 const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，因此+1
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 // 发送日期范围到后端
@@ -94,6 +102,8 @@ function handleConfirmClick() {
         router.push('/business/chart/atm');
     }
 }
+
+const route = useRoute();
 
 onMounted(() => {
     const startTime = sessionStorage.getItem('startTime');

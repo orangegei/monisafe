@@ -28,9 +28,17 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// 将日期转换为字符串
+// // 将日期转换为字符串
+// const formatDate = (date: Date): string => {
+//     return date.toISOString().split('T')[0];
+// };
+
+// 修改后的日期格式化函数，确保按本地时间处理
 const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，因此+1
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 // ATM业务数据
@@ -145,6 +153,7 @@ onMounted(() => {
     if (startTime && endTime) {
         dateRange.value = [new Date(startTime), new Date(endTime)];
     }
+    console.log(dateRange.value);
     getAllData();
 });
 
@@ -284,6 +293,7 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px;
     gap: 3vw;
 }
 
