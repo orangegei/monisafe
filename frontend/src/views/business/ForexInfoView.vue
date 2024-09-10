@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import instance from '@/utils/request';
 import { ElMessage } from 'element-plus';
 import { ElButton } from 'element-plus';
-import { useRouter } from 'vue-router';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -29,10 +29,18 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// 将日期转换为字符串并进行URL编码
-function formatDate(date: Date): string {
-    return encodeURIComponent(date.toISOString());
-}
+// // 将日期转换为字符串并进行URL编码
+// const formatDate = (date: Date): string => {
+//     return date.toISOString().split('T')[0];
+// };
+
+// 修改后的日期格式化函数，确保按本地时间处理
+const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，因此+1
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 // 发送日期范围到后端
 function sendTimeRangeToBackend() {
@@ -72,12 +80,15 @@ function validateSelections() {
     return true;
 }
 
-// 点击确认按钮时的处理方法
 function handleConfirmClick() {
     if (!validateSelections())
         return;
 
-    console.log('Selected business type:', businessType.value);
+    const startDate = formatDate(dateRange.value[0]);
+    const endDate = formatDate(dateRange.value[1]);
+
+    sessionStorage.setItem('startTime', startDate);
+    sessionStorage.setItem('endTime', endDate);
 
     if (businessType.value === 'forex') {
         sendAllDataToBackend().then(() => {
@@ -88,55 +99,56 @@ function handleConfirmClick() {
         });
     } else if (businessType.value === 'atm') {
         // 跳转到ATM页面，传递时间参数
-        router.push({
-            path: '/business/chart/atm',
-            query: {
-                startTime: formatDate(dateRange.value[0]),
-                endTime: formatDate(dateRange.value[1])
-            }
-        });
+        router.push('/business/chart/atm');
     }
 }
 
+const route = useRoute();
+
 onMounted(() => {
+    const startTime = sessionStorage.getItem('startTime');
+    const endTime = sessionStorage.getItem('endTime');
+    if (startTime && endTime) {
+        dateRange.value = [new Date(startTime), new Date(endTime)];
+    }
     sendAllDataToBackend();
 });
 
-// // 柱状图数据
-// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+// 柱状图数据
+const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
-// // 折线图数据
-// const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-// const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+// 折线图数据
+const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
+const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
-// // 饼状图数据
-// const pieData = ref([
-//     { value: 1048, name: 'Search Engine' },
-//     { value: 735, name: 'Direct' },
-//     { value: 580, name: 'Email' },
-//     { value: 484, name: 'Union Ads' },
-//     { value: 300, name: 'Video Ads' },
-// ]);
+// 饼状图数据
+const pieData = ref([
+    { value: 1048, name: 'Search Engine' },
+    { value: 735, name: 'Direct' },
+    { value: 580, name: 'Email' },
+    { value: 484, name: 'Union Ads' },
+    { value: 300, name: 'Video Ads' },
+]);
 
-// // 环形图数据
-// const doughnutChartData = ref([
-//     { value: 1048, name: 'Search Engine' },
-//     { value: 735, name: 'Direct' },
-//     { value: 580, name: 'Email' },
-//     { value: 484, name: 'Union Ads' },
-//     { value: 300, name: 'Video Ads' }
-// ]);
+// 环形图数据
+const doughnutChartData = ref([
+    { value: 1048, name: 'Search Engine' },
+    { value: 735, name: 'Direct' },
+    { value: 580, name: 'Email' },
+    { value: 484, name: 'Union Ads' },
+    { value: 300, name: 'Video Ads' }
+]);
 
-// const timelineItems = ref([
-//     { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-//     { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-//     { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-//     { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
-//     { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
-//     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-//     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
-// ]);
+const timelineItems = ref([
+    { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
+    { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
+    { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
+    { text: '外汇换汇目的最多的是', color: '#f8f1f7' },
+    { text: '外汇换汇货币种类最多的是', color: '#f5f8e8' },
+    { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
+    { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
+]);
 </script>
 
 <template>
@@ -157,43 +169,50 @@ onMounted(() => {
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="外汇交易金额与笔数柱状图" placement="top" style="height: 30vh;">
+                            <el-timeline-item timestamp="外汇交易金额与笔数柱状图" placement="top" style="height: 30vh;"
+                                color="#008C8C">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="外汇年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="外汇年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
+                                color="#B05923">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="过去一周外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易金额与时间折线图" placement="top" style="height: 20vh;"
+                                color="#002FA7">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="过去一周外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="过去一周外汇交易笔数与时间折线图" placement="top" style="height: 20vh;"
+                                color="#800020">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="外汇交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易金额与时间折线图" placement="top" style="height: 20vh;"
+                                color="#003153">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="外汇交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="外汇交易笔数与时间折线图" placement="top" style="height: 20vh;"
+                                color="#E60000">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>

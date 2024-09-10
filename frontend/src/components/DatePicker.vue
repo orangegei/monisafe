@@ -17,6 +17,11 @@ watch(internalValue, (newValue) => {
     emit('update:internalValue', newValue)
 })
 
+// 监听 props.time 的变化并同步更新 internalValue
+watch(() => props.time, (newTime) => {
+    internalValue.value = newTime;
+})
+
 // 禁用今天及以后的日期
 function disableFutureDates(date: Date) {
     const today = new Date();
@@ -29,11 +34,10 @@ function disableFutureDates(date: Date) {
     <div class="date-picker">
         <div class="block">
             <el-date-picker 
-                v-model="internalValue" a
+                v-model="internalValue"
                 type="daterange" 
                 start-placeholder="Start date"
                 end-placeholder="End date" 
-                :default-time="time"
                 :disabled-date="disableFutureDates"
                 style="width: 260px; height: 40px; border-radius: 30px;" 
             />

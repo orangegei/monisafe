@@ -28,9 +28,17 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// 将日期转换为字符串
+// // 将日期转换为字符串
+// const formatDate = (date: Date): string => {
+//     return date.toISOString().split('T')[0];
+// };
+
+// 修改后的日期格式化函数，确保按本地时间处理
 const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，因此+1
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 // ATM业务数据
@@ -95,7 +103,7 @@ const getAllData = async () => {
                     case 1: ATM_transformChartDataTodChartData(data); break;
                     case 2: handleATMChartData(data); break;
                     case 3: handleATMLineChartData(data, 'amount'); break;
-                    case 4: handleATMLineChartData(data, 'count'); break; 
+                    case 4: handleATMLineChartData(data, 'count'); break;
                 }
             } else {
                 console.error('Error in response:', response.message);
@@ -109,9 +117,11 @@ const getAllData = async () => {
 // 选择器和确认按钮逻辑
 const router = useRouter();
 const businessType = ref<string>('atm');
+
 function handleTypeChange(type: string) {
     businessType.value = type;
 }
+
 function validateSelections() {
     if (!dateRange.value || !businessType.value) {
         ElMessage.error('日期或业务内容不能为空');
@@ -124,15 +134,28 @@ function handleConfirmClick() {
     if (!validateSelections())
         return;
 
-    const startTime = formatDate(dateRange.value[0]);
-    const endTime = formatDate(dateRange.value[1]);
+    const startDate = formatDate(dateRange.value[0]);
+    const endDate = formatDate(dateRange.value[1]);
+
+    sessionStorage.setItem('startTime', startDate);
+    sessionStorage.setItem('endTime', endDate);
 
     if (businessType.value === 'atm') {
         getAllData();
     } else if (businessType.value === 'forex') {
-        router.push({ path: '/business/chart/forex', query: { startTime, endTime } });
+        router.push('/business/chart/forex');
     }
 }
+
+onMounted(() => {
+    const startTime = sessionStorage.getItem('startTime');
+    const endTime = sessionStorage.getItem('endTime');
+    if (startTime && endTime) {
+        dateRange.value = [new Date(startTime), new Date(endTime)];
+    }
+    console.log(dateRange.value);
+    getAllData();
+});
 
 // 柱状图数据
 const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
@@ -183,31 +206,36 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;" color="#FF0000">
+                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;"
+                                color="#008C8C">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
                                     <div class="number-text">￥0~5000</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
+                                color="#E85827">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
                                     <div class="number-text">20~30</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
+                                color="#B05923">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
                                     <div class="number-text">30~40</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;"
+                                color="#002FA7">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
                                     <div class="number-text">周三</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;">
+                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;"
+                                color="#800020">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
                                     <div class="number-text">周五</div>
@@ -235,10 +263,12 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
                         <div class="line-chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="ATM_line_amount_data" :xAxisData="daysOfWeek" title="过去一周ATM交易金额与时间折线图" />
+                                <LineChart :chartData="ATM_line_amount_data" :xAxisData="daysOfWeek"
+                                    title="过去一周ATM交易金额与时间折线图" />
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="ATM_line_count_data" :xAxisData="daysOfWeek" title="过去一周ATM交易笔数与时间折线图" />
+                                <LineChart :chartData="ATM_line_count_data" :xAxisData="daysOfWeek"
+                                    title="过去一周ATM交易笔数与时间折线图" />
                             </div>
                         </div>
                     </div>
@@ -263,6 +293,7 @@ const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px;
     gap: 3vw;
 }
 

@@ -226,7 +226,7 @@ body {
     height: 97vh;
     overflow: hidden;
     border-radius: 10px;
-    background: radial-gradient(circle at top, #bfdcffdf, transparent);
+    /* background: radial-gradient(circle at top, #bfdcffdf, transparent); */
     /* background: 
         radial-gradient(circle at top, rgba(255, 0, 0, 0.5), transparent),
         linear-gradient(to bottom right, blue, green); */

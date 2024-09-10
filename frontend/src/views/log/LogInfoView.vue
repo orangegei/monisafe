@@ -29,8 +29,31 @@ const pageSize = ref(10);
 
 // 所有日志数据
 const logs = ref([]);
+// const logs = ref([
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
+//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
+// ]);
 
-// 获取日志数据的函数
+
 const fetchLogs = async () => {
     try {
         const response = await instance.get('/monitor/detailedlogs', {
@@ -67,9 +90,6 @@ onMounted(() => {
     fetchLogs();
 });
 
-// 监听日期范围变化，并自动重新获取数据
-watch(dateRange, fetchLogs);
-
 // 计算当前页显示的数据
 const paginatedLogs = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value;
@@ -90,7 +110,7 @@ const exportToExcel = () => {
 
 const exportToPDF = () => {
     printJS({
-        printable: 'business-content',
+        printable: 'content',
         type: 'html',
         targetStyles: ['*'],
         style: `
@@ -116,6 +136,11 @@ const exportToPDF = () => {
         scanStyles: false
     });
 };
+
+// 在组件挂载时调用 fetchLogs 来获取日志数据
+onMounted(() => {
+    fetchLogs();
+});
 </script>
 
 <template>
@@ -124,8 +149,11 @@ const exportToPDF = () => {
             <div class="container">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <span style="white-space: nowrap;">告警日志记录</span>
-                        <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
+                        <di style="white-space: nowrap;">告警日志记录</di>
+                        <div class="picker">
+                            <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
+                            <ElButton type="primary" class="confirm-button">确认</ElButton>
+                        </div>
                         <div class="function-buttons">
                             <el-button style="background-color: #109968; color: white;" @click="exportToExcel">导出为
                                 Excel</el-button>
@@ -138,13 +166,17 @@ const exportToPDF = () => {
 
                     <div class="table-container">
                         <el-table :data="paginatedLogs" border style="width: 100%;" id="content">
-                            <el-table-column prop="serial_number" label="流水号" width="auto"></el-table-column>
-                            <el-table-column prop="province" label="省份" width="100px"></el-table-column>
-                            <el-table-column prop="age" label="年龄" width="100px"></el-table-column>
-                            <el-table-column prop="transaction_time" label="交易时间" width="auto"></el-table-column>
-                            <el-table-column prop="transaction_amount" label="交易金额" width="100px"></el-table-column>
-                            <el-table-column prop="event_type" label="告警内容" width="auto"></el-table-column>
-                            <el-table-column prop="status" label="状态" width="100px"></el-table-column>
+                            <el-table-column prop="serial_number" label="流水号" width="auto"
+                                align="center"></el-table-column>
+                            <el-table-column prop="province" label="省份" width="100px" align="center"></el-table-column>
+                            <el-table-column prop="age" label="年龄" width="100px" align="center"></el-table-column>
+                            <el-table-column prop="transaction_time" label="交易时间" width="auto"
+                                align="center"></el-table-column>
+                            <el-table-column prop="transaction_amount" label="交易金额" width="100px"
+                                align="center"></el-table-column>
+                            <el-table-column prop="event_type" label="告警内容" width="auto"
+                                align="center"></el-table-column>
+                            <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
                         </el-table>
                     </div>
 
@@ -172,11 +204,8 @@ const exportToPDF = () => {
     overflow: hidden;
     position: relative;
     background: rgba(255, 255, 255, 0.3);
-    /* 设置透明背景 */
     backdrop-filter: blur(10px);
-    /* 毛玻璃效果 */
     -webkit-backdrop-filter: blur(10px);
-    /* 兼容Safari浏览器 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -186,6 +215,14 @@ const exportToPDF = () => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1%;
+}
+
+.picker {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1vw;
 }
 
 .function-buttons {
