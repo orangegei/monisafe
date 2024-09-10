@@ -49,20 +49,20 @@ onMounted(() => {
                         let axisData = opt.xAxis[0].data;
                         let series = opt.series;
                         let table = '<table style="width:100%;text-align:center"><tbody><tr>'
-                                     + '<td>Time</td>'
-                                     + '<td>' + series[0].name + '</td>'
-                                     + '<td>' + series[1].name + '</td>'
-                                     + '<td>' + series[2].name + '</td>'
-                                     + '<td>' + series[3].name + '</td>'
-                                     + '</tr>';
+                            + '<td>Time</td>'
+                            + '<td>' + series[0].name + '</td>'
+                            + '<td>' + series[1].name + '</td>'
+                            + '<td>' + series[2].name + '</td>'
+                            + '<td>' + series[3].name + '</td>'
+                            + '</tr>';
                         for (let i = 0; i < axisData.length; i++) {
                             table += '<tr>'
-                                      + '<td>' + axisData[i] + '</td>'
-                                      + '<td>' + series[0].data[i] + '</td>'
-                                      + '<td>' + series[1].data[i] + '</td>'
-                                      + '<td>' + series[2].data[i] + '</td>'
-                                      + '<td>' + series[3].data[i] + '</td>'
-                                      + '</tr>';
+                                + '<td>' + axisData[i] + '</td>'
+                                + '<td>' + series[0].data[i] + '</td>'
+                                + '<td>' + series[1].data[i] + '</td>'
+                                + '<td>' + series[2].data[i] + '</td>'
+                                + '<td>' + series[3].data[i] + '</td>'
+                                + '</tr>';
                         }
                         table += '</tbody></table>';
                         return table;
@@ -137,9 +137,9 @@ onMounted(() => {
                     <div class="content">
                         <el-card>
                             <el-table :data="serverData" border style="width: 100%">
-                                <el-table-column prop="name" label="节点名称"></el-table-column>
-                                <el-table-column prop="maxResponse" label="最大响应时间"></el-table-column>
-                                <el-table-column prop="avgResponse" label="平均响应时间"></el-table-column>
+                                <el-table-column prop="name" label="节点名称" align="center"></el-table-column>
+                                <el-table-column prop="maxResponse" label="最大响应时间" align="center"></el-table-column>
+                                <el-table-column prop="avgResponse" label="平均响应时间" align="center"></el-table-column>
                             </el-table>
                         </el-card>
                     </div>
@@ -148,7 +148,7 @@ onMounted(() => {
                     <div class="propose">
                         <el-card>
                             <p>建议：</p>
-                            <p>平均响应时间超过 180ms 的节点：</p>
+                            <p>平均响应时间超过 <span class="number">180ms</span> 的节点：</p>
                             <p>CoreServer 系统架构建议转变为分布式。</p>
                         </el-card>
                     </div>
@@ -160,32 +160,33 @@ onMounted(() => {
 
 <style scoped>
 .container {
+    width: 100%;
+    height: 98%;
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .barchart {
-    flex: 6;
     width: 100%;
+    height: 60%;
 }
 
 .bottom-row {
-    flex: 4;
     display: flex;
     width: 100%;
+    height: 40%;
 }
 
 .el-table {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .el-table__body tr {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .el-table__body td {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .content {
@@ -222,5 +223,12 @@ onMounted(() => {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.number {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 28px;
 }
 </style>
