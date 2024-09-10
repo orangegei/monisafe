@@ -99,7 +99,7 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
                 value1: amount[index],
                 value2: count[index],
             }));
-            // console.log(mapData);
+            console.log(mapData);
         }
 
     } catch (error) {

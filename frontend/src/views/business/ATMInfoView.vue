@@ -49,6 +49,8 @@ const ATM_doughnutChartData = ref([]);
 const ATM_line_amount_data = ref([]);
 const ATM_line_count_data = ref([]);
 const daysOfWeek = ref(['Mon.', 'Tue.', 'Wed.', 'Thus.', 'Fri.', 'Sat.', 'Sun.']);
+const barData = ref([]);
+const categories = ref([]);
 
 // 处理函数
 function handleATMChartData(chartData) {
@@ -157,9 +159,9 @@ onMounted(() => {
     getAllData();
 });
 
-// 柱状图数据
-const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+// ATM静态数据
+// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
+// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
 
 // const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
 // const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
