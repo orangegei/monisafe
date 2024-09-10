@@ -344,6 +344,7 @@ const timelineItems = ref([
     border-radius: 15px;
     background-color: antiquewhite;
     box-sizing: border-box;
+    padding: 10px;
 }
 
 .line-chart-row {

@@ -356,6 +356,7 @@ onMounted(() => {
     height: 40vh;
     background-color: antiquewhite;
     box-sizing: border-box;
+    padding: 10px;
 }
 
 .line-chart-row {

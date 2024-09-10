@@ -104,18 +104,18 @@ const focusAtmForexProvinces = computed(() => {
 
                             <transition name="slide" mode="out-in">
                                 <div class="business" v-if="showBusiness" key="business-content">
-                                    <div>大额交易异常次数Top3：</div>
+                                    <div>大额交易异常次数 Top3：</div>
                                     <div class="province-list">{{ topHighCountProvinces.join('，') }}</div>
-                                    <div>异常时间取款笔数Top3：</div>
+                                    <div>异常时间取款笔数 Top3：</div>
                                     <div class="province-list">{{ topTimeCountProvinces.join('，') }}</div>
                                     <div>需重点关注的省份：</div>
                                     <div class="province-list">{{ focusProvinces.join('，') }}</div>
                                 </div>
 
                                 <div class="maintain" v-else key="maintain-content">
-                                    <div>ATM-entry响应时间异常次数Top3：</div>
+                                    <div>ATM-entry 响应时间异常次数 Top3：</div>
                                     <div class="province-list">{{ topAtmResponseProvinces.join('，') }}</div>
-                                    <div>forex-entry响应时间异常次数Top3：</div>
+                                    <div>forex-entry 响应时间异常次数 Top3：</div>
                                     <div class="province-list">{{ topForexResponseProvinces.join('，') }}</div>
                                     <div>需重点关注的省份：</div>
                                     <div class="province-list">{{ focusAtmForexProvinces.join('，') }}</div>
