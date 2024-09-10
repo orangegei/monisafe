@@ -12,6 +12,7 @@ import MonitorView from '@/views/monitor/MonitorView.vue';
 import LogInfoView from '@/views/log/LogInfoView.vue';
 import DispatchView from '@/views/dispatch/DispatchView.vue';
 import PlatView from '@/views/monitor/PlatView.vue';
+import NodeView from '@/views/monitor/NodeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,6 +93,11 @@ const router = createRouter({
       path: '/monitor/plat',
       name: 'plat',
       component: PlatView
+    },
+    {
+      path: '/monitor/node',
+      name: 'node',
+      component: NodeView
     }
   ]
 })

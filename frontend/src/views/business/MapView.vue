@@ -39,7 +39,7 @@ function handleBusinessTypeChange(type: string) {
 
 // 定义 Record 接口
 interface Record {
-    city: string
+    province: string
     money: number
     amount: number
 }
@@ -48,31 +48,6 @@ interface Record {
 const tableData = ref<Record[]>([]);
 const mapData = ref([]);
 
-
-// 定义地图数据
-// const mapData = ref([
-//     { name: '北京市', value: Math.round(Math.random() * 1000) },
-//     { name: '天津市', value: Math.round(Math.random() * 1000) },
-//     { name: '上海市', value: Math.round(Math.random() * 1000) },
-//     { name: '重庆市', value: Math.round(Math.random() * 1000) },
-// ]);
-
-// function updateMapData(data: any) {
-//     // 根据返回的数据更新地图显示
-//     mapData.value = data.map((item: any) => ({
-//         name: item.city,
-//         value: item.money,
-//     }));
-// }
-
-// function updateTableData(data: any) {
-//     // 根据返回的数据更新表格显示
-//     tableData.value = data.map((item: any) => ({
-//         city: item.city,
-//         money: item.money,
-//         amount: item.amount,
-//     }));
-// }
 
 // 验证日期和业务类型是否已选择
 function validateSelections() {
@@ -114,7 +89,7 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
 
             // 更新表格和地图数据
             tableData.value = province.map((name: string, index: number) => ({
-                city: name,
+                province: name,
                 amount: count[index],
                 money: amount[index],
             }));
