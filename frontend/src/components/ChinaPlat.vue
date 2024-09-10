@@ -24,6 +24,7 @@ onMounted(() => {
                 trigger: 'item',
                 formatter: function (params) {
                     const data = params.data;
+                    console.log(data);
                     if (data) {
                         return `${params.name}<br/>
                                 异常金额次数: ${data.value1}<br/>
@@ -40,7 +41,7 @@ onMounted(() => {
             },
             visualMap: {
                 min: 0,
-                max: 100000,
+                max: 100,
                 left: 'left',
                 top: 'bottom',
                 text: ['高', '低'],
@@ -66,12 +67,12 @@ onMounted(() => {
                     },
                     // data: props.data // 使用传递的数据
                     data: props.data.map(item => ({
-                    name: item.name,
-                    value: item.value1,  // 使用 value1 来映射颜色
-                    value1: item.value1,
-                    value2: item.value2,
-                    value3: item.value3,
-                    value4: item.value4,
+                    name: item.province,
+                    value: item.highCount,  // 使用 value1 来映射颜色
+                    value1: item.highCount,
+                    value2: item.timeCount,
+                    value3: item.atmresponseCount,
+                    value4: item.forexResponseCount,
                 }))
                 }
             ]
