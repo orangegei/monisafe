@@ -1,5 +1,32 @@
 <script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import instance from '@/utils/request'
 
+// 当前用户的用户名
+const currentUsername = ref('');
+
+// 在组件挂载时获取当前用户的用户名
+onMounted(async () => {
+    try {
+        const response = await instance.get('/user/getUserName' , {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        });
+        if (response.data.code === 0) {
+            currentUsername.value = response.data.data;
+        } else {
+            throw new Error(response.data.message);
+        }
+    } catch (error) {
+        ElMessage({
+            message: '获取用户信息失败，请重试',
+            type: 'error',
+        });
+        console.error('Error fetching current user:', error);
+    }
+});
 </script>
 
 <template>
@@ -17,7 +44,7 @@
                             style="width: 75px;height: 75px;border-radius: 50%;">
                     </div>
                     <div>
-                        <h1>username</h1>
+                        <h1>{{ currentUsername }}</h1>
                     </div>
                 </div>
 

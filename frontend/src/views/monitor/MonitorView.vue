@@ -43,7 +43,8 @@ const fetchAtmData = async () => {
         });
         if (response.data.code === 0) {
             const data = response.data.data;
-            atmGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
+            console.log(data);
+            atmGaugeValue.value = data[9].averageResponseTime.toFixed(2); // 更新仪表盘值
             atmLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
             // xAxisData.value = data.map(item => item.time); // 更新X轴数据
             atmAmount.value = data[9].transactionAmount; // 更新交易金额
@@ -69,7 +70,8 @@ const fetchForexData = async () => {
         });
         if (response.data.code === 0) {
             const data = response.data.data;
-            forexGaugeValue.value = data[9].averageResponseTime; // 更新仪表盘值
+            console.log(data);
+            forexGaugeValue.value = data[9].averageResponseTime.toFixed(2); // 更新仪表盘值
             forexLineChartData.value = data.map(item => item.averageResponseTime); // 更新折线图数据
             // xAxisData.value = data.map(item => item.time);
             forexAmount.value = data[9].transactionAmount; // 更新交易金额

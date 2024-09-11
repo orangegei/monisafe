@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
@@ -25,7 +24,7 @@ const formatDate = (date: Date): string => {
 
 // 分页相关数据
 const currentPage = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(15);
 
 // 所有日志数据
 const logs = ref([]);
@@ -90,36 +89,6 @@ const exportToExcel = () => {
     XLSX.writeFile(workbook, 'logs.xlsx');
 };
 
-const exportToPDF = () => {
-    printJS({
-        printable: 'content',
-        type: 'html',
-        targetStyles: ['*'],
-        style: `
-          @media print {
-              table {
-                  width: 100% !important;
-                  table-layout: auto !important;
-              }
-              th, td {
-                  word-wrap: break-word !important;
-                  white-space: normal !important;
-                  padding: 8px;
-                  text-align: center !important;
-                  vertical-align: middle !important;
-              }
-              th {
-                  font-weight: bold;
-              }
-          }
-        `,
-        documentTitle: '交易日志记录',
-        header: '<h2 style="text-align: center;">交易日志记录</h2>',
-        scanStyles: false
-    });
-};
-
-
 // const filteredEventTypes = ref([]); // 用于存储当前筛选的事件类型
 
 // const filterEventType = (value: string, row: any) => {
@@ -141,8 +110,6 @@ const exportToPDF = () => {
                         <div class="function-buttons">
                             <el-button style="background-color: #109968; color: white;" @click="exportToExcel">导出为
                                 Excel</el-button>
-                            <el-button style="background-color: #DF4023; color: white;" @click="exportToPDF">导出为
-                                PDF</el-button>
                             <el-button style="background-color: #3B64FC; color: white;"
                                 @click="clearLogs">清空日志</el-button>
                         </div>
@@ -158,23 +125,6 @@ const exportToPDF = () => {
                                 align="center"></el-table-column>
                             <el-table-column prop="transaction_amount" label="交易金额" width="100px"
                                 align="center"></el-table-column>
-                                <!-- <el-table-column 
-                                    prop="event_type" 
-                                    label="告警内容" 
-                                    width="auto" 
-                                    align="center"
-                                    :filters="[
-                                        { text: '大额取款', value: '大额取款' },
-                                        { text: 'CoreService响应时间过长', value: 'CoreService响应时间过长' },
-                                        { text: 'ATMServer响应时间过长', value: 'ATMServer响应时间过长' },
-                                        { text: 'FXEntry响应时间过长', value: 'FXEntry响应时间过长' },
-                                        { text: 'ATMEntry响应时间过长', value: 'ATMEntry响应时间过长' },
-                                        { text: 'FXCoreEntry响应时间过长', value: 'FXCoreEntry响应时间过长' },
-                                        { text: 'FXServer响应时间过长', value: 'FXServer响应时间过长' }
-                                    ]"
-                                    :filter-method="filterEventType"
-                                    :filtered-value="filteredEventTypes">
-                                    </el-table-column> -->
                             <el-table-column prop="event_type" label="告警内容" width="auto"
                                 align="center"></el-table-column>
                             <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>

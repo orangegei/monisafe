@@ -74,7 +74,9 @@ onMounted(() => {
                     lineStyle: {
                         color: '#eeeeee' // 网格线颜色
                     }
-                }
+                },
+                // max: 1000000,
+                // max: Math.max(...props.chartData) * 1.1, // 增加10%的边距，避免数值溢出
             },
             series: [
                 {

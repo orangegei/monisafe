@@ -5,7 +5,7 @@ import instance from '@/utils/request';
 
 // 分页相关数据
 const currentPage = ref(1);
-const pageSize = ref(11);
+const pageSize = ref(15);
 
 // 所有人员数据
 const maintenanceStaff = ref([]);

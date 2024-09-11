@@ -31,14 +31,14 @@ const fetchData = async () => {
 
                 // 检查是否持续3天以上超过170ms
                 const overThreshold = nodeData.averageResponseTime.filter(time => time > 170).length >= 3;
-                const flag = true;
+                // const flag = true;
                 // 如果超过阈值，添加建议
                 if (overThreshold) {
                     suggestions.value.push({
                         name: nodeData.nodeName,
                         action: '建议转变为分布式系统'
                     });
-                    flag=false;
+                    // flag=false;
                 }
                 return {
                     name: nodeData.nodeName,
@@ -46,12 +46,12 @@ const fetchData = async () => {
                     avgResponse
                 };
             });
-            if(flag) {
-                suggestions.value.push({
-                    name: '无',
-                    action: '节点状态良好'
-                });
-            }
+            // if(flag) {
+            //     suggestions.value.push({
+            //         name: '无',
+            //         action: '节点状态良好'
+            //     });
+            // }
             serverData.value = processedData;
             // 更新图表数据
             updateChart(data);
