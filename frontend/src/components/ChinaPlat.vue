@@ -39,7 +39,7 @@ onMounted(() => {
             },
             visualMap: {
                 min: 0,
-                max: 100,
+                max: 5,
                 left: 'left',
                 top: 'bottom',
                 text: ['高', '低'],

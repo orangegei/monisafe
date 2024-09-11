@@ -62,6 +62,10 @@ onMounted(async () => {
                             <img src="../../assets/secure-log-安全日志.svg" alt="secure-log" class="menu-icon">
                             <span class="text">用户日志</span>
                         </RouterLink>
+                        <RouterLink to="/user/login" class="item" style="text-decoration: none;">
+                            <img src="../../assets/exit-退出.svg" alt="secure-log" class="menu-icon">
+                            <span class="text">退出登录</span>
+                        </RouterLink>
                     </div>
                 </div>
             </el-aside>
