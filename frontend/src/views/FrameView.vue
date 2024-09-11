@@ -1,5 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
+import axios from 'axios';
+import instance from '@/utils/request'
 
 // 控制侧边栏显示状态的变量
 const isSidebarCollapsed = ref(false);
@@ -9,12 +12,6 @@ const isMonitorHovered = ref(false);
 
 // 控制业务子菜单的显示状态
 const isBusinessHovered = ref(false);
-
-// 控制状态选择框的显示状态
-const showStatusDialog = ref(false);
-
-// 选择的状态
-const selectedStatus = ref('');
 
 // 切换侧边栏的显示状态
 const toggleSidebar = () => {
@@ -74,14 +71,69 @@ const exit = async () => {
     }
 };
 
-const handleClose = () => {
-    showStatusDialog.value = false;
+// 选择的状态
+const selectedStatus = ref('');
+
+const updateStatus = async (status) => {
+    try {
+        console.log(status);
+        const response = await instance.post('/user/updateStatus', { "status": status }, {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        });
+        if (response.data.code !== 0) {
+            throw new Error(response.data.message);
+        }
+    } catch (error) {
+        throw error;
+    }
 };
 
-const confirmStatus = () => {
-    console.log(`Selected Status: ${selectedStatus.value}`);
-    showStatusDialog.value = false;
+// 处理命令
+const handleCommand = async (command) => {
+    selectedStatus.value = command;
+    try {
+        // 发送状态到后端
+        await updateStatus(selectedStatus.value);
+        ElMessage({
+            message: `修改成功，当前状态为 ${selectedStatus.value === '空闲' ? '空闲' : '忙碌'}`,
+            type: 'success',
+        });
+    } catch (error) {
+        ElMessage({
+            message: '修改状态失败，请重试',
+            type: 'error',
+        });
+        console.error('Error updating status:', error);
+    }
 };
+
+// 当前用户的用户名
+const currentUsername = ref('');
+
+// 在组件挂载时获取当前用户的用户名
+onMounted(async () => {
+    try {
+        const response = await instance.get('/user/getUserName' , {
+            headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        });
+        if (response.data.code === 0) {
+            currentUsername.value = response.data.data;
+        } else {
+            throw new Error(response.data.message);
+        }
+    } catch (error) {
+        ElMessage({
+            message: '获取用户信息失败，请重试',
+            type: 'error',
+        });
+        console.error('Error fetching current user:', error);
+    }
+});
+
 </script>
 
 <template>
@@ -146,7 +198,7 @@ const confirmStatus = () => {
                 <el-header class="monisafe-header">
                     <div class="header-content">
                         <div class="welcome-message">
-                            <h1>Welcome back, Jack!</h1>
+                            <h1>Welcome back, {{ currentUsername }}!</h1>
                         </div>
 
                         <div class="atm-forex-btn">
@@ -154,24 +206,17 @@ const confirmStatus = () => {
                         </div>
 
                         <div class="header-icons">
-                            <div class="button-icon"  @click="showStatusDialog">
-                                <img src="@/assets/switch-切换状态.svg" alt="Switch Icon">
-                            </div>
-
-                            <!-- 状态选择框 -->
-                            <el-dialog
-                                title="选择在线状态"
-                                :visible.sync="showStatusDialog"
-                                @close="handleClose">
-                                <el-select v-model="selectedStatus" placeholder="请选择状态">
-                                    <el-option label="空闲" value="free"></el-option>
-                                    <el-option label="忙碌" value="busy"></el-option>
-                                </el-select>
-                                <span slot="footer" class="dialog-footer">
-                                    <el-button @click="handleClose">取消</el-button>
-                                    <el-button type="primary" @click="confirmStatus">确定</el-button>
-                                </span>
-                            </el-dialog>
+                            <el-dropdown @command="handleCommand">
+                                <div class="icon-button">
+                                    <img src="@/assets/switch-切换状态.svg" alt="Switch Icon" class="button-icon">
+                                </div>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item command="空闲">空闲</el-dropdown-item>
+                                        <el-dropdown-item command="忙碌">忙碌</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
 
                             <RouterLink to="/log" class="icon-button" style="text-decoration: none;">
                                 <img src="@/assets/ring-日志消息.svg" alt="Ring Icon" class="button-icon">

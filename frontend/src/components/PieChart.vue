@@ -44,7 +44,7 @@ onMounted(() => {
             },
             series: [
                 {
-                    name: 'Access Source',
+                    name: '交易金额',
                     type: 'pie',
                     radius: ['0%', '65%'], // 增大饼图的尺寸
                     center: ['50%', '50%'], // 确保饼图居中显示

@@ -73,7 +73,7 @@ onMounted(() => {
             },
             series: [
                 {
-                    name: 'Sales',
+                    name: '交易笔数',
                     type: 'bar',
                     data: props.chartData,
                     barWidth: '70%', // 控制柱状图的宽度

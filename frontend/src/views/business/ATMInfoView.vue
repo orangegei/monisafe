@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import instance from '@/utils/request';
 import { ElMessage } from 'element-plus';
+import { ElButton } from 'element-plus';
 import FrameView from '../FrameView.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import SelectIcon from '@/components/SelectIcon.vue';
@@ -28,11 +29,6 @@ function handleDateChange(newRange: [Date, Date]) {
     dateRange.value = newRange;
 }
 
-// // 将日期转换为字符串
-// const formatDate = (date: Date): string => {
-//     return date.toISOString().split('T')[0];
-// };
-
 // 修改后的日期格式化函数，确保按本地时间处理
 const formatDate = (date: Date): string => {
     const year = date.getFullYear();
@@ -49,34 +45,63 @@ const ATM_doughnutChartData = ref([]);
 const ATM_line_amount_data = ref([]);
 const ATM_line_count_data = ref([]);
 const daysOfWeek = ref(['Mon.', 'Tue.', 'Wed.', 'Thus.', 'Fri.', 'Sat.', 'Sun.']);
-const barData = ref([]);
-const categories = ref([]);
+
+// 展示分析数据
+const maxTransactionRange = ref('');
+const maxAmountAgeGroup = ref('');
+const maxCountAgeGroup = ref('');
+const maxAmountDay = ref('');
+const maxCountDay = ref('');
 
 // 处理函数
+// 处理ATM柱状图数据
 function handleATMChartData(chartData) {
     ATM_bar_xdata.value = chartData.xdata;
     ATM_bar_ydata.value = chartData.ydata;
+
+    // 找到笔数最多的金额区间
+    const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
+    maxTransactionRange.value = chartData.xdata[maxIndex];
 }
 
+// 处理饼状图数据
 function ATM_transformChartDataToPieData(chartData) {
     ATM_pieData.value = chartData.xdata.map((name, index) => ({
         name: name,
         value: chartData.ydata[index]
     }));
+
+    // 找到交易金额最多的年龄段
+    const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
+    maxAmountAgeGroup.value = chartData.xdata[maxIndex];
 }
 
+// 处理环形图数据
 function ATM_transformChartDataTodChartData(chartData) {
     ATM_doughnutChartData.value = chartData.xdata.map((name, index) => ({
         name: name,
         value: chartData.ydata[index]
     }));
+
+    // 找到交易笔数最多的年龄段
+    const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
+    maxCountAgeGroup.value = chartData.xdata[maxIndex];
 }
 
+// 处理折线图数据
 function handleATMLineChartData(chartData, dataType) {
     if (dataType === 'amount') {
-        ATM_line_amount_data.value = chartData.ydata;
+        ATM_line_amount_data.value = chartData;
+
+        // 找到交易金额最多的时间点
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
+        maxAmountDay.value = daysOfWeek.value[maxIndex];
     } else if (dataType === 'count') {
-        ATM_line_count_data.value = chartData.ydata;
+        ATM_line_count_data.value = chartData;
+
+        // 找到交易笔数最多的时间点
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
+        maxCountDay.value = daysOfWeek.value[maxIndex];
     }
 }
 
@@ -92,14 +117,15 @@ const getAllData = async () => {
             instance.get('/business/atm/age/amount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/atm/age/count', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/atm/range', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
-            instance.get('/business/atm/weekamount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
-            instance.get('/business/atm/weekcount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/weekAmount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/atm/weekCount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
         ];
 
         const responses = await Promise.all(requests);
         responses.forEach((response, index) => {
             if (response.data.code === 0) {
                 const data = response.data.data;
+                console.log(data);
                 switch (index) {
                     case 0: ATM_transformChartDataToPieData(data); break;
                     case 1: ATM_transformChartDataTodChartData(data); break;
@@ -159,34 +185,6 @@ onMounted(() => {
     getAllData();
 });
 
-// ATM静态数据
-// const barData = ref([120, 60, 150, 80, 100, 130, 110, 50]);
-// const categories = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
-
-// const lineData = ref([120, 200, 150, 80, 70, 110, 130]);
-// const daysOfWeek = ref(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-// const pieData = ref([
-//     { value: 1048, name: 'Search Engine' },
-//     { value: 735, name: 'Direct' },
-//     { value: 580, name: 'Email' },
-//     { value: 484, name: 'Union Ads' },
-//     { value: 300, name: 'Video Ads' },
-// ]);
-// const doughnutChartData = ref([
-//     { value: 1048, name: 'Search Engine' },
-//     { value: 735, name: 'Direct' },
-//     { value: 580, name: 'Email' },
-//     { value: 484, name: 'Union Ads' },
-//     { value: 300, name: 'Video Ads' }
-// ]);
-// const timelineItems = ref([
-//     { text: 'ATM交易金额占比最多的年龄段是', color: '#ebe5e5' },
-//     { text: '金额为xxxx范围的交易笔数最多', color: '#DDE8F2' },
-//     { text: 'ATM交易笔数占比最多的年龄段是', color: '#cdeded' },
-//     { text: '本周中ATM交易金额最多的是', color: '#e0f4fe' },
-//     { text: '本周中ATM交易笔数最多的是', color: '#e0f4fe' },
-// ]);
-
 </script>
 
 <template>
@@ -208,39 +206,39 @@ onMounted(() => {
                 <div class="display">
                     <div class="time-line">
                         <el-timeline style="width: 80%;">
-                            <el-timeline-item timestamp="交易金额与笔数柱状图" placement="top" style="height: 30vh;"
+                            <el-timeline-item timestamp="ATM交易金额与笔数柱状图" placement="top" style="height: 30vh;"
                                 color="#008C8C">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
-                                    <div class="number-text">￥0~5000</div>
+                                    <div class="number-text">{{ maxTransactionRange }}￥</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
+                            <el-timeline-item timestamp="ATM年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
                                 color="#E85827">
                                 <el-card>
                                     <div>交易金额最多的年龄段是：</div>
-                                    <div class="number-text">20~30</div>
+                                    <div class="number-text">{{ maxAmountAgeGroup }}</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
+                            <el-timeline-item timestamp="ATM年龄段与交易笔数环形图" placement="top" style="height: 20vh;"
                                 color="#B05923">
                                 <el-card>
                                     <div>交易笔数最多的年龄段是：</div>
-                                    <div class="number-text">30~40</div>
+                                    <div class="number-text">{{ maxCountAgeGroup }}</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易金额与时间折线图" placement="top" style="height: 20vh;"
+                            <el-timeline-item timestamp="过去一周ATM交易金额与时间折线图" placement="top" style="height: 20vh;"
                                 color="#002FA7">
                                 <el-card>
                                     <div>交易金额最多的时间点是：</div>
-                                    <div class="number-text">周三</div>
+                                    <div class="number-text">{{ maxAmountDay }}</div>
                                 </el-card>
                             </el-timeline-item>
-                            <el-timeline-item timestamp="交易笔数与时间折线图" placement="top" style="height: 20vh;"
+                            <el-timeline-item timestamp="过去一周ATM交易笔数与时间折线图" placement="top" style="height: 20vh;"
                                 color="#800020">
                                 <el-card>
                                     <div>交易笔数最多的时间点是：</div>
-                                    <div class="number-text">周五</div>
+                                    <div class="number-text">{{ maxCountDay }}</div>
                                 </el-card>
                             </el-timeline-item>
                         </el-timeline>
@@ -249,7 +247,7 @@ onMounted(() => {
                     <div class="chart">
                         <div class="bar-chart-row">
                             <div class="bar-chart">
-                                <BarChart :chartData="barData" :xAxisData="categories" title="ATM交易金额与笔数柱状图" />
+                                <BarChart :chartData="ATM_bar_ydata" :xAxisData="ATM_bar_xdata" title="ATM交易金额与笔数柱状图" />
                             </div>
                         </div>
 
@@ -265,11 +263,11 @@ onMounted(() => {
 
                         <div class="line-chart-row">
                             <div class="line-chart">
-                                <LineChart :chartData="ATM_line_amount_data" :xAxisData="daysOfWeek"
+                                <LineChart :chartData="ATM_line_amount_data" :xAxisData="daysOfWeek" 
                                     title="过去一周ATM交易金额与时间折线图" />
                             </div>
                             <div class="line-chart">
-                                <LineChart :chartData="ATM_line_count_data" :xAxisData="daysOfWeek"
+                                <LineChart :chartData="ATM_line_count_data" :xAxisData="daysOfWeek" 
                                     title="过去一周ATM交易笔数与时间折线图" />
                             </div>
                         </div>

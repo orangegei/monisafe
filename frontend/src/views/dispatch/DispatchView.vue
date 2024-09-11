@@ -51,7 +51,7 @@ const fetchStaff = async () => {
                 status: log.status,
                 user_role: log.userRole,
             }));
-            // console.log(maintenanceStaff);
+            console.log(maintenanceStaff);
             filterStaff('all'); // 默认筛选所有人员
         }
     } catch (error) {
@@ -83,11 +83,7 @@ onMounted(() => {
                     <div class="table-container">
                         <el-table :data="paginatedStaff" border style="width: 100%">
                             <!-- 用户角色列 -->
-                            <el-table-column prop="user_role" label="用户角色" width="auto" align="center">
-                                <template #default="{ row }">
-                                    {{ row.user_role === 1 ? '维修人员' : '业务人员' }}
-                                </template>
-                            </el-table-column>
+                            <el-table-column prop="user_role" label="用户角色" width="auto" align="center"></el-table-column>
                             <el-table-column prop="id" label="人员ID" width="auto" align="center"></el-table-column>
                             <el-table-column prop="province" label="所属省份" width="auto" align="center"></el-table-column>
                             <el-table-column prop="phone" label="手机号" width="auto" align="center"></el-table-column>
