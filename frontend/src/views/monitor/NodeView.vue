@@ -31,14 +31,13 @@ const fetchData = async () => {
 
                 // 检查是否持续3天以上超过170ms
                 const overThreshold = nodeData.averageResponseTime.filter(time => time > 170).length >= 3;
-                // const flag = true;
+                
                 // 如果超过阈值，添加建议
                 if (overThreshold) {
                     suggestions.value.push({
                         name: nodeData.nodeName,
                         action: '建议转变为分布式系统'
                     });
-                    // flag=false;
                 }
                 return {
                     name: nodeData.nodeName,
@@ -46,12 +45,6 @@ const fetchData = async () => {
                     avgResponse
                 };
             });
-            // if(flag) {
-            //     suggestions.value.push({
-            //         name: '无',
-            //         action: '节点状态良好'
-            //     });
-            // }
             serverData.value = processedData;
             // 更新图表数据
             updateChart(data);
@@ -74,7 +67,7 @@ const updateChart = (data) => {
             textStyle: {
                 fontSize: 18,
                 fontWeight: 'bold'
-            }   
+            }
         },
         tooltip: {
             trigger: 'axis',
@@ -100,12 +93,12 @@ const updateChart = (data) => {
                         let axisData = opt.xAxis[0].data;
                         let series = opt.series;
                         let table = '<table style="width:100%;text-align:center"><tbody><tr>'
-                        + '<td>Time</td>'
-                        + '<td>' + series[0].name + '</td>'
-                        + '<td>' + series[1].name + '</td>'
-                        + '<td>' + series[2].name + '</td>'
-                        + '<td>' + series[3].name + '</td>'
-                        + '</tr>';
+                            + '<td>Time</td>'
+                            + '<td>' + series[0].name + '</td>'
+                            + '<td>' + series[1].name + '</td>'
+                            + '<td>' + series[2].name + '</td>'
+                            + '<td>' + series[3].name + '</td>'
+                            + '</tr>';
                         for (let i = 0; i < axisData.length; i++) {
                             table += '<tr>'
                                 + '<td>' + axisData[i] + '</td>'
@@ -138,7 +131,7 @@ const updateChart = (data) => {
             emphasis: { focus: 'series' },
             data: node.averageResponseTime.map(value => parseFloat(value.toFixed(2)))
         })),
-        
+
         grid: {
             left: '3%',
             right: '4%',
@@ -151,7 +144,7 @@ const updateChart = (data) => {
 };
 
 onMounted(() => {
-  fetchData();
+    fetchData();
 });
 </script>
 
@@ -179,7 +172,7 @@ onMounted(() => {
                     <!-- 右侧显示建议内容 -->
                     <div class="propose">
                         <el-card>
-                            <p class="suggestion-description">平均响应时间持续超过 <span class="number">170ms 3天</span> 的节点：</p>
+                            <p class="suggestion-description">平均响应时间持续超过 <span class="number">阈值 3天</span> 的节点：</p>
                             <div v-for="suggestion in suggestions" :key="suggestion.name">
                                 <p class="suggestion-node">{{ suggestion.name }}</p>
                                 <p class="suggestion-action">{{ suggestion.action }}</p>
@@ -271,6 +264,8 @@ onMounted(() => {
 
 .suggestion-action {
     text-align: right;
+    font-size: 32px;
+    font-weight: 600;
 }
 
 .number {

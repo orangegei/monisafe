@@ -35,8 +35,6 @@ onMounted(() => {
                         // console.log(params.name);
                         return `${params.name}<br/>无数据`;
                     }
-
-                    // return `${params.name}<br/>数据值: ${params.value ? params.value : '无数据'}`;
                 }
             },
             visualMap: {

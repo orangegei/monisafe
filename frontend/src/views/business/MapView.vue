@@ -72,6 +72,11 @@ async function handleConfirmClick() {
     }
 }
 
+const visualMapConfig = ref({
+    min: 0,  // 初始最小值
+    max: 100000,  // 初始最大值
+});
+
 async function fetchData(url: string, startDate: Date, endDate: Date) {
     try {
         const params = {
@@ -99,6 +104,14 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
                 value1: amount[index],
                 value2: count[index],
             }));
+
+            const value1Array = mapData.value.map(item => item.value1);
+            const minValue1 = Math.min(...value1Array);
+            const maxValue1 = Math.max(...value1Array);
+
+            visualMapConfig.value.min = minValue1;  // 取最小值
+            visualMapConfig.value.max = maxValue1;  // 取最大值
+
             console.log(mapData);
         }
 
@@ -114,7 +127,7 @@ async function fetchData(url: string, startDate: Date, endDate: Date) {
         <template #main-body>
             <div class="container">
                 <div class="china-map">
-                    <ChinaMap :data="mapData" />
+                    <ChinaMap :data="mapData" :visualMapConfig="visualMapConfig"/>
                 </div>
 
                 <div class="display">

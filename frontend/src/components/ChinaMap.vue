@@ -7,8 +7,10 @@ echarts.registerMap('china', chinaJson);
 
 const chartContainer = ref(null);
 
+// 接收父组件传递的 props
 const props = defineProps({
-    data: Array,  // 接收传递的数据
+    data: Array,              // 数据
+    visualMapConfig: Object,  // 最大值和最小值
 });
 
 onMounted(() => {
@@ -37,8 +39,8 @@ onMounted(() => {
                 }
             },
             visualMap: {
-                min: 0,
-                max: 100000,
+                min: props.visualMapConfig.min,
+                max: props.visualMapConfig.max,
                 left: 'left',
                 top: 'bottom',
                 text: ['高', '低'],
@@ -64,18 +66,18 @@ onMounted(() => {
                     },
                     // data: props.data // 使用传递的数据
                     data: props.data.map(item => ({
-                    name: item.name,
-                    value: item.value1,  // 使用 value1 来映射颜色
-                    value1: item.value1,
-                    value2: item.value2,
-                }))
+                        name: item.name,
+                        value: item.value1,  // 使用 value1 来映射颜色
+                        value1: item.value1,
+                        value2: item.value2,
+                    }))
                 }
             ]
         };
-    myChart.setOption(option);
-};
+        myChart.setOption(option);
+    };
 
-    setChartOption();   
+    setChartOption();
 
     // 监听窗口大小变化，自动调整图表大小
     window.addEventListener('resize', () => {
