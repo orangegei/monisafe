@@ -93,14 +93,14 @@ function handleATMLineChartData(chartData, dataType) {
     if (dataType === 'amount') {
         ATM_line_amount_data.value = chartData;
 
-         // 找到交易金额最多的时间点
-         const maxIndex = chartData.ydata.indexOf(Math.max(...chartData));
+        // 找到交易金额最多的时间点
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
         maxAmountDay.value = daysOfWeek.value[maxIndex];
     } else if (dataType === 'count') {
         ATM_line_count_data.value = chartData;
 
         // 找到交易笔数最多的时间点
-        const maxIndex = chartData.ydata.indexOf(Math.max(...chartData));
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
         maxCountDay.value = daysOfWeek.value[maxIndex];
     }
 }
@@ -125,7 +125,7 @@ const getAllData = async () => {
         responses.forEach((response, index) => {
             if (response.data.code === 0) {
                 const data = response.data.data;
-                // console.log(data);
+                console.log(data);
                 switch (index) {
                     case 0: ATM_transformChartDataToPieData(data); break;
                     case 1: ATM_transformChartDataTodChartData(data); break;
@@ -210,7 +210,7 @@ onMounted(() => {
                                 color="#008C8C">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
-                                    <div class="number-text">{{ maxTransactionRange }}</div>
+                                    <div class="number-text">{{ maxTransactionRange }}￥</div>
                                 </el-card>
                             </el-timeline-item>
                             <el-timeline-item timestamp="ATM年龄段与交易金额饼状图" placement="top" style="height: 20vh;"

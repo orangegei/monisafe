@@ -29,30 +29,6 @@ const pageSize = ref(10);
 
 // 所有日志数据
 const logs = ref([]);
-// const logs = ref([
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-//     { province: '北京', age: 35, transaction_amount: 500.00, transaction_time: '2024-09-03 12:30:00', status: '警告', event_type: '金额过大', transaction_type: '在线支付' },
-//     { province: '上海', age: 28, transaction_amount: 300.00, transaction_time: '2024-09-03 13:00:00', status: '严重', event_type: '异常时间交易', transaction_type: '银行异常时间交易' },
-// ]);
-
 
 const fetchLogs = async () => {
     try {
@@ -97,6 +73,12 @@ const paginatedLogs = computed(() => {
     return logs.value.slice(start, end);
 });
 
+
+// 点击确认按钮时的处理方法
+async function handleConfirmClick() {
+    await fetchLogs();
+}
+
 const clearLogs = () => {
     logs.value = [];
 };
@@ -137,10 +119,12 @@ const exportToPDF = () => {
     });
 };
 
-// 在组件挂载时调用 fetchLogs 来获取日志数据
-onMounted(() => {
-    fetchLogs();
-});
+
+// const filteredEventTypes = ref([]); // 用于存储当前筛选的事件类型
+
+// const filterEventType = (value: string, row: any) => {
+//     return row.event_type === value;
+// };
 </script>
 
 <template>
@@ -152,7 +136,7 @@ onMounted(() => {
                         <di style="white-space: nowrap;">告警日志记录</di>
                         <div class="picker">
                             <DatePicker :time="dateRange" @update:internalValue="handleDateChange"></DatePicker>
-                            <ElButton type="primary" class="confirm-button">确认</ElButton>
+                            <ElButton type="primary" class="confirm-button" @click="handleConfirmClick">确认</ElButton>
                         </div>
                         <div class="function-buttons">
                             <el-button style="background-color: #109968; color: white;" @click="exportToExcel">导出为
@@ -174,6 +158,23 @@ onMounted(() => {
                                 align="center"></el-table-column>
                             <el-table-column prop="transaction_amount" label="交易金额" width="100px"
                                 align="center"></el-table-column>
+                                <!-- <el-table-column 
+                                    prop="event_type" 
+                                    label="告警内容" 
+                                    width="auto" 
+                                    align="center"
+                                    :filters="[
+                                        { text: '大额取款', value: '大额取款' },
+                                        { text: 'CoreService响应时间过长', value: 'CoreService响应时间过长' },
+                                        { text: 'ATMServer响应时间过长', value: 'ATMServer响应时间过长' },
+                                        { text: 'FXEntry响应时间过长', value: 'FXEntry响应时间过长' },
+                                        { text: 'ATMEntry响应时间过长', value: 'ATMEntry响应时间过长' },
+                                        { text: 'FXCoreEntry响应时间过长', value: 'FXCoreEntry响应时间过长' },
+                                        { text: 'FXServer响应时间过长', value: 'FXServer响应时间过长' }
+                                    ]"
+                                    :filter-method="filterEventType"
+                                    :filtered-value="filteredEventTypes">
+                                    </el-table-column> -->
                             <el-table-column prop="event_type" label="告警内容" width="auto"
                                 align="center"></el-table-column>
                             <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>

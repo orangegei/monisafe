@@ -79,14 +79,15 @@ function forex_transformChartDataToPieData(chartData, dataType) {
         const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
         maxAmountAgeGroup.value = chartData.xdata[maxIndex];
     }
-    else if (dataType === 'purpose') {
+    else if (dataType === 'type') {
         forex_pieData2.value = chartData.xdata.map((name, index) => ({
             name: name,
             value: chartData.ydata[index]
         }));
-        // 找到交易金额最多的换汇目的
+        // 找到交易笔数最多的货币种类
         const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
-        maxExchangePurpose.value = chartData.xdata[maxIndex];
+        maxCurrencyType.value = chartData.xdata[maxIndex];
+        
     }    
 }
 
@@ -101,14 +102,14 @@ function forex_transformChartDataTodChartData(chartData, dataType) {
         const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
         maxCountAgeGroup.value = chartData.xdata[maxIndex];
     }
-    else if (dataType === 'type') {
+    else if (dataType === 'purpose') {
         forex_doughnutChartData2.value = chartData.xdata.map((name, index) => ({
             name: name,
             value: chartData.ydata[index]
         }));
-        // 找到交易笔数最多的货币种类
+        // 找到交易金额最多的换汇目的
         const maxIndex = chartData.ydata.indexOf(Math.max(...chartData.ydata));
-        maxCurrencyType.value = chartData.xdata[maxIndex];
+        maxExchangePurpose.value = chartData.xdata[maxIndex];
     }
 }
 
@@ -116,15 +117,13 @@ function forex_transformChartDataTodChartData(chartData, dataType) {
 function handleForexLineChartData(chartData, dataType) {
     if (dataType === 'amount') {
         forex_line_amount_data.value = chartData;
-
         // 找到交易金额最多的时间点
-        const maxIndex = chartData.ydata.indexOf(Math.max(...chartData));
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
         maxAmountDay.value = daysOfWeek.value[maxIndex];
     } else if (dataType === 'count') {
         forex_line_count_data.value = chartData;
-
         // 找到交易笔数最多的时间点
-        const maxIndex = chartData.ydata.indexOf(Math.max(...chartData));
+        const maxIndex = chartData.indexOf(Math.max(...chartData));
         maxCountDay.value = daysOfWeek.value[maxIndex];
     }
 }
@@ -143,22 +142,23 @@ const getAllData = async () => {
             instance.get('/business/forex/range', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/forex/weekAmount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/forex/weekCount', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
-            instance.get('/business/forex/purpose', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
             instance.get('/business/forex/type', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
+            instance.get('/business/forex/purpose', { params, headers: { Authorization: sessionStorage.getItem('token') } }),
         ];
 
         const responses = await Promise.all(requests);
         responses.forEach((response, index) => {
             if (response.data.code === 0) {
                 const data = response.data.data;
+                console.log(data);
                 switch (index) {
                     case 0: forex_transformChartDataToPieData(data, 'age'); break;
                     case 1: forex_transformChartDataTodChartData(data, 'age'); break;
                     case 2: handleForexChartData(data); break;
                     case 3: handleForexLineChartData(data, 'amount'); break;
                     case 4: handleForexLineChartData(data, 'count'); break;
-                    case 5: forex_transformChartDataToPieData(data, 'purpose'); break;
-                    case 6: forex_transformChartDataToPieData(data, 'type'); break;
+                    case 5: forex_transformChartDataToPieData(data, 'type'); break;
+                    case 6: forex_transformChartDataTodChartData(data, 'purpose'); break;
                 }
             } else {
                 console.error('Error in response:', response.message);
@@ -234,7 +234,7 @@ onMounted(() => {
                                 color="#008C8C">
                                 <el-card style="height: 28vh;">
                                     <div>交易笔数最多的金额区间是：</div>
-                                    <div class="number-text">{{ maxTransactionRange }}</div>
+                                    <div class="number-text">{{ maxTransactionRange }}￥</div>
                                 </el-card>
                             </el-timeline-item>
                             <el-timeline-item timestamp="外汇年龄段与交易金额饼状图" placement="top" style="height: 20vh;"
@@ -310,12 +310,11 @@ onMounted(() => {
                         </div>
 
                         <div class="pie-doughnut-chart-row">
-                            <div class="pie-chart">
-                                <PieChart :chartData="forex_pieData2" title="外汇交易笔数与换汇目的饼状图"></PieChart>
-                            </div>
                             <div class="doughnut-chart">
-                                <DoughnutChart :chartData="forex_doughnutChartData2" title="外汇交易金额与货币种类环形图">
-                                </DoughnutChart>
+                                <DoughnutChart :chartData="forex_doughnutChartData2" title="外汇交易笔数与换汇目的饼状图"></DoughnutChart>
+                            </div>
+                            <div class="pie-chart">
+                                <PieChart :chartData="forex_pieData2" title="外汇交易金额与货币种类环形图"></PieChart>
                             </div>
                         </div>
                     </div>

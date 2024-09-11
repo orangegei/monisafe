@@ -46,7 +46,7 @@ onMounted(() => {
             },
             series: [
                 {
-                    name: 'Data',
+                    name: '交易笔数',
                     type: 'pie',
                     radius: ['35%', '65%'], // 调整内外半径使其更占空间
                     center: ['50%', '50%'], // 确保饼图居中
@@ -72,7 +72,7 @@ onMounted(() => {
                     data: props.chartData.map((item, index) => ({
                         ...item,
                         itemStyle: {
-                            color: ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1'][index % 5], // 使用简约风格的配色
+                            color: ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1', '#FFECA1'][index % 6], // 使用简约风格的配色
                             borderRadius: 6,
                             borderColor: '#ffffff',
                             borderWidth: 1
